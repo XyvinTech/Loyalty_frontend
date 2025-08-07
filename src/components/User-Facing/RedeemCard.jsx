@@ -68,13 +68,13 @@ const RedeemCard = ({ onClose, image }) => {
         <img
           src={image}
           alt="Sneaker"
-          className="w-full h-48 object-cover rounded-t-2xl"
+          className="w-full h-56 object-contain rounded-t-2xl"
         />
       </div>
 
       <div className="px-5 pt-5 text-[#2C2C2C] poppins-text">
         <h3 className="text-sm text-gray-500 font-medium">
-          Enter Vendor Code:
+          Request the merchant to enter the 4 digit code:
         </h3>
         <div className="grid grid-cols-4 gap-3 px-4 py-4">
           {code.map((digit, index) => (

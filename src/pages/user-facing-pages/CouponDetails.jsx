@@ -13,13 +13,31 @@ const CouponDetails = () => {
   const { customerID, apiKey } = useCustomerAuth();
   const couponId = searchParams.get("couponId");
   const [showRedeemCard, setShowRedeemCard] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchOfferData = async () => {
-      const offers = await sdkApi.getCouponId(couponId, customerID, apiKey);
-      setOfferData(offers.data);
+      try {
+        setLoading(true);
+        const offers = await sdkApi.getCouponId(couponId, customerID, apiKey);
+        setOfferData(offers.data);
+      } catch (err) {
+        console.error("Error fetching offer data:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchOfferData();
   }, [customerID, apiKey]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-gray-600 text-sm">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen pb-6">
       <div className="relative bg-[#23243A]  pb-0">
@@ -40,7 +58,7 @@ const CouponDetails = () => {
         <div className="flex items-center mb-2">
           <img
             src={offerData?.merchantId?.image}
-            alt="Amazon"
+            alt="Merchant"
             className="w-14 h-14 mr-2"
           />
           <span className="font-semibold text-lg ">
@@ -76,11 +94,6 @@ const CouponDetails = () => {
               <strong>Redemption Type:</strong> {offerData?.type}
             </li>
 
-            <li>
-              <strong>Redeemable Points:</strong>{" "}
-              {offerData?.redeemablePointsCount ?? 0}
-            </li>
-
             {offerData?.usagePolicy?.frequency && (
               <li>
                 <strong>Usage Limit:</strong>{" "}
@@ -97,6 +110,7 @@ const CouponDetails = () => {
             )}
           </ul>
         </div>
+
         {offerData?.termsAndConditions?.length > 0 && (
           <div className="mt-4">
             <div className="text-xs italic text-gray-600 space-y-1">
@@ -106,9 +120,10 @@ const CouponDetails = () => {
             </div>
           </div>
         )}
+
         <div className="flex justify-end mt-4">
           <p
-            className="text-xs text-gray-500 cursor:pointer hover:underline"
+            className="text-xs text-gray-500 cursor-pointer hover:underline"
             onClick={() => navigate("/user/terms-and-conditions")}
           >
             Terms and Conditions
@@ -120,6 +135,7 @@ const CouponDetails = () => {
           onClick={() => setShowRedeemCard(true)}
         />
       </div>
+
       {showRedeemCard && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-40 transition-opacity flex items-center justify-center">
           <div className="w-[86%] max-w-md rounded-2xl ">

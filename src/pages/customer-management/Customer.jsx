@@ -27,163 +27,129 @@ const FilterModal = ({ filters, onClose, onApply }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Filter Customers</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
-        </div>
+ <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 mt-10">
+  <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
+    
+    <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
+      <h2 className="text-lg font-semibold">Filter Customers</h2>
+      <button
+        onClick={onClose}
+        className="text-gray-400 hover:text-gray-500"
+      >
+        <XMarkIcon className="h-6 w-6" />
+      </button>
+    </div>
 
-        <div className="space-y-4">
-          {/* Status Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.status || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  status: e.target.value || undefined,
-                })
-              }
-            >
-              <option value="">All Status</option>
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
-          </div>
+    <div className="px-6 py-4 overflow-y-auto space-y-4 flex-1">
+    
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <select
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.status || ""}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, status: e.target.value || undefined })
+          }
+        >
+          <option value="">All Status</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
 
-          {/* Date Range */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Registration Date From
-            </label>
-            <input
-              type="date"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.start_date || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  start_date: e.target.value || undefined,
-                })
-              }
-            />
-          </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Registration Date From</label>
+        <input
+          type="date"
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.start_date || ""}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, start_date: e.target.value || undefined })
+          }
+        />
+      </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Registration Date To
-            </label>
-            <input
-              type="date"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.end_date || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  end_date: e.target.value || undefined,
-                })
-              }
-            />
-          </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Registration Date To</label>
+        <input
+          type="date"
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.end_date || ""}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, end_date: e.target.value || undefined })
+          }
+        />
+      </div>
 
-          {/* Points Range */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Minimum Points
-            </label>
-            <input
-              type="number"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.min_points || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  min_points: e.target.value || undefined,
-                })
-              }
-              placeholder="Enter minimum points"
-            />
-          </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Minimum Points</label>
+        <input
+          type="number"
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.min_points || ""}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, min_points: e.target.value || undefined })
+          }
+        />
+      </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Maximum Points
-            </label>
-            <input
-              type="number"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.max_points || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  max_points: e.target.value || undefined,
-                })
-              }
-              placeholder="Enter maximum points"
-            />
-          </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Maximum Points</label>
+        <input
+          type="number"
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.max_points || ""}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, max_points: e.target.value || undefined })
+          }
+        />
+      </div>
 
-          {/* Sort Options */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sort By
-            </label>
-            <select
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.sort_by || "createdAt"}
-              onChange={(e) =>
-                setLocalFilters({ ...localFilters, sort_by: e.target.value })
-              }
-            >
-              <option value="createdAt">Registration Date</option>
-              <option value="total_points">Points</option>
-              <option value="name">Name</option>
-            </select>
-          </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+        <select
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.sort_by || "createdAt"}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, sort_by: e.target.value })
+          }
+        >
+          <option value="createdAt">Registration Date</option>
+          <option value="total_points">Points</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sort Order
-            </label>
-            <select
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.sort_order || "desc"}
-              onChange={(e) =>
-                setLocalFilters({ ...localFilters, sort_order: e.target.value })
-              }
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="mt-6 flex justify-end space-x-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleApply}
-            className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
-          >
-            Apply Filters
-          </button>
-        </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+        <select
+          className="w-full rounded-md border border-gray-300 p-2"
+          value={localFilters.sort_order || "desc"}
+          onChange={(e) =>
+            setLocalFilters({ ...localFilters, sort_order: e.target.value })
+          }
+        >
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
       </div>
     </div>
+    <div className="px-6 py-4 border-t flex justify-end space-x-3 sticky bottom-0 bg-white z-10">
+      <button
+        onClick={onClose}
+        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+      >
+        Cancel
+      </button>
+     <StyledButton
+     name={"Apply"}
+        onClick={handleApply}
+        // className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
+      />
+    </div>
+  </div>
+</div>
+
   );
 };
 
@@ -379,7 +345,7 @@ const Customer = () => {
   const [filters, setFilters] = useState({
     page: 1,
     limit: 10,
-    search: "",
+    name: "",
     status: undefined,
     start_date: undefined,
     end_date: undefined,
@@ -410,7 +376,7 @@ const Customer = () => {
   const { addToast } = useUiStore();
 
   const handleSearch = (value) => {
-    setFilters((prev) => ({ ...prev, search: value, page: 1 }));
+    setFilters((prev) => ({ ...prev, name: value, page: 1 }));
   };
 
   const handlePageChange = (newPage) => {
@@ -504,7 +470,7 @@ const Customer = () => {
           <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
           <StyledSearchInput
             placeholder="Search customers..."
-            value={filters.search}
+            value={filters.name}
             onChange={(e) => handleSearch(e.target.value)}
             className="w-full sm:w-auto"
           />
@@ -518,14 +484,7 @@ const Customer = () => {
             onClick={() => setShowFilterModal(true)}
             variant="secondary"
           />
-          <StyledButton
-            name={
-              <>
-                <ArrowDownTrayIcon className="w-4 h-4" /> Export
-              </>
-            }
-            variant="download"
-          />
+     
           <StyledButton
             name={
               <>

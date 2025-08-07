@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import StyledButton from "../../ui/StyledButton";
-import StyledSearchInput from "../../ui/StyledSearchInput";
 import RefreshButton from "../../ui/RefreshButton";
 import {
   ArrowDownTrayIcon,
@@ -74,9 +73,10 @@ const FilterModal = ({ filters, onClose, onApply }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
+    <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 mt-10">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
+        <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
+          {" "}
           <h2 className="text-lg font-semibold">Filter Transactions</h2>
           <button
             onClick={onClose}
@@ -86,7 +86,7 @@ const FilterModal = ({ filters, onClose, onApply }) => {
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="px-6 py-4 overflow-y-auto space-y-4 flex-1">
           {/* Transaction Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -205,19 +205,14 @@ const FilterModal = ({ filters, onClose, onApply }) => {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-end space-x-3">
+        <div className="px-6 py-4 border-t flex justify-end space-x-3 sticky bottom-0 bg-white z-10">
           <button
             onClick={onClose}
             className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Cancel
           </button>
-          <button
-            onClick={handleApply}
-            className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
-          >
-            Apply Filters
-          </button>
+          <StyledButton name="Apply Filters" onClick={handleApply} />
         </div>
       </div>
     </div>
@@ -385,7 +380,6 @@ const Transactions = () => {
   const [filters, setFilters] = useState({
     page: 1,
     limit: 10,
-    search: "",
     transaction_type: undefined,
     status: undefined,
     start_date: undefined,
@@ -405,9 +399,9 @@ const Transactions = () => {
   const transactions = transactionsData?.data?.transactions || [];
   const totalCount = transactionsData?.data?.pagination?.total || 0;
 
-  const handleSearch = (value) => {
-    setFilters((prev) => ({ ...prev, search: value, page: 1 }));
-  };
+  // const handleSearch = (value) => {
+  //   setFilters((prev) => ({ ...prev, search: value, page: 1 }));
+  // };
 
   const handlePageChange = (newPage) => {
     setFilters((prev) => ({ ...prev, page: newPage }));
@@ -485,12 +479,12 @@ const Transactions = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
-          <StyledSearchInput
+          {/* <StyledSearchInput
             placeholder="Search transactions..."
             value={filters.search}
             onChange={(e) => handleSearch(e.target.value)}
             className="w-full sm:w-auto"
-          />
+          /> */}
           <StyledButton
             name={
               <>
@@ -501,14 +495,14 @@ const Transactions = () => {
             onClick={() => setShowFilterModal(true)}
             variant="secondary"
           />
-          <StyledButton
+          {/* <StyledButton
             name={
               <>
                 <ArrowDownTrayIcon className="w-4 h-4" /> Export{" "}
               </>
             }
             variant="download"
-          />
+          /> */}
         </div>
       </div>
 

@@ -80,10 +80,7 @@ const AuthLogs = () => {
     return logList?.map((item) => (
       <tr key={item.id} className="hover:bg-gray-50">
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          {item?.userName}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {item?.userEmail}
+          {item?.details?.username}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
           {item?.userAgent?.length > 20
@@ -146,7 +143,7 @@ const AuthLogs = () => {
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+      {/* <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
         <h2 className="text-lg font-medium text-gray-800 mb-3">Filter Logs</h2>
         <div className="flex flex-wrap gap-4 mb-4">
           <div className="flex flex-col">
@@ -177,20 +174,7 @@ const AuthLogs = () => {
             />
           </div>
 
-          <div className="flex flex-col">
-            <label htmlFor="adminName" className="text-xs text-gray-600 mb-1">
-              Admin Name
-            </label>
-            <input
-              id="adminName"
-              type="text"
-              name="adminName"
-              value={filters.adminName}
-              onChange={handleFilterChange}
-              className={inputClass}
-              placeholder="Search by name"
-            />
-          </div>
+        
 
           <div className="flex flex-col">
             <label htmlFor="status" className="text-xs text-gray-600 mb-1">
@@ -221,7 +205,7 @@ const AuthLogs = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {isLoading ? (
         <Loader />
@@ -241,9 +225,7 @@ const AuthLogs = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
+              
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Agent
                 </th>

@@ -70,16 +70,26 @@ const ViewLog = ({ open, onClose, id }) => {
                 <div className="space-y-2">
                   <p className="text-sm">
                     <span className="font-medium text-gray-700">User:</span>{" "}
-                    <span className="text-gray-600">{logs.data.userName}</span>
+                    <span className="text-gray-600">
+                      {logs?.data?.userName || logs?.data?.details?.username}
+                    </span>
                   </p>
-                  <p className="text-sm">
-                    <span className="font-medium text-gray-700">Email:</span>{" "}
-                    <span className="text-gray-600">{logs.data.userEmail}</span>
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium text-gray-700">Role:</span>{" "}
-                    <span className="text-gray-600">{logs.data.userModel}</span>
-                  </p>
+                  {logs.data.userEmail && (
+                    <p className="text-sm">
+                      <span className="font-medium text-gray-700">Email:</span>{" "}
+                      <span className="text-gray-600">
+                        {logs.data.userEmail}
+                      </span>
+                    </p>
+                  )}
+                  {logs.data.userModel && (
+                    <p className="text-sm">
+                      <span className="font-medium text-gray-700">Role:</span>{" "}
+                      <span className="text-gray-600">
+                        {logs.data.userModel}
+                      </span>
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

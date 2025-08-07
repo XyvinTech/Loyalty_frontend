@@ -94,18 +94,11 @@ const MerchantOffers = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
-          <StyledSearchInput
+          {/* <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
-          />
-          <StyledButton
-            name={
-              <>
-                <ArrowDownTrayIcon className="w-4 h-4" /> Export
-              </>
-            }
-            variant="download"
-          />
+          /> */}
+
           <StyledButton
             name={
               <>

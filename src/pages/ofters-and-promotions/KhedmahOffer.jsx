@@ -84,7 +84,7 @@ const KhedmahOffer = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <RefreshButton isLoading={isLoading} onClick={() => refetch()} />
-          <StyledSearchInput
+          {/* <StyledSearchInput
             placeholder="Search offers"
             className="w-full sm:w-auto"
           />
@@ -95,7 +95,7 @@ const KhedmahOffer = () => {
               </>
             }
             variant="download"
-          />
+          /> */}
           <StyledButton
             name={
               <>

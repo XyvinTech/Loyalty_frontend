@@ -126,6 +126,50 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         },
       ],
     },
+     {
+      label: "Reference Data",
+      type: "dropdown",
+      icon: Cog6ToothIcon,
+      permissions: ["CREATE_OFFERS", "EDIT_OFFERS"],
+      subItems: [
+        {
+          label: "Categories",
+          path: "/categories",
+          icon: TagIcon,
+          permissions: ["CREATE_OFFERS"],
+        },
+        {
+          label: "Brands",
+          path: "/brands",
+          icon: BuildingStorefrontIcon,
+          permissions: ["CREATE_OFFERS"],
+        },
+        {
+          label: "Apps",
+          path: "/apps",
+          icon: DevicePhoneMobileIcon,
+          permissions: ["CREATE_OFFERS"],
+        },
+        {
+          label: "Service Providers",
+          path: "/trigger-services",
+          icon: ServerIcon,
+          permissions: ["CREATE_OFFERS"],
+        },
+        {
+          label: "Trigger Events",
+          path: "/trigger-events",
+          icon: CalendarDateRangeIcon,
+          permissions: ["CREATE_OFFERS"],
+        },
+        {
+          label: "Payment Methods",
+          path: "/payment-methods",
+          icon: CalendarDateRangeIcon,
+          permissions: ["CREATE_OFFERS"],
+        },
+      ],
+    },
     {
       label: "Offers & Promotions",
       type: "dropdown",

@@ -11,26 +11,33 @@ import sdkApi from "../../api/sdk";
 const UserBrands = () => {
   const [brands, setBrands] = useState([]);
   const [page, setPage] = useState(1);
-  const [rows, setRows] = useState(100);
+  const [rows] = useState(100);
+  const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const { customerID, apiKey, customerData } = useCustomerAuth();
+  const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
 
-  const fetchData = async () => {
+  const fetchData = async (reset = false) => {
     try {
       setLoading(true);
       const brandData = await sdkApi.getBrands(customerID, apiKey, {
-        page,
+        page: reset ? 1 : page,
         limit: rows,
+        search: searchQuery,
       });
+
       const newBrands = brandData.data || [];
-      setBrands((prev) => [...prev, ...newBrands]);
-      if (newBrands.length < rows) {
-        // No more data
+      if (reset) {
+        setBrands(newBrands);
+        setPage(2);
       } else {
-        setPage((prev) => prev + 1);
+        setBrands((prev) => [...prev, ...newBrands]);
+        if (newBrands.length >= rows) {
+          setPage((prev) => prev + 1);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch customer data:", error);
@@ -42,9 +49,14 @@ const UserBrands = () => {
 
   useEffect(() => {
     if (customerID && apiKey) {
-      fetchData();
+      fetchData(true); // initial load
     }
-  }, [customerID, apiKey]);
+  }, [customerID, apiKey, searchQuery]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSearchQuery(search);
+  };
 
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-8">
@@ -80,14 +92,18 @@ const UserBrands = () => {
       </div>
 
       <div className="px-4 py-3">
-        <div className="relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFE5C9] focus:border-transparent"
-          />
-        </div>
+        <form onSubmit={handleSearchSubmit}>
+          <div className="relative">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFE5C9] focus:border-transparent"
+            />
+          </div>
+        </form>
       </div>
 
       <div className="min-h-[400px]">
@@ -98,9 +114,15 @@ const UserBrands = () => {
             {brands?.length === 0 ? (
               <NoBrandsFound />
             ) : (
-              brands?.map((brand, index) => {
-                return <ProductCard key={index} product={brand} />;
-              })
+              brands?.map((brand, index) => (
+                <ProductCard
+                  key={index}
+                  product={brand}
+                  onClick={() =>
+                    navigate("/user/offers", { state: { brand: brand?._id } })
+                  }
+                />
+              ))
             )}
           </div>
         )}

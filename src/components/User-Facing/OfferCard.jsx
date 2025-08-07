@@ -1,4 +1,5 @@
 import moment from "moment/moment";
+import { useNavigate, useSearchParams } from "react-router-dom";
 const OfferCard = ({ data, tier }) => {
   const {
     title,
@@ -9,9 +10,16 @@ const OfferCard = ({ data, tier }) => {
     eligibilityCriteria,
     validityPeriod,
   } = data;
-
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  params.set("couponId", data._id);
+  const couponUrl = `/user/coupon?${params.toString()}`;
   return (
     <div
+      onClick={() => {
+        navigate(couponUrl);
+      }}
       className="rounded-[22px] bg-white transition-all  duration-200 hover:shadow-lg cursor-pointer overflow-hidden"
       style={{
         border: `1px solid ${tier}`,

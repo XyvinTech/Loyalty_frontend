@@ -3,7 +3,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import OfferView from "../../components/User-Facing/OfferView";
@@ -12,14 +12,22 @@ const UserOffers = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [offerData, setOfferData] = useState([]);
   const [page, setPage] = useState(1);
+  const location = useLocation();
+  const brandId = location?.state?.brand;
+  const categoryId = location?.state?.category;
   const [rows] = useState(100);
   const [searchParams] = useSearchParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  
+
   const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (categoryId) {
+      setActiveCategory(categoryId);
+    }
+  }, [categoryId]);
 
   const fetchOfferData = async () => {
     try {
@@ -28,6 +36,7 @@ const UserOffers = () => {
         categoryId: activeCategory,
         page,
         limit: rows,
+        ...(brandId && { brandId }), // include brandId if available
       });
 
       const newOffers = offers.data || [];
@@ -87,7 +96,9 @@ const UserOffers = () => {
   const NoOffersFound = () => (
     <div className="flex flex-col items-center justify-center py-12 px-4">
       <div className="text-6xl text-gray-300 mb-4">🔍</div>
-      <h3 className="text-lg font-medium text-gray-600 mb-2">No offers found</h3>
+      <h3 className="text-lg font-medium text-gray-600 mb-2">
+        No offers found
+      </h3>
       <p className="text-sm text-gray-500 text-center">
         Try selecting a different category or check back later for new offers.
       </p>
@@ -108,7 +119,7 @@ const UserOffers = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="px-4 mb-4 mt-3">
         <div
           className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
@@ -129,7 +140,7 @@ const UserOffers = () => {
           ))}
         </div>
       </div>
-      
+
       <div className="px-4 py-3">
         <div className="relative">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />

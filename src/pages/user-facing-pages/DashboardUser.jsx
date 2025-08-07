@@ -111,8 +111,11 @@ const DashboardUser = () => {
           {brands?.slice(0, 5).map((item) => (
             <div key={item?._id} className="min-w-[70px] mb-3">
               <div
+                onClick={() =>
+                  navigate("/user/offers", { state: { brand: item?._id } })
+                }
                 style={{ border: "2px solid rgba(0, 0, 0, 0.15)" }}
-                className="w-[74px] h-[74px] flex items-center justify-center rounded-[12px] bg-white shadow-lg"
+                className="w-[74px] h-[74px] cursor-pointer flex items-center justify-center rounded-[12px] bg-white shadow-lg"
               >
                 <img
                   src={item?.image}
@@ -163,9 +166,12 @@ const DashboardUser = () => {
           {categories?.slice(0, 5)?.map((category) => (
             <div
               key={category?._id}
+              onClick={() =>
+                navigate("/user/offers", { state: { category: category?._id } })
+              }
               className="flex flex-col items-center min-w-[89px] w-[89px]"
             >
-              <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mb-2">
+              <div className="w-16 h-16 rounded-full  cusror-pointer overflow-hidden flex items-center justify-center mb-2">
                 <img
                   src={category?.image}
                   alt={category?.title?.en}

@@ -141,7 +141,7 @@ const PaymentMethods = () => {
             }}
             isLoading={isLoading}
           />
-          <StyledSearchInput
+          {/* <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
           />
@@ -152,7 +152,7 @@ const PaymentMethods = () => {
               </>
             }
             variant="download"
-          />
+          /> */}
           <StyledButton
             name={
               <>

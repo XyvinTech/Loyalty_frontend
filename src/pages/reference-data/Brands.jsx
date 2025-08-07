@@ -135,14 +135,14 @@ const Brands = () => {
             placeholder="Search"
             className="w-full sm:w-auto"
           />
-          <StyledButton
+          {/* <StyledButton
             name={
               <>
                 <ArrowDownTrayIcon className="w-4 h-4" /> Export{" "}
               </>
             }
             variant="download"
-          />
+          /> */}
           <StyledButton
             name={
               <>

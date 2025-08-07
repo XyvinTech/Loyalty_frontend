@@ -187,7 +187,7 @@ const MerchantOffers = () => {
                           {offer.title?.en}
                         </h3>
                         <p className="text-xs text-gray-500 truncate">
-                          {offer.serviceCategory?.title || "Khedmah Service"}
+                          {offer?.merchantId?.title?.en}
                         </p>
                       </div>
                     </div>
@@ -227,7 +227,6 @@ const MerchantOffers = () => {
                     </div>
 
                     <div className="flex items-end justify-end pt-2 border-t border-gray-100">
-                   
                       <div className="flex gap-3">
                         <button
                           className="text-gray-600 hover:text-gray-900 transition"
@@ -299,7 +298,10 @@ const MerchantOffers = () => {
                         </div>
                       </div>
                       <div className="flex gap-3 ml-auto md:ml-4">
-                        <button className="text-gray-600 hover:text-gray-900 transition" onClick={() => handleEdit(offer?._id)}>
+                        <button
+                          className="text-gray-600 hover:text-gray-900 transition"
+                          onClick={() => handleEdit(offer?._id)}
+                        >
                           <PencilIcon className="w-4 h-4" />
                         </button>
                         <button

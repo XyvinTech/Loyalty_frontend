@@ -21,6 +21,7 @@ const Brands = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
   const { useGetBrandById, useDeleteBrand, useGetBrands } = useBrands();
   const { data: triggerBrandData } = useGetBrandById(data?.id);
@@ -34,6 +35,7 @@ const Brands = () => {
   } = useGetBrands({
     limit: itemsPerPage,
     page: currentPage,
+    search: searchQuery,
   });
   const deleteMutation = useDeleteBrand();
   const { addToast } = useUiStore();
@@ -131,9 +133,14 @@ const Brands = () => {
             }}
             isLoading={isLoading}
           />
-          <StyledSearchInput
+           <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
           />
           {/* <StyledButton
             name={

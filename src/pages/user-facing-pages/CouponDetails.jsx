@@ -48,9 +48,6 @@ const CouponDetails = () => {
           </span>
         </div>
         <div className="font-medium text-xl mb-1 ">{offerData?.title?.en}</div>
-        {/* <div className="text-sm font-medium mb-4">
-          {offerData?.description?.en}
-        </div> */}
 
         <div>
           <div className="font-semibold text-base mb-2">Details</div>
@@ -100,6 +97,15 @@ const CouponDetails = () => {
             )}
           </ul>
         </div>
+        {offerData?.termsAndConditions?.length > 0 && (
+          <div className="mt-4">
+            <div className="text-xs italic text-gray-600 space-y-1">
+              {offerData.termsAndConditions.map((term, idx) => (
+                <p key={idx}>• {term}</p>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor:pointer hover:underline"

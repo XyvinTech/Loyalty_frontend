@@ -28,6 +28,10 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const { useGetCurrentUser } = useAuth();
+  const { data: user } = useGetCurrentUser();
+  console.log("user", user?.data?.role?.permissions);
+
   const location = useLocation();
   const { pathname } = location;
   const { useLogout } = useAuth();
@@ -50,34 +54,61 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const toggleNav = (label) => {
     setExpandedNav(expandedNav === label ? null : label);
   };
+  const hasPermission = (permission) => {
+    return user?.data?.role?.permissions?.includes(permission);
+  };
+
+  const hasAnyPermission = (permissions) => {
+    return permissions.some((perm) => hasPermission(perm));
+  };
 
   const navItems = [
     {
       label: "Dashboard",
       path: "/dashboard",
       icon: ChartBarIcon,
+      permissions: ["VIEW_DASHBOARD"],
     },
     {
       label: "Points Management",
       type: "dropdown",
       icon: CurrencyDollarIcon,
+      permissions: [
+        "MANAGE_POINTS",
+        "MANAGE_CRITERIA",
+        "VIEW_POINTS_HISTORY",
+        "ADJUST_POINTS",
+      ],
       subItems: [
         {
           label: "Points Criteria",
           path: "/points-criteria",
           icon: CurrencyDollarIcon,
+          permissions: ["MANAGE_CRITERIA"],
         },
         {
           label: "Transactions",
           path: "/transactions",
           icon: ArrowPathIcon,
+          permissions: ["VIEW_POINTS_HISTORY"],
         },
-        { label: "Rules & Expiry", path: "/rules", icon: Cog6ToothIcon },
-        { label: "Tiers", path: "/tiers", icon: TrophyIcon },
+        {
+          label: "Rules & Expiry",
+          path: "/rules",
+          icon: Cog6ToothIcon,
+          permissions: ["MANAGE_POINTS"],
+        },
+        {
+          label: "Tiers",
+          path: "/tiers",
+          icon: TrophyIcon,
+          permissions: ["VIEW_TIERS", "MANAGE_TIERS"],
+        },
         {
           label: "Tier Eligibility",
           path: "/tier-eligibility",
           icon: AdjustmentsHorizontalIcon,
+          permissions: ["ASSIGN_TIERS"],
         },
       ],
     },
@@ -85,53 +116,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       label: "Customer Management",
       type: "dropdown",
       icon: UserGroupIcon,
+      permissions: ["VIEW_CUSTOMERS", "EDIT_CUSTOMERS"],
       subItems: [
         {
           label: "Customers",
           path: "/customers",
           icon: UsersIcon,
-        },
-        // {
-        //   label: "Support",
-        //   path: "/support",
-        //   icon: ChatBubbleLeftRightIcon,
-        // },
-      ],
-    },
-    {
-      label: "Reference Data",
-      type: "dropdown",
-      icon: Cog6ToothIcon,
-      subItems: [
-        {
-          label: "Categories",
-          path: "/categories",
-          icon: TagIcon,
-        },
-        {
-          label: "Brands",
-          path: "/brands",
-          icon: BuildingStorefrontIcon,
-        },
-        {
-          label: "Apps",
-          path: "/apps",
-          icon: DevicePhoneMobileIcon,
-        },
-        {
-          label: "Service Providers",
-          path: "/trigger-services",
-          icon: ServerIcon,
-        },
-        {
-          label: "Trigger Events",
-          path: "/trigger-events",
-          icon: CalendarDateRangeIcon,
-        },
-        {
-          label: "Payment Methods",
-          path: "/payment-methods",
-          icon: CalendarDateRangeIcon,
+          permissions: ["VIEW_CUSTOMERS"],
         },
       ],
     },
@@ -139,16 +130,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       label: "Offers & Promotions",
       type: "dropdown",
       icon: TagIcon,
+      permissions: ["CREATE_OFFERS", "EDIT_OFFERS"],
       subItems: [
         {
           label: "Khedmah Offers",
           path: "/khedma-offers",
           icon: TicketIcon,
+          permissions: ["CREATE_OFFERS"],
         },
         {
           label: "Merchant Offers",
           path: "/merchant-offers",
           icon: TicketIcon,
+          permissions: ["CREATE_OFFERS"],
         },
       ],
     },
@@ -156,54 +150,45 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       label: "System & Settings",
       type: "dropdown",
       icon: Cog6ToothIcon,
+      permissions: ["MANAGE_ADMINS", "MANAGE_ROLES"],
       subItems: [
         {
           label: "Users",
           path: "/users",
           icon: UsersIcon,
+          permissions: ["MANAGE_ADMINS"],
         },
         {
           label: "Role & Accesses",
           path: "/role",
           icon: LockClosedIcon,
+          permissions: ["MANAGE_ROLES"],
         },
-        // {
-        //   label: "SDK & API Access",
-        //   path: "/sdk-access",
-        //   icon: CodeBracketIcon,
-        // },
-        // {
-        //   label: "Theme Settings",
-        //   path: "/theme",
-        //   icon: Cog6ToothIcon,
-        // },
       ],
     },
     {
       label: "Audit",
       type: "dropdown",
       icon: AdjustmentsHorizontalIcon,
+      permissions: ["VIEW_AUDIT_LOGS"],
       subItems: [
-        // {
-        //   label: "Reports",
-        //   path: "/reports",
-        //   icon: DocumentChartBarIcon,
-        // },
         {
           label: "Admin-System Logs",
           path: "/system-logs",
           icon: CodeBracketIcon,
+          permissions: ["VIEW_AUDIT_LOGS"],
         },
-
         {
           label: "User-API Logs",
           path: "/api-logs",
           icon: CommandLineIcon,
+          permissions: ["VIEW_AUDIT_LOGS"],
         },
         {
           label: "Authentication-Logs",
           path: "/auth-logs",
           icon: CommandLineIcon,
+          permissions: ["VIEW_AUDIT_LOGS"],
         },
       ],
     },
@@ -231,62 +216,68 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </button>
       </div>
       <nav className="flex-1 overflow-y-auto py-4">
-        {navItems.map((item) =>
-          item.type === "dropdown" ? (
-            <div key={item.label}>
-              <button
-                onClick={() => toggleNav(item.label)}
-                className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                  item.subItems.some((subItem) => pathname === subItem.path)
-                    ? "text-white bg-green-700/90"
+        {navItems
+          .filter((item) => hasAnyPermission(item.permissions ?? []))
+          .map((item) =>
+            item.type === "dropdown" ? (
+              <div key={item.label}>
+                <button
+                  onClick={() => toggleNav(item.label)}
+                  className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                    item.subItems.some((subItem) => pathname === subItem.path)
+                      ? "text-white bg-green-700/90"
+                      : "text-gray-300 hover:bg-green-700/50 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <item.icon className="w-5 h-5" />
+                    {item.label}
+                  </div>
+                  {expandedNav === item.label ? (
+                    <ChevronDownIcon className="w-4 h-4" />
+                  ) : (
+                    <ChevronRightIcon className="w-4 h-4" />
+                  )}
+                </button>
+
+                {expandedNav === item.label && (
+                  <div className="ml-4 mt-2 space-y-1 mr-2">
+                    {item.subItems
+                      .filter((subItem) =>
+                        hasAnyPermission(subItem.permissions ?? [])
+                      )
+                      .map((subItem) => (
+                        <NavLink
+                          key={subItem.path}
+                          to={subItem.path}
+                          className={`flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg ${
+                            pathname.startsWith(subItem.path)
+                              ? "text-white bg-green-800"
+                              : "text-gray-200 hover:bg-green-700/30 hover:text-white"
+                          }`}
+                        >
+                          {subItem.icon && <subItem.icon className="w-4 h-4" />}
+                          {subItem.label}
+                        </NavLink>
+                      ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                  pathname.startsWith(item.path)
+                    ? "text-white bg-green-700/90 "
                     : "text-gray-300 hover:bg-green-700/50 hover:text-white"
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <item.icon className="w-5 h-5" />
-                  {item.label}
-                </div>
-                {expandedNav === item.label ? (
-                  <ChevronDownIcon className="w-4 h-4" />
-                ) : (
-                  <ChevronRightIcon className="w-4 h-4" />
-                )}
-              </button>
-
-              {expandedNav === item.label && (
-                <div className="ml-4 mt-2 space-y-1 mr-2">
-                  {item.subItems.map((subItem) => (
-                    <NavLink
-                      key={subItem.path}
-                      to={subItem.path}
-                      className={`flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg ${
-                        pathname.startsWith(subItem.path)
-                          ? "text-white bg-green-800"
-                          : "text-gray-200 hover:bg-green-700/30 hover:text-white"
-                      }`}
-                    >
-                      {subItem.icon && <subItem.icon className="w-4 h-4" />}
-                      {subItem.label}
-                    </NavLink>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={`flex items-center px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                pathname.startsWith(item.path)
-                  ? "text-white bg-green-700/90 "
-                  : "text-gray-300 hover:bg-green-700/50 hover:text-white"
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="ml-3">{item.label}</span>
-            </NavLink>
-          )
-        )}
+                <item.icon className="w-5 h-5" />
+                <span className="ml-3">{item.label}</span>
+              </NavLink>
+            )
+          )}
       </nav>
 
       <div className="mt-auto flex justify-center py-4 w-full">

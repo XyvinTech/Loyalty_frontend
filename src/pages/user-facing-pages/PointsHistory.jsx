@@ -69,22 +69,17 @@ const PointsHistory = () => {
     },
     [customerID, apiKey, isAuthenticated]
   );
-
-  // Initial fetch OR when user / api key changes
   useEffect(() => {
     setPage(1);
     setError(null);
     fetchTransactionHistory(1);
-    // eslint-disable-next-line
   }, [customerID, apiKey, isAuthenticated]);
 
-  // When page increments, fetch more transactions
   useEffect(() => {
     if (page === 1) return;
     fetchTransactionHistory(page);
   }, [page, fetchTransactionHistory]);
 
-  // Tier-related background
   useEffect(() => {
     const tier = customerData?.customer_tier?.en;
     switch (tier) {

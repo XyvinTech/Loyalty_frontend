@@ -1,17 +1,17 @@
-import UserCard from "../../components/User-Facing/UserCard";
 import bg from "../../assets/bg.png";
-import OfferCard from "../../components/User-Facing/OfferCard";
 import bronze from "../../assets/background.png";
 import { data } from "../../assets/json/userData";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import sdkApi from "../../api/sdk";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import CouponCard from "../../components/User-Facing/CouponCard";
 import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
-const DashboardUser = () => {
+import ArabicCard from "../../components/User-Facing/ArabicCard";
+import ArabicCouponCard from "../../components/User-Facing/ArabicCouponCard";
+import ArabicOfferCard from "../../components/User-Facing/ArabicOfferCard";
+const ArabicDashboard = () => {
   const navigate = useNavigate();
   const [variant, setVariant] = useState("primary");
   const [offerData, setOfferData] = useState([]);
@@ -69,16 +69,16 @@ const DashboardUser = () => {
           }}
         ></div>
         <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4">
-          <UserCard />
+          <ArabicCard />
         </div>
       </div>
 
       <div className=" bg-white  rounded-t-3xl p-4 mt-10">
         <img src={bg} alt="Background decoration" />
         <div className="flex items-center justify-between mt-4 poppins-text mb-4">
-          <h2 className="text-sm font-semibold ">Coupons</h2>
+          <h2 className="text-sm font-semibold">القسائم</h2>
+          <AppButton name={"عرض كل القسائم"} variant={variant} />
 
-          <AppButton name={"View All Coupons"} variant={variant} />
         </div>
         <div
           className="flex space-x-3 overflow-x-auto scrollbar-hide"
@@ -89,18 +89,20 @@ const DashboardUser = () => {
         >
           {data.map((item) => (
             <div key={item.id} className="min-w-[132px]">
-              <CouponCard data={item} />
+              <ArabicCouponCard data={item} />
             </div>
           ))}
         </div>
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
-          <h2 className="text-sm font-semibold ">Brands</h2>
-          <AppButton
-            name={"View All Brands"}
+        
+          <h2 className="text-sm font-semibold">العلامات التجارية</h2>
+            <AppButton
+            name={"عرض جميع العلامات التجارية"}
             variant={variant}
-            onClick={() => navigate("/user/brands")}
-          />
+            onClick={() => navigate("/user/brands/ar")}
+          />{" "}
         </div>
+
         <div
           className="flex space-x-3 overflow-x-auto scrollbar-hide"
           style={{
@@ -112,7 +114,7 @@ const DashboardUser = () => {
             <div key={item?._id} className="min-w-[70px] mb-3">
               <div
                 onClick={() =>
-                  navigate("/user/offers", { state: { brand: item?._id } })
+                  navigate("/user/offers/ar", { state: { brand: item?._id } })
                 }
                 style={{ border: "2px solid rgba(0, 0, 0, 0.15)" }}
                 className="w-[74px] h-[74px] cursor-pointer flex items-center justify-center rounded-[12px] bg-white shadow-lg"
@@ -126,13 +128,16 @@ const DashboardUser = () => {
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-between mt-6 poppins-text mb-4">
-          <h2 className="text-sm font-semibold ">Brand Offers</h2>
+        <div
+          className={`flex items-center mt-6 poppins-text mb-4 flex-row-reverse justify-between`}
+          dir={"rtl"}
+        >
           <AppButton
-            name={"View All Brand Offers"}
+            name={"عرض جميع عروض العلامة التجارية"}
             variant={variant}
-            onClick={() => navigate("/user/offers")}
+            onClick={() => navigate("/user/offers/ar")}
           />
+          <h2 className="text-sm font-semibold">عروض العلامة التجارية</h2>
         </div>
         <div
           className="flex space-x-3 overflow-x-auto scrollbar-hide"
@@ -143,19 +148,22 @@ const DashboardUser = () => {
         >
           {offerData?.slice(0, 5)?.map((offer) => (
             <div key={offer._id} className="min-w-[192px]">
-              <OfferCard data={offer} tier={tierColor} />
+              <ArabicOfferCard data={offer} tier={tierColor} />
             </div>
           ))}
         </div>
-        <div className="flex items-center justify-between mt-6 poppins-text mb-4">
-          <h2 className="text-sm font-semibold ">Categories </h2>
-
+        <div
+          className="flex items-center justify-between mt-6 poppins-text mb-4"
+          dir="rtl"
+        >
+          <h2 className="text-sm font-semibold">الفئات</h2>
           <AppButton
-            name={"View All Categories"}
+            name={"عرض جميع الفئات"}
             variant={variant}
-            onClick={() => navigate("/user/categories")}
+            onClick={() => navigate("/user/categories/ar")}
           />
         </div>
+
         <div
           className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4"
           style={{
@@ -167,7 +175,7 @@ const DashboardUser = () => {
             <div
               key={category?._id}
               onClick={() =>
-                navigate("/user/offers", { state: { category: category?._id } })
+                navigate("/user/offers/ar", { state: { category: category?._id } })
               }
               className="flex flex-col items-center min-w-[89px] w-[89px]"
             >
@@ -180,7 +188,7 @@ const DashboardUser = () => {
               </div>
 
               <p className="text-[10px] text-center poppins-text line-clamp-2 leading-tight h-[28px]">
-                {category?.title?.en}
+                {category?.title?.ar}
               </p>
             </div>
           ))}
@@ -190,4 +198,4 @@ const DashboardUser = () => {
   );
 };
 
-export default DashboardUser;
+export default ArabicDashboard;

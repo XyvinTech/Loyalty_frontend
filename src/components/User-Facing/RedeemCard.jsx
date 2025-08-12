@@ -13,26 +13,27 @@ const RedeemCard = ({ onClose, image }) => {
   const [loading, setLoading] = useState(false);
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const couponId = searchParams.get("couponId");
-  const handleChange = (index) => (e) => {
-    const value = e.target.value;
-    if (/^\d{0,1}$/.test(value)) {
-      const newCode = [...code];
-      newCode[index] = value;
-      setCode(newCode);
-      if (value && index < 3) {
-        document.getElementById(`code-${index + 1}`)?.focus();
-      }
+const handleChange = (index) => (e) => {
+  const value = e.target.value;
+  if (/^[a-zA-Z0-9]{0,1}$/.test(value)) {
+    const newCode = [...code];
+    newCode[index] = value;
+    setCode(newCode);
+    if (value && index < 3) {
+      document.getElementById(`code-${index + 1}`)?.focus();
     }
-  };
+  }
+};
 
-  const handlePaste = (e) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text/plain");
-    if (/^\d{4}$/.test(pasted)) {
-      setCode(pasted.split("").slice(0, 4));
-      document.getElementById("code-3")?.focus();
-    }
-  };
+const handlePaste = (e) => {
+  e.preventDefault();
+  const pasted = e.clipboardData.getData("text/plain");
+  if (/^[a-zA-Z0-9]{4}$/.test(pasted)) {
+    setCode(pasted.split("").slice(0, 4));
+    document.getElementById("code-3")?.focus();
+  }
+};
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -47,7 +48,7 @@ const RedeemCard = ({ onClose, image }) => {
     } catch (e) {
       addToast({
         type: "error",
-        message: e.message || "Failed to redeem points",
+        message: e.data || "Failed to redeem points",
       });
     } finally {
       setLoading(false);

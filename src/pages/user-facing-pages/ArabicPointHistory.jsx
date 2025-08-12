@@ -7,11 +7,11 @@ import minus from "../../assets/minus.png";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import { getTierTheme } from "../../components/User-Facing/themes/tierThemes";
-import UserCard from "../../components/User-Facing/UserCard";
+import ArabicCard from "../../components/User-Facing/ArabicCard";
 
 const PAGE_SIZE = 20;
 
-const PointsHistory = () => {
+const ArabicPointsHistory = () => {
   const [customer, setCustomer] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState(bronze);
   const [transactions, setTransactions] = useState([]);
@@ -21,15 +21,13 @@ const PointsHistory = () => {
   const [pagination, setPagination] = useState(null);
   const [page, setPage] = useState(1);
 
-  // Use the customer auth hook
   const { customerID, apiKey, isAuthenticated, customerData } =
     useCustomerAuth();
 
-  // Fetch transaction history
   const fetchTransactionHistory = useCallback(
     async (pageToLoad = 1) => {
       if (!isAuthenticated || !customerID || !apiKey) {
-        setError("Customer ID and API Key are required");
+        setError("معرف العميل ومفتاح API مطلوبان");
         setLoading(false);
         return;
       }
@@ -55,11 +53,11 @@ const PointsHistory = () => {
             ]);
           }
         } else {
-          setError("Failed to fetch transaction history");
+          setError("فشل في جلب سجل المعاملات");
         }
       } catch (err) {
         setError(
-          `Error loading transaction history: ${
+          `خطأ أثناء تحميل سجل المعاملات: ${
             err.response?.data?.message || err.message
           }`
         );
@@ -70,6 +68,7 @@ const PointsHistory = () => {
     },
     [customerID, apiKey, isAuthenticated]
   );
+
   useEffect(() => {
     setPage(1);
     setError(null);
@@ -95,7 +94,6 @@ const PointsHistory = () => {
     }
   }, [customerData]);
 
-  // Infinite scroll observer
   const observer = useRef();
   const lastRowRef = useCallback(
     (node) => {
@@ -118,24 +116,19 @@ const PointsHistory = () => {
   const customerTier =
     customer?.customer_tier?.en || customerData?.customer_tier?.en || "Bronze";
   const theme = getTierTheme(customerTier);
-  const formatPoints = (num) => num?.toLocaleString("de-DE") || "0";
-  const customerName = customer?.name || customerData?.name || "Customer";
-  const pointBalance =
-    customer?.point_balance || customerData?.point_balance || 0;
 
-  // Auth error UI
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
           <div className="text-red-500 text-lg font-semibold mb-2">
-            Authentication Required
+            يتطلب تسجيل الدخول
           </div>
           <p className="text-gray-600 text-sm mb-4">
-            Please access this page with valid customer credentials.
+            يرجى الوصول إلى هذه الصفحة باستخدام بيانات عميل صالحة.
           </p>
           <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-500">
-            <p className="font-medium mb-1">Required URL format:</p>
+            <p className="font-medium mb-1">صيغة الرابط المطلوبة:</p>
             <p className="font-mono text-xs break-all">
               ?customerID=YOUR_ID&apiKey=YOUR_KEY
             </p>
@@ -145,7 +138,6 @@ const PointsHistory = () => {
     );
   }
 
-  // Loading UI (first load only)
   if (loading && page === 1) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -187,20 +179,19 @@ const PointsHistory = () => {
     );
   }
 
-  // Error UI
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
           <div className="text-red-500 text-lg font-semibold mb-2">
-            Error Loading History
+            خطأ في تحميل السجل
           </div>
           <p className="text-gray-600 text-sm mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition-colors"
           >
-            Try Again
+            حاول مرة أخرى
           </button>
         </div>
       </div>
@@ -217,9 +208,8 @@ const PointsHistory = () => {
             backgroundSize: "cover",
           }}
         >
-          {" "}
           <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4 mb-20">
-            <UserCard />
+            <ArabicCard />
           </div>
         </div>
 
@@ -227,24 +217,18 @@ const PointsHistory = () => {
           {transactions.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-500 text-sm">
-                No transaction history found
+                لا يوجد سجل للمعاملات
               </p>
               <p className="text-gray-400 text-xs mt-2">
-                Your transaction history will appear here once you start earning
-                or redeeming points
+                سيظهر سجل معاملاتك هنا بمجرد أن تبدأ في كسب أو استبدال النقاط
               </p>
             </div>
           ) : (
             <>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-800 poppins-text">
-                  Transaction History
+                  سجل النقاط
                 </h3>
-                {/* {pagination && (
-                  <span className="text-xs text-gray-500 poppins-text">
-                    {pagination.total_count} transactions
-                  </span>
-                )} */}
               </div>
               {transactions.map((item, idx) => {
                 const lastItem = transactions.length === idx + 1;
@@ -284,7 +268,7 @@ const PointsHistory = () => {
                       }`}
                     >
                       {item.type === "earned" ? "+" : "-"}
-                      {item.points} <span className="text-xs">pts</span>
+                      {item.points} <span className="text-xs">نقطة</span>
                       <div className="text-[#000] opacity-40 text-xs mt-1">
                         {item.date}
                       </div>
@@ -294,12 +278,12 @@ const PointsHistory = () => {
               })}
               {isLoadingMore && (
                 <div className="flex justify-center py-3 text-xs text-gray-500">
-                  Loading more transactions...
+                  جاري تحميل المزيد من المعاملات...
                 </div>
               )}
               {!pagination?.has_next && transactions.length > 0 && (
                 <div className="flex justify-center py-3 text-gray-400 text-xs">
-                  You've reached the end of your transaction history
+                  لقد وصلت إلى نهاية سجل معاملاتك
                 </div>
               )}
             </>
@@ -310,4 +294,4 @@ const PointsHistory = () => {
   );
 };
 
-export default PointsHistory;
+export default ArabicPointsHistory;

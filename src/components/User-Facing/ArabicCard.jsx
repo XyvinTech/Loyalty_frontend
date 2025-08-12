@@ -1,11 +1,11 @@
-import { useState, useEffect, use, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import khedmah from "../../assets/Frame 92.png";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
 import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 
-const UserCard = () => {
+const ArabicCard = () => {
   const [user, setUser] = useState({
     name: "",
     membership: "Bronze",
@@ -17,15 +17,11 @@ const UserCard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-const progress = useMemo(() => {
-  const total = user.points + user.requiredPoint;
-  const value = total > 0 ? (user.points / total) * 100 : 100;
-  return value;
-}, [user.points, user.requiredPoint]);
+  const progress = useMemo(() => {
+    const total = user.points + user.requiredPoint;
+    return total > 0 ? (user.points / total) * 100 : 100;
+  }, [user.points, user.requiredPoint]);
 
-
-
-  // Use the customer auth hook
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
 
@@ -44,17 +40,13 @@ const progress = useMemo(() => {
 
         if (response.status === 200 && response.data) {
           const customerData = response.data;
-
-          // Get tier name (default to Bronze if not available)
           const tierName = customerData.customer_tier?.en || "Bronze";
           const currentPoints = customerData.point_balance || 0;
-
-          // Get next tier info using the theme system
           const nextTierInfo = getNextTierInfo(tierName, currentPoints);
           const requiredPoint = Number(
             customerData.next_tier?.required_point || 0
           );
-          const userData = {
+          setUser({
             name: customerData.name || "Customer",
             membership: tierName,
             points: currentPoints,
@@ -64,11 +56,7 @@ const progress = useMemo(() => {
             avatar: null,
             requiredPoint,
             nextTierName: customerData.next_tier?.en || null,
-          };
-
-          setUser(userData);
-
-          // Update the stored customer data
+          });
           updateCustomerData(customerData);
         } else {
           setError("Failed to fetch customer data");
@@ -84,32 +72,31 @@ const progress = useMemo(() => {
     fetchCustomerData();
   }, [customerID, apiKey, isAuthenticated, updateCustomerData]);
 
-  // Get the current tier theme
   const theme = getTierTheme(user.membership);
   const formatPoints = (num) => num.toLocaleString("en-US");
 
-
   if (!isAuthenticated) {
     return (
-      <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6">
-        <div className="text-center">
-          <p className="text-red-500 text-sm font-medium">
-            Customer ID and API Key are required
-          </p>
-          <p className="text-gray-500 text-xs mt-2">
-            Please access this page with valid customerID and apiKey parameters
-          </p>
-          <p className="text-gray-400 text-xs mt-2">
-            Example: ?customerID=YOUR_ID&apiKey=YOUR_KEY
-          </p>
-        </div>
+      <div
+        className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-right"
+        dir="rtl"
+      >
+        <p className="text-red-500 text-sm font-medium">
+          Customer ID and API Key are required
+        </p>
+        <p className="text-gray-500 text-xs mt-2">
+          الرجاء الدخول باستخدام customerID و apiKey صالحين
+        </p>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6">
+      <div
+        className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6"
+        dir="rtl"
+      >
         <div className="animate-pulse">
           <div className="h-4 bg-gray-200 rounded mb-2"></div>
           <div className="h-6 bg-gray-200 rounded mb-4"></div>
@@ -123,34 +110,34 @@ const progress = useMemo(() => {
 
   if (error) {
     return (
-      <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6">
-        <div className="text-center">
-          <p className="text-red-500 text-sm">{error}</p>
-          <p className="text-gray-500 text-xs mt-2">
-            Please check your authentication or try again
-          </p>
-        </div>
+      <div
+        className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-right"
+        dir="rtl"
+      >
+        <p className="text-red-500 text-sm">{error}</p>
+        <p className="text-gray-500 text-xs mt-2">
+          يرجى التحقق من بيانات الدخول أو المحاولة مرة أخرى
+        </p>
       </div>
     );
   }
 
   return (
     <div
+      dir="rtl"
       className={`relative ${theme.colors.background.card} rounded-2xl max-w-md mx-auto overflow-hidden ${theme.styles.cardBorder} ${theme.colors.shadow}`}
     >
-      {/* Background overlay with tier-specific gradient */}
       <div
         className={`absolute inset-0 ${theme.colors.background.overlay} opacity-30 rounded-2xl pointer-events-none`}
       ></div>
 
       <div className="relative z-10">
-        {/* Header section */}
-        <div className="flex justify-between items-start px-4 py-4">
-          <div>
+        <div className="flex justify-between items-center px-4 py-4" dir="rtl">
+          <div className="flex flex-col items-end text-right">
             <h2
               className={`${theme.styles.welcomeText} text-sm font-semibold poppins-text mb-1`}
             >
-              Welcome
+              مرحباً
             </h2>
             <h1
               className="text-base font-semibold poppins-text capitalize"
@@ -166,32 +153,15 @@ const progress = useMemo(() => {
           />
         </div>
 
-        {/* Tier badge and points section */}
         <div className="relative flex items-center px-4 mb-2">
-          <img
-            src={theme.badge}
-            alt={`${user.membership} Badge`}
-            className={`absolute left-[-12px] top-1/3 -translate-y-1/2 w-29 h-29 z-0 ${theme.styles.badgeGlow}`}
-            style={{
-              pointerEvents: "none",
-              filter:
-                user.membership === "Silver"
-                  ? "hue-rotate(180deg) saturate(0.5) brightness(1.2)"
-                  : user.membership === "Gold"
-                  ? "hue-rotate(40deg) saturate(1.5) brightness(1.3)"
-                  : user.membership === "Platinum"
-                  ? "hue-rotate(200deg) saturate(0.3) brightness(1.4)"
-                  : "none",
-            }}
-          />
-          <div className="relative z-10 pl-20 flex flex-col">
+          <div className="relative z-10 pr-20 flex flex-col text-right">
             <span
               className="font-semibold text-xl leading-none poppins-text"
               style={{ color: theme.colors.text.primary }}
             >
               {user.membership}
             </span>
-            <div className="flex items-center mt-1 text-xs">
+            <div className="flex items-center justify-end mt-1 text-xs">
               <span
                 className="poppins-text"
                 style={{ color: theme.colors.text.muted }}
@@ -199,37 +169,34 @@ const progress = useMemo(() => {
                 {formatPoints(user.points)}
               </span>
               <span
-                className="ml-1 poppins-text"
+                className="mr-1 poppins-text"
                 style={{ color: theme.colors.text.muted }}
               >
-                Points
+                نقاط
               </span>
-              <ChevronRightIcon
-                className="w-4 h-4 ml-1"
+              <ChevronLeftIcon
+                className="w-4 h-4 mr-1"
                 style={{ color: theme.colors.text.muted }}
               />
             </div>
           </div>
+          <img
+            src={theme.badge}
+            alt={`${user.membership} Badge`}
+            className={`absolute right-[-12px] top-1/3 -translate-y-1/2 w-29 h-29 z-0 ${theme.styles.badgeGlow}`}
+          />
         </div>
-
-        {/* Progress bar section */}
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 text-right">
           <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
             <div
               className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
-              style={{
-                width: `${progress}%`,
-              }}
+              style={{ width: `${progress}%` }}
             ></div>
           </div>
           <span className="text-[#8E8E8E] text-[12px] poppins-text">
-            {user?.requiredPoint === 0 ? (
-              "Maximum Level Reached!"
-            ) : (
-              <>
-                {user.requiredPoint} points to {user.nextTierName}
-              </>
-            )}
+            {user?.requiredPoint === 0
+              ? "أعلى مستوى تم الوصول إليه!"
+              : `${user.requiredPoint} نقاط إلى ${user.nextTierName}`}
           </span>
         </div>
       </div>
@@ -237,4 +204,4 @@ const progress = useMemo(() => {
   );
 };
 
-export default UserCard;
+export default ArabicCard;

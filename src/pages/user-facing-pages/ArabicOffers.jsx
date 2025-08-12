@@ -8,7 +8,7 @@ import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import OfferView from "../../components/User-Facing/OfferView";
 
-const UserOffers = () => {
+const ArabicOffers = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [offerData, setOfferData] = useState([]);
   const [page, setPage] = useState(1);
@@ -36,12 +36,12 @@ const UserOffers = () => {
     try {
       setLoading(true);
       const currentPage = resetData ? 1 : page;
-      
+
       const offers = await sdkApi.getMerchantOffers(customerID, apiKey, {
         categoryId: activeCategory,
         page: currentPage,
         limit: rows,
-        search: searchQuery.trim(), 
+        search: searchQuery.trim(),
         ...(brandId && { brandId }),
       });
 
@@ -52,14 +52,12 @@ const UserOffers = () => {
         setPage(2);
       } else {
         setOfferData((prev) => [...prev, ...newOffers]);
-        if (newOffers.length < rows) {
-          // No more data
-        } else {
+        if (newOffers.length >= rows) {
           setPage((prev) => prev + 1);
         }
       }
     } catch (error) {
-      console.error("Failed to fetch offers:", error);
+      console.error("فشل في جلب العروض:", error);
     } finally {
       setLoading(false);
       setInitialLoading(false);
@@ -71,10 +69,10 @@ const UserOffers = () => {
       const categoriesData = await sdkApi.getCategories(customerID, apiKey, {
         limit: 100,
       });
-      const allCategory = { _id: "", title: { en: "All" } };
+      const allCategory = { _id: "", title: { ar: "الكل" } };
       setCategories([allCategory, ...categoriesData.data]);
     } catch (error) {
-      console.error("Failed to fetch categories:", error);
+      console.error("فشل في جلب الفئات:", error);
     }
   };
 
@@ -84,41 +82,37 @@ const UserOffers = () => {
     }
   }, [customerID, apiKey]);
 
-  // Reset data when category changes
   useEffect(() => {
     setOfferData([]);
     setPage(1);
     setInitialLoading(true);
   }, [activeCategory]);
 
-  // Reset data when search query changes
   useEffect(() => {
     setOfferData([]);
     setPage(1);
     setInitialLoading(true);
   }, [searchQuery]);
 
-  // Fetch offers when dependencies change
   useEffect(() => {
     if (customerID && apiKey) {
       fetchOfferData(true);
     }
   }, [customerID, apiKey, activeCategory, searchQuery]);
 
-  // Debounced search handler
-  const handleSearchChange = useCallback((value) => {
-    if (searchTimeout) {
-      clearTimeout(searchTimeout);
-    }
-    
-    const timeout = setTimeout(() => {
-      setSearchQuery(value);
-    }, 500); // 500ms delay
-    
-    setSearchTimeout(timeout);
-  }, [searchTimeout]);
+  const handleSearchChange = useCallback(
+    (value) => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+      const timeout = setTimeout(() => {
+        setSearchQuery(value);
+      }, 500);
+      setSearchTimeout(timeout);
+    },
+    [searchTimeout]
+  );
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (searchTimeout) {
@@ -137,29 +131,26 @@ const UserOffers = () => {
     <div className="flex flex-col items-center justify-center py-12 px-4">
       <div className="text-6xl text-gray-300 mb-4">🔍</div>
       <h3 className="text-lg font-medium text-gray-600 mb-2">
-        No offers found
+        لا توجد عروض متاحة
       </h3>
       <p className="text-sm text-gray-500 text-center">
-        {searchQuery 
-          ? `No offers found for "${searchQuery}". Try a different search term.`
-          : "Try selecting a different category or check back later for new offers."
-        }
+        {searchQuery
+          ? `لا توجد عروض لكلمة "${searchQuery}". جرب البحث بكلمة أخرى.`
+          : "حاول اختيار فئة مختلفة أو تحقق لاحقًا لعرض عروض جديدة."}
       </p>
     </div>
   );
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen">
-      <div className="flex justify-between items-center p-4 ">
+    <div className="max-w-md mx-auto bg-white min-h-screen" dir="rtl">
+      <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="w-6 h-6 " />
+            <ArrowLeftIcon className="w-6 h-6" />
           </button>
-          <div>
-            <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
-              Offers
-            </h1>
-          </div>
+          <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
+            العروض
+          </h1>
         </div>
       </div>
 
@@ -178,7 +169,7 @@ const UserOffers = () => {
                   : "border border-[#404040] hover:bg-gray-200 text-[#404040]"
               }`}
             >
-              {category?.title?.en}
+              {category?.title?.ar }
             </button>
           ))}
         </div>
@@ -186,11 +177,11 @@ const UserOffers = () => {
 
       <div className="px-4 py-3">
         <div className="relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search offers or merchants..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFE5C9] focus:border-transparent"
+            placeholder="ابحث عن العروض أو المتاجر..."
+            className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFE5C9] focus:border-transparent"
             onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
@@ -207,7 +198,7 @@ const UserOffers = () => {
               offerData?.map((offer, index) => {
                 const params = new URLSearchParams(searchParams);
                 params.set("couponId", offer?._id);
-                const couponUrl = `/user/coupon?${params.toString()}`;
+                const couponUrl = `/user/coupon/ar?${params.toString()}`;
 
                 return (
                   <div key={index}>
@@ -239,4 +230,4 @@ const UserOffers = () => {
   );
 };
 
-export default UserOffers;
+export default ArabicOffers;

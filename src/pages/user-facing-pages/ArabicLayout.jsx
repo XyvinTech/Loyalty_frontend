@@ -6,30 +6,30 @@ import {
   TagIcon as TagSolidIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import PropTypes from "prop-types";
 
-const UserLayout = ({ children, currentPage = "home" }) => {
+const ArabicLayout = ({ children, currentPage = "home" }) => {
   const [activePage, setActivePage] = useState(currentPage);
   const navigate = useNavigate();
   const location = useLocation();
-  const [tierColor, setTierColor] = useState("#DF9872"); // default to Bronze
+  const [tierColor, setTierColor] = useState("#DF9872"); // Bronze default
 
   const { isAuthenticated, customerID, apiKey, customerData } =
     useCustomerAuth();
+
   useEffect(() => {
     if (customerData) {
       const tier = customerData?.customer_tier?.en;
       switch (tier) {
         case "Bronze":
-          setTierColor("#DF9872"); // bronze color
+          setTierColor("#DF9872");
           break;
         case "Silver":
-          setTierColor("#C0C0C0"); // silver color
+          setTierColor("#C0C0C0");
           break;
         case "Gold":
-          setTierColor("#FFD700"); // gold color
+          setTierColor("#FFD700");
           break;
         default:
           setTierColor("#DF9872");
@@ -37,7 +37,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     }
   }, [customerData]);
 
-  // Update active page based on current route
+  // Detect current page
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("dashboard")) setActivePage("home");
@@ -49,44 +49,42 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   const navigationItems = [
     {
       id: "home",
-      label: "Home",
+      label: "الرئيسية",
       icon: HomeIcon,
       activeIcon: HomeSolidIcon,
-      href: "/user/dashboard",
+      href: "/user/dashboard/ar",
     },
     {
       id: "history",
-      label: "History",
+      label: "السجل",
       icon: ClockIcon,
       activeIcon: ClockSolidIcon,
-      href: "/user/history",
+      href: "/user/history/ar",
     },
     {
       id: "offers",
-      label: "Offers",
+      label: "العروض",
       icon: TagIcon,
       activeIcon: TagSolidIcon,
-      href: "/user/offers",
+      href: "/user/offers/ar",
     },
     // {
     //   id: "support",
-    //   label: "Support",
+    //   label: "الدعم",
     //   icon: ChatBubbleLeftRightIcon,
     //   activeIcon: ChatBubbleLeftRightIcon,
-    //   href: "/user/support",
+    //   href: "/user/support/ar",
     // },
   ];
 
   const handleNavigation = (item) => {
     if (!isAuthenticated) {
-      // If not authenticated, show error
-      console.warn("Navigation attempted without authentication");
+      console.warn("محاولة التنقل بدون تسجيل الدخول");
       return;
     }
 
     setActivePage(item.id);
 
-    // Navigate with optional URL parameters for better bookmarking/sharing
     const searchParams = new URLSearchParams();
     if (customerID && apiKey) {
       searchParams.set("customerID", customerID);
@@ -100,19 +98,18 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     navigate(url);
   };
 
-  // Show authentication error if not authenticated
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6" dir="rtl">
         <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
           <div className="text-red-500 text-lg font-semibold mb-2">
-            Authentication Required
+            يتطلب تسجيل الدخول
           </div>
           <p className="text-gray-600 text-sm mb-4">
-            Please access this page with valid customer credentials.
+            الرجاء الدخول باستخدام بيانات العميل الصحيحة.
           </p>
           <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-500">
-            <p className="font-medium mb-1">Required URL format:</p>
+            <p className="font-medium mb-1">صيغة الرابط المطلوبة:</p>
             <p className="font-mono text-xs break-all">
               ?customerID=YOUR_ID&apiKey=YOUR_KEY
             </p>
@@ -123,7 +120,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 pb-20" dir="rtl">
       <main className="min-h-screen">{children}</main>
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
         <div className="flex items-center justify-around max-w-md mx-auto">
@@ -153,9 +150,9 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   );
 };
 
-UserLayout.propTypes = {
+ArabicLayout.propTypes = {
   children: PropTypes.node.isRequired,
   currentPage: PropTypes.string,
 };
 
-export default UserLayout;
+export default ArabicLayout;

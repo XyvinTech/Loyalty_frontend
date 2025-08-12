@@ -42,6 +42,13 @@ import ScrollToTop from "../ui/ScrollToTop";
 import UserBrands from "../pages/user-facing-pages/UserBrands";
 import UserCategories from "../pages/user-facing-pages/UserCategories";
 import Terms from "../pages/user-facing-pages/Terms";
+import ArabicDashboard from "../pages/user-facing-pages/ArabicDashboard";
+import ArabicLayout from "../pages/user-facing-pages/ArabicLayout";
+import ArabicPointsHistory from "../pages/user-facing-pages/ArabicPointHistory";
+import ArabicBrands from "../pages/user-facing-pages/ArabicBrands";
+import ArabicCategories from "../pages/user-facing-pages/ArabicCategories";
+import ArabicOffers from "../pages/user-facing-pages/ArabicOffers";
+import ArabicCouponDetail from "../pages/user-facing-pages/ArabicCouponDetail";
 const RootLayout = () => (
   <AuthProvider>
     <Outlet />
@@ -59,6 +66,12 @@ const UserFacingLayout = () => (
     <ScrollToTop />
     <Outlet />
   </UserLayout>
+);
+const ArabicFacingLayout= () => (
+  <ArabicLayout>
+    <ScrollToTop />
+    <Outlet />
+  </ArabicLayout>
 );
 
 const router = createBrowserRouter([
@@ -111,6 +124,21 @@ const router = createBrowserRouter([
           { path: "/user/terms-and-conditions", element: <Terms /> },
         ],
       },
+            {
+        path: "/user",
+        element: <ArabicFacingLayout />,
+        children: [
+          { path: "/user/dashboard/ar", element: <ArabicDashboard /> },
+          { path: "/user/offers/ar", element: <ArabicOffers /> },
+          { path: "/user/history/ar", element: <ArabicPointsHistory /> },
+          { path: "/user/coupon/ar", element: <ArabicCouponDetail /> },
+          { path: "/user/brands/ar", element: <ArabicBrands /> },
+          { path: "/user/categories/ar", element: <ArabicCategories /> },
+          { path: "/user/support", element: <UserSupport /> },
+          { path: "/user/terms-and-conditions", element: <Terms /> },
+        ],
+      },
+      
     ],
   },
 ]);

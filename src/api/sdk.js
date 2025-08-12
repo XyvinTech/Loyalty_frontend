@@ -6,7 +6,7 @@ const sdkApiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
+  // timeout: 10000,
 });
 
 // SDK API service for customer-facing operations

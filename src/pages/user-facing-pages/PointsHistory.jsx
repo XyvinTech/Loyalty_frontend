@@ -218,12 +218,12 @@ const PointsHistory = () => {
           }}
         >
           {" "}
-          <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4 mb-20">
-            <UserCard />
+          <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4 mb-200">
+            <UserCard  streak/>
           </div>
         </div>
 
-        <div className="w-full bg-white top-50 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
+        <div className="w-full bg-white top-60 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
           {transactions.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-500 text-sm">
@@ -240,11 +240,7 @@ const PointsHistory = () => {
                 <h3 className="text-lg font-semibold text-gray-800 poppins-text">
                   Transaction History
                 </h3>
-                {/* {pagination && (
-                  <span className="text-xs text-gray-500 poppins-text">
-                    {pagination.total_count} transactions
-                  </span>
-                )} */}
+            
               </div>
               {transactions.map((item, idx) => {
                 const lastItem = transactions.length === idx + 1;

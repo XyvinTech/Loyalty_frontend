@@ -16,19 +16,24 @@ const tierSchema = z.object({
   points_required: z
     .number()
     .nonnegative("Points required must be 0 or greater"),
+  hierarchy_level: z
+    .number()
+    .nonnegative("Hierarchy level must be 0 or greater"),
   isActive: z.boolean(),
   description: z.object({
     en: z.array(z.string()).optional(),
     ar: z.array(z.string()).optional(),
   }),
-  tier_point_multiplier: z.array(
-    z.object({
-      appType: z.string().min(1, "App Type is required"),
-      multiplier: z
-        .number()
-        .positive("Multiplier value must be greater than 0"),
-    })
-  ).min(1, "At least one multiplier is required"),
+  tier_point_multiplier: z
+    .array(
+      z.object({
+        appType: z.string().min(1, "App Type is required"),
+        multiplier: z
+          .number()
+          .positive("Multiplier value must be greater than 0"),
+      })
+    )
+    .min(1, "At least one multiplier is required"),
 });
 
 const AddTier = ({ isOpen, onClose, editData }) => {
@@ -49,6 +54,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
     defaultValues: {
       name: { en: "", ar: "" },
       points_required: "",
+      hierarchy_level: 0,
       isActive: true,
       description: { en: [], ar: [] },
       tier_point_multiplier: [{ appType: "", multiplier: "" }],
@@ -65,6 +71,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
       setValue("name.en", editData?.data?.name?.en || "");
       setValue("name.ar", editData?.data?.name?.ar || "");
       setValue("points_required", editData?.data?.points_required || "");
+      setValue("hierarchy_level", editData?.data?.hierarchy_level || "");
       setValue("isActive", editData?.data?.isActive ?? true);
       setValue("description.en", editData?.data?.description?.en || []);
       setValue("description.ar", editData?.data?.description?.ar || []);
@@ -109,6 +116,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
         reset({
           name: { en: "", ar: "" },
           points_required: "",
+          hierarchy_level: "",
           isActive: true,
           description: { en: [], ar: [] },
           tier_point_multiplier: [{ appType: "", multiplier: "" }],
@@ -272,10 +280,24 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                 </div>
               ))}
             </div>
-
+            <div className="flex-1">
+              <label className={labelClass}>Hierachy Level</label>
+              <input
+                type="number"
+                {...register("hierarchy_level", { valueAsNumber: true })}
+                className={inputClass}
+              />
+              {errors.hierarchy_level && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.hierarchy_level.message}
+                </p>
+              )}
+            </div>
             <div className={cardClass}>
               <div className="flex justify-between items-center mb-3">
-                <h3 className={sectionHeadingClass}>Multiplier Configuration</h3>
+                <h3 className={sectionHeadingClass}>
+                  Multiplier Configuration
+                </h3>
                 <button
                   type="button"
                   onClick={addMultiplier}
@@ -316,9 +338,12 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                       <div>
                         <label className={labelClass}>App Type</label>
                         <select
-                          {...register(`tier_point_multiplier.${index}.appType`, {
-                            required: "App Type is required",
-                          })}
+                          {...register(
+                            `tier_point_multiplier.${index}.appType`,
+                            {
+                              required: "App Type is required",
+                            }
+                          )}
                           className={inputClass}
                         >
                           <option value="">Select App Type</option>
@@ -330,7 +355,10 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                         </select>
                         {errors.tier_point_multiplier?.[index]?.appType && (
                           <p className="text-red-500 text-xs mt-1">
-                            {errors.tier_point_multiplier[index].appType.message}
+                            {
+                              errors.tier_point_multiplier[index].appType
+                                .message
+                            }
                           </p>
                         )}
                       </div>
@@ -339,31 +367,39 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                         <input
                           type="number"
                           step="0.01"
-                          {...register(`tier_point_multiplier.${index}.multiplier`, {
-                            valueAsNumber: true,
-                            required: "Multiplier value is required",
-                            min: {
-                              value: 0.01,
-                              message: "Multiplier value must be greater than 0",
-                            },
-                          })}
+                          {...register(
+                            `tier_point_multiplier.${index}.multiplier`,
+                            {
+                              valueAsNumber: true,
+                              required: "Multiplier value is required",
+                              min: {
+                                value: 0.01,
+                                message:
+                                  "Multiplier value must be greater than 0",
+                              },
+                            }
+                          )}
                           placeholder="Enter multiplier (e.g., 1.5)"
                           className={inputClass}
                         />
                         {errors.tier_point_multiplier?.[index]?.multiplier && (
                           <p className="text-red-500 text-xs mt-1">
-                            {errors.tier_point_multiplier[index].multiplier.message}
+                            {
+                              errors.tier_point_multiplier[index].multiplier
+                                .message
+                            }
                           </p>
                         )}
                       </div>
                     </div>
                   </div>
                 ))}
-                {errors.tier_point_multiplier && !errors.tier_point_multiplier[0] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.tier_point_multiplier.message}
-                  </p>
-                )}
+                {errors.tier_point_multiplier &&
+                  !errors.tier_point_multiplier[0] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.tier_point_multiplier.message}
+                    </p>
+                  )}
               </div>
             </div>
           </div>

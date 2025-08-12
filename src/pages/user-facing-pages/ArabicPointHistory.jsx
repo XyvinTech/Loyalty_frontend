@@ -209,11 +209,11 @@ const ArabicPointsHistory = () => {
           }}
         >
           <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4 mb-20">
-            <ArabicCard />
+            <ArabicCard  streak/>
           </div>
         </div>
 
-        <div className="w-full bg-white top-50 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
+        <div className="w-full bg-white top-65 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
           {transactions.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-500 text-sm">

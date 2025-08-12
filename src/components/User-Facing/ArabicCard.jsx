@@ -4,8 +4,13 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
 import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-
-const ArabicCard = () => {
+import {
+  CheckCircleIcon,
+  FireIcon,
+  CalendarDaysIcon,
+  FlagIcon,
+} from "@heroicons/react/24/solid";
+const ArabicCard = ({ streak }) => {
   const [user, setUser] = useState({
     name: "",
     membership: "Bronze",
@@ -14,6 +19,7 @@ const ArabicCard = () => {
     avatar: null,
     requiredPoint: 0,
     nextTierName: null,
+    nextTierProgress: null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -56,6 +62,8 @@ const ArabicCard = () => {
             avatar: null,
             requiredPoint,
             nextTierName: customerData.next_tier?.en || null,
+            nextTierProgress:
+              customerData.next_tier?.next_tier_progress || null, // ✅ Fixed: corrected the path
           });
           updateCustomerData(customerData);
         } else {
@@ -186,19 +194,116 @@ const ArabicCard = () => {
             className={`absolute right-[-12px] top-1/3 -translate-y-1/2 w-29 h-29 z-0 ${theme.styles.badgeGlow}`}
           />
         </div>
-        <div className="px-4 pb-4 text-right">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-            <div
-              className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            ></div>
+        {streak ? (
+          <div className="px-4 pb-4">
+            {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
+              <div className="relative w-full">
+                <div className="absolute top-[14px] left-0 w-full h-[2px] bg-gray-200 rounded-full" />
+
+                <div
+                  className="absolute top-[14px] right-0 h-[2px] rounded-full bg-green-500 transition-all duration-500"
+                  style={{
+                    width: `${
+                      (user.nextTierProgress.streak.completed_periods /
+                        user.nextTierProgress.streak.period_details.length) *
+                      100
+                    }%`,
+                  }}
+                />
+
+                <div className="flex justify-between relative z-10">
+                  {user.nextTierProgress.streak.period_details.map(
+                    (period, index) => {
+                      const isCompleted = period.completed;
+                      const isCurrent =
+                        index ===
+                        user.nextTierProgress.streak.completed_periods;
+
+                      return (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center text-center min-w-[64px]"
+                        >
+                          <div
+                            className={`w-6 h-6 flex items-center justify-center ${
+                              isCompleted
+                                ? "text-green-600"
+                                : isCurrent
+                                ? "text-amber-500"
+                                : "text-gray-400"
+                            }`}
+                          >
+                            {isCompleted ? (
+                              <CheckCircleIcon className="w-5 h-5" />
+                            ) : isCurrent ? (
+                              typeof FireIcon !== "undefined" ? (
+                                <FireIcon className="w-5 h-5 animate-pulse" />
+                              ) : (
+                                <svg
+                                  className="w-5 h-5 animate-pulse"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path d="M12 2s1.5 2 1.5 3.5S12 8 12 8s2-1 2-3 1-3 1-3-3 1-3 0z" />
+                                  <path
+                                    d="M12 10c-3.866 0-7 3.134-7 7a7 7 0 0014 0c0-3.866-3.134-7-7-7z"
+                                    opacity="0.9"
+                                  />
+                                </svg>
+                              )
+                            ) : (
+                              <CalendarDaysIcon className="w-5 h-5" />
+                            )}
+                          </div>
+
+                          <span className="text-[11px] mt-1 text-gray-800">
+                            {period.period_name}
+                          </span>
+                          <span className="text-[10px] text-gray-500">
+                            {period.points_earned} / {period.points_required}
+                          </span>
+                        </div>
+                      );
+                    }
+                  )}
+
+                  <div className="flex flex-col items-center text-center min-w-[64px]">
+                    <div className="w-6 h-6 flex items-center justify-center text-green-700">
+                      <FlagIcon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[11px] mt-1 text-gray-800">
+                      {user.nextTierName}
+                    </span>
+                    <span className="text-[10px] text-gray-500">
+                      Req: {user.requiredPoint || 0} pts
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <span className="text-gray-500 text-xs font-medium">
+                  No streak details available
+                </span>
+              </div>
+            )}
           </div>
-          <span className="text-[#8E8E8E] text-[12px] poppins-text">
-            {user?.requiredPoint === 0
-              ? "أعلى مستوى تم الوصول إليه!"
-              : `${user.requiredPoint} نقاط إلى ${user.nextTierName}`}
-          </span>
-        </div>
+        ) : (
+          <div className="px-4 pb-4 text-right">
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+              <div
+                className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <span className="text-[#8E8E8E] text-[12px] poppins-text">
+              {user?.requiredPoint === 0
+                ? "أعلى مستوى تم الوصول إليه!"
+                : `${user.requiredPoint} نقاط إلى ${user.nextTierName}`}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,8 +4,13 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import sdkApi from "../../api/sdk";
 import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-
-const UserCard = () => {
+import {
+  CheckCircleIcon,
+  FireIcon,
+  CalendarDaysIcon,
+  FlagIcon,
+} from "@heroicons/react/24/solid";
+const UserCard = ({ streak }) => {
   const [user, setUser] = useState({
     name: "",
     membership: "Bronze",
@@ -14,16 +19,15 @@ const UserCard = () => {
     avatar: null,
     requiredPoint: 0,
     nextTierName: null,
+    nextTierProgress: null,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-const progress = useMemo(() => {
-  const total = user.points + user.requiredPoint;
-  const value = total > 0 ? (user.points / total) * 100 : 100;
-  return value;
-}, [user.points, user.requiredPoint]);
-
-
+  const progress = useMemo(() => {
+    const total = user.points + user.requiredPoint;
+    const value = total > 0 ? (user.points / total) * 100 : 100;
+    return value;
+  }, [user.points, user.requiredPoint]);
 
   // Use the customer auth hook
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
@@ -44,7 +48,9 @@ const progress = useMemo(() => {
 
         if (response.status === 200 && response.data) {
           const customerData = response.data;
-
+          console.log("====================================");
+          console.log("customerData", customerData);
+          console.log("====================================");
           // Get tier name (default to Bronze if not available)
           const tierName = customerData.customer_tier?.en || "Bronze";
           const currentPoints = customerData.point_balance || 0;
@@ -64,6 +70,8 @@ const progress = useMemo(() => {
             avatar: null,
             requiredPoint,
             nextTierName: customerData.next_tier?.en || null,
+            nextTierProgress:
+              customerData.next_tier?.next_tier_progress || null, // ✅ Fixed: corrected the path
           };
 
           setUser(userData);
@@ -87,7 +95,6 @@ const progress = useMemo(() => {
   // Get the current tier theme
   const theme = getTierTheme(user.membership);
   const formatPoints = (num) => num.toLocaleString("en-US");
-
 
   if (!isAuthenticated) {
     return (
@@ -138,13 +145,11 @@ const progress = useMemo(() => {
     <div
       className={`relative ${theme.colors.background.card} rounded-2xl max-w-md mx-auto overflow-hidden ${theme.styles.cardBorder} ${theme.colors.shadow}`}
     >
-      {/* Background overlay with tier-specific gradient */}
       <div
         className={`absolute inset-0 ${theme.colors.background.overlay} opacity-30 rounded-2xl pointer-events-none`}
       ></div>
 
       <div className="relative z-10">
-        {/* Header section */}
         <div className="flex justify-between items-start px-4 py-4">
           <div>
             <h2
@@ -166,7 +171,6 @@ const progress = useMemo(() => {
           />
         </div>
 
-        {/* Tier badge and points section */}
         <div className="relative flex items-center px-4 mb-2">
           <img
             src={theme.badge}
@@ -211,27 +215,122 @@ const progress = useMemo(() => {
             </div>
           </div>
         </div>
+        {streak ? (
+          <div className="px-4 pb-4">
+            {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
+              <div className="relative w-full">
+                <div className="absolute top-[14px] left-0 w-full h-[2px] bg-gray-200 rounded-full" />
 
-        {/* Progress bar section */}
-        <div className="px-4 pb-4">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-            <div
-              className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
-              style={{
-                width: `${progress}%`,
-              }}
-            ></div>
-          </div>
-          <span className="text-[#8E8E8E] text-[12px] poppins-text">
-            {user?.requiredPoint === 0 ? (
-              "Maximum Level Reached!"
+                <div
+                  className="absolute top-[14px] left-0 h-[2px] rounded-full bg-green-500 transition-all duration-500"
+                  style={{
+                    width: `${
+                      (user.nextTierProgress.streak.completed_periods /
+                        user.nextTierProgress.streak.period_details.length) *
+                      100
+                    }%`,
+                  }}
+                />
+
+                <div className="flex justify-between relative z-10">
+                  {user.nextTierProgress.streak.period_details.map(
+                    (period, index) => {
+                      const isCompleted = period.completed;
+                      const isCurrent =
+                        index ===
+                        user.nextTierProgress.streak.completed_periods;
+
+                      return (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center text-center min-w-[64px]"
+                        >
+                          <div
+                            className={`w-6 h-6 flex items-center justify-center ${
+                              isCompleted
+                                ? "text-green-600"
+                                : isCurrent
+                                ? "text-amber-500"
+                                : "text-gray-400"
+                            }`}
+                          >
+                            {isCompleted ? (
+                              <CheckCircleIcon className="w-5 h-5" />
+                            ) : isCurrent ? (
+                              typeof FireIcon !== "undefined" ? (
+                                <FireIcon className="w-5 h-5 animate-pulse" />
+                              ) : (
+                                <svg
+                                  className="w-5 h-5 animate-pulse"
+                                  viewBox="0 0 24 24"
+                                  fill="currentColor"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path d="M12 2s1.5 2 1.5 3.5S12 8 12 8s2-1 2-3 1-3 1-3-3 1-3 0z" />
+                                  <path
+                                    d="M12 10c-3.866 0-7 3.134-7 7a7 7 0 0014 0c0-3.866-3.134-7-7-7z"
+                                    opacity="0.9"
+                                  />
+                                </svg>
+                              )
+                            ) : (
+                              <CalendarDaysIcon className="w-5 h-5" />
+                            )}
+                          </div>
+
+                          <span className="text-[11px] mt-1 text-gray-800">
+                            {period.period_name}
+                          </span>
+                          <span className="text-[10px] text-gray-500">
+                            {period.points_earned} / {period.points_required}
+                          </span>
+                        </div>
+                      );
+                    }
+                  )}
+
+                  <div className="flex flex-col items-center text-center min-w-[64px]">
+                    <div className="w-6 h-6 flex items-center justify-center text-green-700">
+                      <FlagIcon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[11px] mt-1 text-gray-800">
+                      {user.nextTierName}
+                    </span>
+                    <span className="text-[10px] text-gray-500">
+                      Req: {user.requiredPoint || 0} pts
+                    </span>
+                  </div>
+                </div>
+              </div>
             ) : (
-              <>
-                {user.requiredPoint} points to {user.nextTierName}
-              </>
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <span className="text-gray-500 text-xs font-medium">
+                  No streak details available
+                </span>
+              </div>
             )}
-          </span>
-        </div>
+          </div>
+        ) : (
+          <div className="px-4 pb-4">
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+              <div
+                className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
+                style={{
+                  width: `${progress}%`,
+                }}
+              ></div>
+            </div>
+            <span className="text-[#8E8E8E] text-[12px] poppins-text">
+              {user?.requiredPoint === 0 ? (
+                "Maximum Level Reached!"
+              ) : (
+                <>
+                  {user.requiredPoint} points to {user.nextTierName}
+                </>
+              )}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

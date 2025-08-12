@@ -111,7 +111,9 @@ const Tiers = () => {
             {item?.isActive ? "Active" : "Inactive"}
           </span>
         </td>
-
+        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {item?.hierarchy_level}
+        </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <button
@@ -191,6 +193,9 @@ const Tiers = () => {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Hierarchy
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions

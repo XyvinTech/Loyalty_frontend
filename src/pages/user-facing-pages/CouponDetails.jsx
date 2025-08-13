@@ -100,13 +100,6 @@ const CouponDetails = () => {
                 {offerData.usagePolicy.frequency.toLowerCase()}
               </li>
             )}
-
-            {offerData?.merchantId?.description?.en && (
-              <li>
-                <strong>Merchant Info:</strong>{" "}
-                {offerData.merchantId.description.en}
-              </li>
-            )}
           </ul>
         </div>
 

@@ -65,9 +65,7 @@ const ArabicCouponDetail = () => {
             {offerData?.merchantId?.title?.ar}
           </span>
         </div>
-        <div className="font-medium text-xl mb-1 ">
-          {offerData?.title?.ar}
-        </div>
+        <div className="font-medium text-xl mb-1 ">{offerData?.title?.ar}</div>
 
         <div>
           <div className="font-semibold text-base mb-2">التفاصيل</div>
@@ -78,9 +76,9 @@ const ArabicCouponDetail = () => {
                 offerData?.validityPeriod?.startDate
               ).toLocaleDateString("ar-EG")}{" "}
               إلى{" "}
-              {new Date(
-                offerData?.validityPeriod?.endDate
-              ).toLocaleDateString("ar-EG")}
+              {new Date(offerData?.validityPeriod?.endDate).toLocaleDateString(
+                "ar-EG"
+              )}
             </li>
 
             {offerData?.discountDetails?.type && (
@@ -107,19 +105,12 @@ const ArabicCouponDetail = () => {
                   : "شهر"}
               </li>
             )}
-
-            {offerData?.merchantId?.description?.ar && (
-              <li>
-                <strong>معلومات التاجر:</strong>{" "}
-                {offerData.merchantId.description.ar}
-              </li>
-            )}
           </ul>
         </div>
 
         {offerData?.termsAndConditions?.length > 0 && (
           <div className="mt-4">
-            <div className="text-xs italic text-gray-600 space-y-1">
+            <div className="text-xs italic text-gray-600 space-y-1" dir="ltr">
               {offerData.termsAndConditions.map((term, idx) => (
                 <p key={idx}>• {term}</p>
               ))}

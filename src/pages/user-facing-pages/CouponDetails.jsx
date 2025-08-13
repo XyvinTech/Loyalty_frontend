@@ -79,26 +79,9 @@ const CouponDetails = () => {
               to{" "}
               {moment(offerData?.validityPeriod?.endDate).locale("en").format("DD-MM-YYYY")}
             </li>
-            {offerData?.discountDetails?.type && (
-              <li>
-                <strong>Discount:</strong>{" "}
-                {offerData.discountDetails.type === "PERCENTAGE"
-                  ? `${offerData.discountDetails.value}% off`
-                  : `Flat ${offerData.discountDetails.value} off`}
-              </li>
-            )}
-
             <li>
               <strong>Redemption Type:</strong> {offerData?.type}
             </li>
-
-            {offerData?.usagePolicy?.frequency && (
-              <li>
-                <strong>Usage Limit:</strong>{" "}
-                {offerData.usagePolicy.maxUsagePerPeriod}x per{" "}
-                {offerData.usagePolicy.frequency.toLowerCase()}
-              </li>
-            )}
             {offerData?.merchantId?.description?.en && (
               <li className="break-words whitespace-pre-line text-xs leading-relaxed">
                 <strong>Merchant Info:</strong>{" "}

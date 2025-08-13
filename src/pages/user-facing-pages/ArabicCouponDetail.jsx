@@ -80,31 +80,9 @@ const ArabicCouponDetail = () => {
                 .locale("ar")
                 .format("DD MMMM YYYY")}
             </li>
-
-            {offerData?.discountDetails?.type && (
-              <li>
-                <strong>الخصم:</strong>{" "}
-                {offerData.discountDetails.type === "PERCENTAGE"
-                  ? `${offerData.discountDetails.value}% خصم`
-                  : `خصم ${offerData.discountDetails.value} ريال`}
-              </li>
-            )}
-
             <li>
               <strong>نوع الاسترداد:</strong> {offerData?.type}
             </li>
-
-            {offerData?.usagePolicy?.frequency && (
-              <li>
-                <strong>حد الاستخدام:</strong>{" "}
-                {offerData.usagePolicy.maxUsagePerPeriod} مرات لكل{" "}
-                {offerData.usagePolicy.frequency.toLowerCase() === "day"
-                  ? "يوم"
-                  : offerData.usagePolicy.frequency.toLowerCase() === "week"
-                  ? "أسبوع"
-                  : "شهر"}
-              </li>
-            )}
             {offerData?.merchantId?.description?.ar && (
               <li className="break-words whitespace-pre-line text-xs leading-relaxed">
                 <strong>Merchant Info:</strong>{" "}

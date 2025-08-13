@@ -80,7 +80,6 @@ const CouponDetails = () => {
                 offerData?.validityPeriod?.endDate
               ).toLocaleDateString()}
             </li>
-
             {offerData?.discountDetails?.type && (
               <li>
                 <strong>Discount:</strong>{" "}

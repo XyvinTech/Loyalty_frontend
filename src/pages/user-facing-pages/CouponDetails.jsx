@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import { AppMainButton } from "../../ui/AppMainButton";
+import moment from "moment";
 
 const CouponDetails = () => {
   const navigate = useNavigate();
@@ -72,13 +73,11 @@ const CouponDetails = () => {
           <ul className="text-xs list-disc pl-5 space-y-2">
             <li>
               <strong>Valid from:</strong>{" "}
-              {new Date(
-                offerData?.validityPeriod?.startDate
-              ).toLocaleDateString()}{" "}
+              {moment(offerData?.validityPeriod?.startDate).locale("en").format(
+                "DD-MM-YYYY"
+              )}{" "}
               to{" "}
-              {new Date(
-                offerData?.validityPeriod?.endDate
-              ).toLocaleDateString()}
+              {moment(offerData?.validityPeriod?.endDate).locale("en").format("DD-MM-YYYY")}
             </li>
             {offerData?.discountDetails?.type && (
               <li>
@@ -98,6 +97,12 @@ const CouponDetails = () => {
                 <strong>Usage Limit:</strong>{" "}
                 {offerData.usagePolicy.maxUsagePerPeriod}x per{" "}
                 {offerData.usagePolicy.frequency.toLowerCase()}
+              </li>
+            )}
+            {offerData?.merchantId?.description?.en && (
+              <li className="break-words whitespace-pre-line text-xs leading-relaxed">
+                <strong>Merchant Info:</strong>{" "}
+                {offerData.merchantId.description.en}
               </li>
             )}
           </ul>

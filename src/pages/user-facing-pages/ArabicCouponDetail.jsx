@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import { AppMainButton } from "../../ui/AppMainButton";
-
+import moment from "moment";
 const ArabicCouponDetail = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -72,13 +72,13 @@ const ArabicCouponDetail = () => {
           <ul className="text-xs list-disc pr-5 space-y-2">
             <li>
               <strong>صالح من:</strong>{" "}
-              {new Date(
-                offerData?.validityPeriod?.startDate
-              ).toLocaleDateString("ar-EG")}{" "}
+              {moment(offerData?.validityPeriod?.startDate)
+                .locale("ar")
+                .format("DD MMMM YYYY")}{" "}
               إلى{" "}
-              {new Date(offerData?.validityPeriod?.endDate).toLocaleDateString(
-                "ar-EG"
-              )}
+              {moment(offerData?.validityPeriod?.endDate)
+                .locale("ar")
+                .format("DD MMMM YYYY")}
             </li>
 
             {offerData?.discountDetails?.type && (
@@ -103,6 +103,12 @@ const ArabicCouponDetail = () => {
                   : offerData.usagePolicy.frequency.toLowerCase() === "week"
                   ? "أسبوع"
                   : "شهر"}
+              </li>
+            )}
+            {offerData?.merchantId?.description?.ar && (
+              <li className="break-words whitespace-pre-line text-xs leading-relaxed">
+                <strong>Merchant Info:</strong>{" "}
+                {offerData.merchantId.description.ar}
               </li>
             )}
           </ul>

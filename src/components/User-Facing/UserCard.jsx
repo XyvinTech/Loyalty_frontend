@@ -222,9 +222,7 @@ const UserCard = ({ streak }) => {
                   className="absolute top-[14px] left-0 h-[2px] rounded-full bg-green-500 transition-all duration-500"
                   style={{
                     width: `${
-                      (user.nextTierProgress.streak.completed_periods /
-                        user.nextTierProgress.streak.period_details.length) *
-                      100
+                      user.nextTierProgress.streak.percentage 
                     }%`,
                   }}
                 />

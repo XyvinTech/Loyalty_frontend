@@ -69,7 +69,7 @@ const ArabicDashboard = () => {
           }}
         ></div>
         <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4">
-          <ArabicCard />
+          <ArabicCard streak />
         </div>
       </div>
 

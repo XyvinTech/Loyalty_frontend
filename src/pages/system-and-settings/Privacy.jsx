@@ -25,7 +25,6 @@ useEffect(() => {
   const fetchData = async () => {
     try {
       const response = await subAdminApi.getSubAdmin();
-      console.log(response.data);
       // Set admin options from the response
       if (response.data && Array.isArray(response.data)) {
         setAdminOptions(response.data);

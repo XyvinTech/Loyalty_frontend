@@ -107,6 +107,7 @@ const MerchantOffers = () => {
               </>
             }
             onClick={() => {
+              setData(null);
               setAddOpen(true);
             }}
           />

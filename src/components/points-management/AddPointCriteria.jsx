@@ -25,7 +25,6 @@ const AddPointCriteria = ({ isOpen, onClose, editData }) => {
   const { data: appTypes } = useGetAppTypes();
   const { useGetPaymentMethods } = usePaymentMethod();
   const { data: paymentMethods } = useGetPaymentMethods();
-  console.log("paymentMethods", paymentMethods);
 
   const {
     register,

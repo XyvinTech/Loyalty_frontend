@@ -391,6 +391,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
         {
           onSuccess: (data) => {
             addToast({ type: "success", message: data?.data });
+            setSelectedOfferType(null);
+            setImagePreview(null);
+            setOriginalFile(null);
+            setIsCropping(false);
+            setBulkCodes([]);
             reset();
             onClose();
           },
@@ -425,6 +430,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
             type: "success",
             message: data?.data,
           });
+          setSelectedOfferType(null);
+          setImagePreview(null);
+          setOriginalFile(null);
+          setIsCropping(false);
+          setBulkCodes([]);
           reset();
           onClose();
         },
@@ -451,13 +461,14 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
   const handleBack = () => {
     setSelectedOfferType(null);
-    reset();
-    onClose();
-    setImagePreview("");
+    setImagePreview(null);
     setOriginalFile(null);
     setIsCropping(false);
+    setBulkCodes([]);
+    setActiveLanguage("en");
+    reset();
+    onClose();
   };
-
   const addCondition = () => {
     const currentConditions = watch("conditions") || [];
     setValue("conditions", [

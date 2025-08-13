@@ -48,9 +48,6 @@ const UserCard = ({ streak }) => {
 
         if (response.status === 200 && response.data) {
           const customerData = response.data;
-          console.log("====================================");
-          console.log("customerData", customerData);
-          console.log("====================================");
           // Get tier name (default to Bronze if not available)
           const tierName = customerData.customer_tier?.en || "Bronze";
           const currentPoints = customerData.point_balance || 0;

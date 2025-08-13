@@ -100,30 +100,20 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6" dir="rtl">
-        <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
-          <div className="text-red-500 text-lg font-semibold mb-2">
-            يتطلب تسجيل الدخول
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            الرجاء الدخول باستخدام بيانات العميل الصحيحة.
-          </p>
-          <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-500">
-            <p className="font-medium mb-1">صيغة الرابط المطلوبة:</p>
-            <p className="font-mono text-xs break-all">
-              ?customerID=YOUR_ID&apiKey=YOUR_KEY
-            </p>
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20" >
+    <div className="min-h-screen bg-gray-50 pb-20">
       <main className="min-h-screen">{children}</main>
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
-        <div className="flex items-center justify-around max-w-md mx-auto"dir="rtl">
+        <div
+          className="flex items-center justify-around max-w-md mx-auto"
+          dir="rtl"
+        >
           {navigationItems.map((item) => {
             const isActive = activePage === item.id;
             const IconComponent = isActive ? item.activeIcon : item.icon;

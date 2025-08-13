@@ -101,26 +101,14 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   };
 
   // Show authentication error if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
-          <div className="text-red-500 text-lg font-semibold mb-2">
-            Authentication Required
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            Please access this page with valid customer credentials.
-          </p>
-          <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-500">
-            <p className="font-medium mb-1">Required URL format:</p>
-            <p className="font-mono text-xs break-all">
-              ?customerID=YOUR_ID&apiKey=YOUR_KEY
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+ if (!isAuthenticated) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+  );
+}
+
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">

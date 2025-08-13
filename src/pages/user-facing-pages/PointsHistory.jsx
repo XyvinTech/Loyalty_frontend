@@ -295,7 +295,7 @@ const PointsHistory = () => {
               )}
               {!pagination?.has_next && transactions.length > 0 && (
                 <div className="flex justify-center py-3 text-gray-400 text-xs">
-                  You've reached the end of your transaction history
+                  You've reached the end of last one year transaction history
                 </div>
               )}
             </>

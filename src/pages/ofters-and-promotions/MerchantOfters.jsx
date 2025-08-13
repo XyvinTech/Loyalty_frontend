@@ -195,7 +195,7 @@ const MerchantOffers = () => {
                       <div className="text-xs">
                         <span className="text-gray-500">Valid Until</span>
                         <p className="font-medium text-gray-900">
-                          {moment(offer.validityPeriod?.endDate).format(
+                          {moment(offer.validityPeriod?.endDate).locale("en").format(
                             "DD MMM YYYY"
                           )}
                         </p>
@@ -267,7 +267,7 @@ const MerchantOffers = () => {
                         <div className="text-center text-xs">
                           <span className="text-gray-500">Valid Until</span>
                           <p className="font-medium text-gray-900">
-                            {moment(offer.validityPeriod?.endDate).format(
+                            {moment(offer.validityPeriod?.endDate).locale("en").format(
                               "DD MMM YYYY"
                             )}
                           </p>

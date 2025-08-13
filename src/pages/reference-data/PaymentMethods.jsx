@@ -222,7 +222,7 @@ const PaymentMethods = () => {
                     {item?.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">
-                    {moment(item?.createdAt).format("DD-MM-YYYY")}
+                    {moment(item?.createdAt).locale("en").format("DD-MM-YYYY")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center gap-2">

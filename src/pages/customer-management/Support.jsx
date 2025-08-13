@@ -100,7 +100,7 @@ const Support = () => {
           </span>
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {item?.createdAt ? moment(item.createdAt).format("M/D/YYYY") : "-"}
+          {item?.createdAt ? moment(item.createdAt).locale("en").format("M/D/YYYY") : "-"}
         </td>
         <td
           className="px-6 py-4 whitespace-nowrap text-sm hover:text-green-500 text-slate-400 cursor-pointer"

@@ -45,6 +45,65 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
   const { useGetTiers } = useTiers();
   const { data: tiers } = useGetTiers();
   const [bulkCodes, setBulkCodes] = useState([]);
+  const merchantOptions = useMemo(
+    () =>
+      merchants?.data?.map((merchant) => ({
+        value: merchant._id,
+        label: merchant.title?.en || merchant.title,
+        data: merchant,
+      })) || [],
+    [merchants]
+  );
+
+  const couponCategoryOptions = useMemo(
+    () =>
+      couponCategories?.data?.map((category) => ({
+        value: category._id,
+        label: category.title?.en || category.title,
+        data: category,
+      })) || [],
+    [couponCategories]
+  );
+
+  // Custom styles for the select components
+  const selectStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: "1px solid #E5E7EB",
+      borderRadius: "0.375rem",
+      padding: "2px",
+      boxShadow: state.isFocused ? "0 0 0 1px #10B981" : "none",
+      "&:hover": {
+        borderColor: "#10B981",
+      },
+      fontSize: "0.875rem",
+      minHeight: "38px",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      fontSize: "0.875rem",
+      backgroundColor: state.isSelected
+        ? "#10B981"
+        : state.isFocused
+        ? "#F0FDF4"
+        : "white",
+      color: state.isSelected ? "white" : "#374151",
+      "&:hover": {
+        backgroundColor: state.isSelected ? "#10B981" : "#F0FDF4",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#9CA3AF",
+      fontSize: "0.875rem",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      fontSize: "0.875rem",
+      color: "#374151",
+    }),
+  };
+
   const handleBulkCodesChange = (codes) => {
     setBulkCodes(codes);
   };
@@ -585,7 +644,106 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
             </div>
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Basic Offer Details</h3>
+
               <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>Merchant</label>
+                  <Controller
+                    name="merchantId"
+                    control={control}
+                    rules={{ required: "Merchant is required" }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={
+                          merchantOptions.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        }
+                        onChange={(selectedOption) =>
+                          field.onChange(selectedOption?.value || "")
+                        }
+                        options={merchantOptions}
+                        placeholder="Search and select merchant..."
+                        isSearchable={true}
+                        isClearable={true}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        styles={selectStyles}
+                        filterOption={(option, searchText) => {
+                          if (!searchText) return true;
+                          const searchLower = searchText.toLowerCase();
+                          return (
+                            option.label.toLowerCase().includes(searchLower) ||
+                            option.data.title?.ar
+                              ?.toLowerCase()
+                              .includes(searchLower) ||
+                            false
+                          );
+                        }}
+                        noOptionsMessage={({ inputValue }) =>
+                          inputValue
+                            ? `No merchants found for "${inputValue}"`
+                            : "No merchants available"
+                        }
+                      />
+                    )}
+                  />
+                  {errors.merchantId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.merchantId.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className={labelClass}>Coupon Category</label>
+                  <Controller
+                    name="couponCategoryId"
+                    control={control}
+                    rules={{ required: "Coupon Category is required" }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={
+                          couponCategoryOptions.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        }
+                        onChange={(selectedOption) =>
+                          field.onChange(selectedOption?.value || "")
+                        }
+                        options={couponCategoryOptions}
+                        placeholder="Search and select category..."
+                        isSearchable={true}
+                        isClearable={true}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        styles={selectStyles}
+                        filterOption={(option, searchText) => {
+                          if (!searchText) return true;
+                          const searchLower = searchText.toLowerCase();
+                          return (
+                            option.label.toLowerCase().includes(searchLower) ||
+                            option.data.title?.ar
+                              ?.toLowerCase()
+                              .includes(searchLower) ||
+                            false
+                          );
+                        }}
+                        noOptionsMessage={({ inputValue }) =>
+                          inputValue
+                            ? `No categories found for "${inputValue}"`
+                            : "No categories available"
+                        }
+                      />
+                    )}
+                  />
+                  {errors.couponCategoryId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.couponCategoryId.message}
+                    </p>
+                  )}
+                </div>
                 {selectedOfferType === "PRE_GENERATED" && (
                   <div>
                     <label className={labelClass}>Offer Code</label>
@@ -655,48 +813,6 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                   {errors.title?.[activeLanguage] && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.title[activeLanguage].message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className={labelClass}>Merchant</label>
-                  <select
-                    {...register("merchantId", {
-                      required: "Merchant is required",
-                    })}
-                    className={inputClass}
-                  >
-                    <option value="">Select Merchant</option>
-                    {merchants?.data?.map((merchant) => (
-                      <option key={merchant._id} value={merchant._id}>
-                        {merchant.title?.en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.merchantId && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.merchantId.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className={labelClass}>Coupon Category</label>
-                  <select
-                    {...register("couponCategoryId", {
-                      required: "Coupon Category is required",
-                    })}
-                    className={inputClass}
-                  >
-                    <option value="">Select Coupon Category</option>
-                    {couponCategories?.data?.map((category) => (
-                      <option key={category?._id} value={category?._id}>
-                        {category.title?.en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.couponCategoryId && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.couponCategoryId.message}
                     </p>
                   )}
                 </div>

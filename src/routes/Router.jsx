@@ -135,7 +135,7 @@ const router = createBrowserRouter([
           { path: "/user/brands/ar", element: <ArabicBrands /> },
           { path: "/user/categories/ar", element: <ArabicCategories /> },
           { path: "/user/support", element: <UserSupport /> },
-          { path: "/user/terms-and-conditions", element: <Terms /> },
+          { path: "/user/terms-and-conditions/ar", element: <Terms /> },
         ],
       },
       

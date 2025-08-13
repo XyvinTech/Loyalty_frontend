@@ -28,8 +28,8 @@ const OfferView = ({ product, onClick }) => {
         <div className="flex items-center gap-1 text-[#0A7800] mt-1 text-sm">
           <CalendarDateRangeIcon className="w-4 h-4" />
           <span>
-            {moment(product?.validityPeriod?.startDate).format("DD MMM YYYY")} –{" "}
-            {moment(product?.validityPeriod?.endDate).format("DD MMM YYYY")}
+            {moment(product?.validityPeriod?.startDate).locale('en').format("DD MMM YYYY")} –{" "}
+            {moment(product?.validityPeriod?.endDate).locale('en').format("DD MMM YYYY")}
           </span>
         </div>
       </div>

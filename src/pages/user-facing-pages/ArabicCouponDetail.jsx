@@ -121,7 +121,7 @@ const ArabicCouponDetail = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions")}
+            onClick={() => navigate("/user/terms-and-conditions/ar")}
           >
             الشروط والأحكام
           </p>

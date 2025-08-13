@@ -43,7 +43,7 @@ const ArabicCouponDetail = () => {
       <div className="relative bg-[#23243A]  pb-0">
         <button
           className="absolute top-4 left-4 bg-white w-8 h-8 bg-opacity-50 rounded-full p-0 flex items-center justify-center cursor-pointer"
-          onClick={() => navigate("/user/offers")}
+          onClick={() => navigate("/user/offers/ar")}
         >
           <ArrowLeftIcon className="w-3 h-3 text-black" />
         </button>

@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
-import OfferView from "../../components/User-Facing/OfferView";
+import ArabicOfferView from "../../components/User-Facing/ArabicOfferView";
 
 const ArabicOffers = () => {
   const [activeCategory, setActiveCategory] = useState("");
@@ -202,7 +202,7 @@ const ArabicOffers = () => {
 
                 return (
                   <div key={index}>
-                    <OfferView
+                    <ArabicOfferView
                       onClick={() => navigate(couponUrl)}
                       product={offer}
                     />

@@ -76,9 +76,8 @@ const ArabicDashboard = () => {
       <div className=" bg-white  rounded-t-3xl p-4 mt-10">
         <img src={bg} alt="Background decoration" />
         <div className="flex items-center justify-between mt-4 poppins-text mb-4">
-          <h2 className="text-sm font-semibold">القسائم</h2>
           <AppButton name={"عرض كل القسائم"} variant={variant} />
-
+          <h2 className="text-sm font-semibold">القسائم</h2>
         </div>
         <div
           className="flex space-x-3 overflow-x-auto scrollbar-hide"
@@ -94,13 +93,12 @@ const ArabicDashboard = () => {
           ))}
         </div>
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
-        
-          <h2 className="text-sm font-semibold">العلامات التجارية</h2>
-            <AppButton
+          <AppButton
             name={"عرض جميع العلامات التجارية"}
             variant={variant}
             onClick={() => navigate("/user/brands/ar")}
-          />{" "}
+          />
+          <h2 className="text-sm font-semibold">العلامات التجارية</h2>{" "}
         </div>
 
         <div
@@ -175,7 +173,9 @@ const ArabicDashboard = () => {
             <div
               key={category?._id}
               onClick={() =>
-                navigate("/user/offers/ar", { state: { category: category?._id } })
+                navigate("/user/offers/ar", {
+                  state: { category: category?._id },
+                })
               }
               className="flex flex-col items-center min-w-[89px] w-[89px]"
             >

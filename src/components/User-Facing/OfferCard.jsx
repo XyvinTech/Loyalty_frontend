@@ -1,4 +1,5 @@
 import moment from "moment/moment";
+moment.locale('en');
 import { useNavigate, useSearchParams } from "react-router-dom";
 const OfferCard = ({ data, tier }) => {
   const {

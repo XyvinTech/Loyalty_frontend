@@ -23,18 +23,28 @@ const ArabicOfferView = ({ product, onClick }) => {
         className="w-20 h-20 rounded-md object-cover"
       />
 
-      <div className="flex-1 text-right"> {/* Right aligned for Arabic */}
+      <div className="flex-1 text-right">
+        {" "}
+        {/* Right aligned for Arabic */}
         <p className="text-base font-semibold text-black poppins-text">
           {product?.title?.ar}
         </p>
         <p className="text-sm text-gray-800 poppins-text">
-          {product?.merchantId?.title?.ar }
+          {product?.merchantId?.title?.ar}
         </p>
-        <div className="flex items-center justify-end gap-1 text-[#0A7800] mt-1 text-sm">
+        <div
+          className="flex items-center justify-start gap-1 text-[#0A7800] mt-1 text-sm text-right"
+          dir="rtl"
+        >
           <CalendarDateRangeIcon className="w-4 h-4" />
           <span>
-            {moment(product?.validityPeriod?.startDate).format("DD MMM YYYY")} –{" "}
-            {moment(product?.validityPeriod?.endDate).format("DD MMM YYYY")}
+            {moment(product?.validityPeriod?.startDate)
+              .locale("ar")
+              .format("DD MMM YYYY")}{" "}
+            –{" "}
+            {moment(product?.validityPeriod?.endDate)
+              .locale("ar")
+              .format("DD MMM YYYY")}
           </span>
         </div>
       </div>

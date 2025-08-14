@@ -254,7 +254,7 @@ const ArabicPointsHistory = () => {
                     </div>
                     <div className="flex-1 poppins-text">
                       <div className="font-medium text-[#1E2022] text-sm mb-2">
-                        {item.title}
+                        {item.type === "earned" ? "النقاط المكتسبة" : "النقاط المستبدلة"}
                       </div>
                       <div className="text-xs opacity-40">
                         {item.transaction_id}

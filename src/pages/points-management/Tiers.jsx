@@ -161,6 +161,7 @@ const Tiers = () => {
               }
               onClick={() => {
                 setOpen(true);
+                setData(null);
               }}
             />
           </div>

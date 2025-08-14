@@ -23,8 +23,8 @@ const MerchantOffers = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [data, setData] = useState(null);
-  const { getMerchantOffers, offterfById, deleteMerchantOffer } = useOffers();
-  const { data: singleData } = offterfById(data?.id);
+  const { getMerchantOffers, offerById, deleteMerchantOffer } = useOffers();
+  const { data: singleData } = offerById(data?.id);
   const [activeTab, setActiveTab] = useState("ALL");
   const {
     data: offerData,

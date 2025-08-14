@@ -79,9 +79,7 @@ const CouponDetails = () => {
               to{" "}
               {moment(offerData?.validityPeriod?.endDate).locale("en").format("DD-MM-YYYY")}
             </li>
-            <li>
-              <strong>Redemption Type:</strong> {offerData?.type}
-            </li>
+           
             {offerData?.merchantId?.description?.en && (
               <li className="break-words whitespace-pre-line text-xs leading-relaxed">
                 <strong>Merchant Info:</strong>{" "}

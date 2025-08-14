@@ -80,12 +80,10 @@ const ArabicCouponDetail = () => {
                 .locale("ar")
                 .format("DD MMMM YYYY")}
             </li>
-            <li>
-              <strong>نوع الاسترداد:</strong> {offerData?.type}
-            </li>
+          
             {offerData?.merchantId?.description?.ar && (
               <li className="break-words whitespace-pre-line text-xs leading-relaxed">
-                <strong>Merchant Info:</strong>{" "}
+                <strong>تفاصيل التاجر</strong>{" "}
                 {offerData.merchantId.description.ar}
               </li>
             )}

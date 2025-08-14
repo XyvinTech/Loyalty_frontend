@@ -80,7 +80,7 @@ const ArabicCard = ({ streak }) => {
               : 0,
             avatar: null,
             requiredPoint,
-            nextTierName: customerData.next_tier?.en || null,
+            nextTierName: customerData.next_tier?.ar || null,
             nextTierProgress:
               customerData.next_tier?.next_tier_progress || null, // ✅ Fixed: corrected the path
           });

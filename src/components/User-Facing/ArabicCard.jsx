@@ -4,12 +4,31 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
 import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
+import moment from "moment";
+import "moment/locale/ar"; // Arabic locale
+moment.locale("ar");
 import {
   CheckCircleIcon,
   FireIcon,
   CalendarDaysIcon,
   FlagIcon,
 } from "@heroicons/react/24/solid";
+moment.updateLocale("ar", {
+  months: [
+    "يناير",
+    "فبراير",
+    "مارس",
+    "أبريل",
+    "مايو",
+    "يونيو",
+    "يوليو",
+    "أغسطس",
+    "سبتمبر",
+    "أكتوبر",
+    "نوفمبر",
+    "ديسمبر",
+  ],
+});
 const ArabicCard = ({ streak }) => {
   const [user, setUser] = useState({
     name: "",
@@ -258,7 +277,10 @@ const ArabicCard = ({ streak }) => {
                           </div>
 
                           <span className="text-[11px] mt-1 text-gray-800">
-                            {period.period_name}
+                            {moment(
+                              period.date_range.split(" - ")[0],
+                              "D/M/YYYY"
+                            ).locale("ar").format("MMMM")}
                           </span>
                           <span className="text-[10px] text-gray-500">
                             {period.points_earned} / {period.points_required}
@@ -270,13 +292,10 @@ const ArabicCard = ({ streak }) => {
 
                   <div className="flex flex-col items-center text-center min-w-[64px]">
                     <div className="w-6 h-6 flex items-center justify-center text-green-700">
-                      <FlagIcon className="w-5 h-5" />
+                      <FlagIcon className="w-8 h-8" />
                     </div>
-                    <span className="text-[11px] mt-1 text-gray-800">
+                    <span className="text-[16px] mt-1 text-gray-800">
                       {user.nextTierName}
-                    </span>
-                    <span className="text-[10px] text-gray-500">
-                      Req: {user.requiredPoint || 0} pts
                     </span>
                   </div>
                 </div>

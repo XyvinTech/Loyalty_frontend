@@ -2,6 +2,7 @@ import { useState, useEffect, use, useMemo } from "react";
 import khedmah from "../../assets/Frame 92.png";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import sdkApi from "../../api/sdk";
+import moment from "moment";
 import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import {
@@ -155,7 +156,7 @@ const UserCard = ({ streak }) => {
               Welcome
             </h2>
             <h1
-              className="text-base font-semibold poppins-text capitalize"
+              className="text-base font-semibold poppins-text uppercase"
               style={{ color: theme.colors.text.primary }}
             >
               {user.name} !
@@ -221,9 +222,7 @@ const UserCard = ({ streak }) => {
                 <div
                   className="absolute top-[14px] left-0 h-[2px] rounded-full bg-green-500 transition-all duration-500"
                   style={{
-                    width: `${
-                      user.nextTierProgress.streak.percentage 
-                    }%`,
+                    width: `${user.nextTierProgress.streak.percentage}%`,
                   }}
                 />
 
@@ -274,7 +273,12 @@ const UserCard = ({ streak }) => {
                           </div>
 
                           <span className="text-[11px] mt-1 text-gray-800">
-                            {period.period_name}
+                            {moment(
+                              period.date_range.split(" - ")[0],
+                              "D/M/YYYY"
+                            )
+                              .locale("en")
+                              .format("MMMM")}
                           </span>
                           <span className="text-[10px] text-gray-500">
                             {period.points_earned} / {period.points_required}
@@ -286,13 +290,10 @@ const UserCard = ({ streak }) => {
 
                   <div className="flex flex-col items-center text-center min-w-[64px]">
                     <div className="w-6 h-6 flex items-center justify-center text-green-700">
-                      <FlagIcon className="w-5 h-5" />
+                      <FlagIcon className="w-8 h-8" />
                     </div>
-                    <span className="text-[11px] mt-1 text-gray-800">
+                    <span className="text-[16px] mt-1 text-gray-800">
                       {user.nextTierName}
-                    </span>
-                    <span className="text-[10px] text-gray-500">
-                      Req: {user.requiredPoint || 0} pts
                     </span>
                   </div>
                 </div>

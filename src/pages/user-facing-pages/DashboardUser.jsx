@@ -74,8 +74,8 @@ const DashboardUser = () => {
       </div>
 
       <div className=" bg-white  rounded-t-3xl p-4 mt-10">
-        <img src={bg} alt="Background decoration" />
-        <div className="flex items-center justify-between mt-4 poppins-text mb-4">
+        {/* <img src={bg} alt="Background decoration" /> */}
+        {/* <div className="flex items-center justify-between mt-4 poppins-text mb-4">
           <h2 className="text-sm font-semibold ">Coupons</h2>
 
           <AppButton name={"View All Coupons"} variant={variant} />
@@ -92,7 +92,7 @@ const DashboardUser = () => {
               <CouponCard data={item} />
             </div>
           ))}
-        </div>
+        </div> */}
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
           <h2 className="text-sm font-semibold ">Brands</h2>
           <AppButton

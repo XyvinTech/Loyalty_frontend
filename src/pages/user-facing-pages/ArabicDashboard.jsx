@@ -74,7 +74,7 @@ const ArabicDashboard = () => {
       </div>
 
       <div className=" bg-white  rounded-t-3xl p-4 mt-10">
-        <img src={bg} alt="Background decoration" />
+        {/* <img src={bg} alt="Background decoration" />
         <div className="flex items-center justify-between mt-4 poppins-text mb-4">
           <AppButton name={"عرض كل القسائم"} variant={variant} />
           <h2 className="text-sm font-semibold">القسائم</h2>
@@ -91,7 +91,7 @@ const ArabicDashboard = () => {
               <ArabicCouponCard data={item} />
             </div>
           ))}
-        </div>
+        </div> */}
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
           <AppButton
             name={"عرض جميع العلامات التجارية"}

@@ -65,7 +65,7 @@ const ArabicCard = ({ streak }) => {
 
         if (response.status === 200 && response.data) {
           const customerData = response.data;
-          const tierName = customerData.customer_tier?.en || "Bronze";
+          const tierName = customerData.customer_tier?.ar || "Bronze";
           const currentPoints = customerData.point_balance || 0;
           const nextTierInfo = getNextTierInfo(tierName, currentPoints);
           const requiredPoint = Number(

@@ -44,11 +44,11 @@ const ArabicDashboard = () => {
             setTierColor("#DF9872");
             setBackgroundImage(bronze);
         }
-        const offers = await sdkApi.getMerchantOffers(customerID, apiKey);
+        const offers = await sdkApi.getMerchantOffers(customerID, apiKey, {limit: 20});
         setOfferData(offers.data);
-        const brandData = await sdkApi.getBrands(customerID, apiKey);
+        const brandData = await sdkApi.getBrands(customerID, apiKey, {limit: 20});
         setBrands(brandData.data);
-        const categoriesData = await sdkApi.getCategories(customerID, apiKey);
+        const categoriesData = await sdkApi.getCategories(customerID, apiKey, {limit: 20});
         setCategories(categoriesData.data);
       } catch (error) {
         console.error("Failed to fetch customer data:", error);
@@ -108,7 +108,7 @@ const ArabicDashboard = () => {
             msOverflowStyle: "auto",
           }}
         >
-          {brands?.slice(0, 5).map((item) => (
+          {brands?.slice(0, 15).map((item) => (
             <div key={item?._id} className="min-w-[70px] mb-3">
               <div
                 onClick={() =>
@@ -144,7 +144,7 @@ const ArabicDashboard = () => {
             msOverflowStyle: "auto",
           }}
         >
-          {offerData?.slice(0, 5)?.map((offer) => (
+          {offerData?.slice(0, 15)?.map((offer) => (
             <div key={offer._id} className="min-w-[192px]">
               <ArabicOfferCard data={offer} tier={tierColor} />
             </div>
@@ -169,7 +169,7 @@ const ArabicDashboard = () => {
             msOverflowStyle: "auto",
           }}
         >
-          {categories?.slice(0, 5)?.map((category) => (
+          {categories?.slice(0, 15)?.map((category) => (
             <div
               key={category?._id}
               onClick={() =>

@@ -59,9 +59,9 @@ const ArabicCouponDetail = () => {
           <img
             src={offerData?.merchantId?.image}
             alt="الشركة"
-            className="w-14 h-14 mr-2"
+            className="w-14 h-14 ml-2"
           />
-          <span className="font-semibold text-lg ">
+          <span className="font-semibold text-lg  ">
             {offerData?.merchantId?.title?.ar}
           </span>
         </div>

@@ -160,9 +160,9 @@ const ArabicCard = ({ streak }) => {
 
       <div className="relative z-10">
         <div className="flex justify-between items-center px-4 py-4" dir="rtl">
-          <div className="flex flex-col items-end text-right">
+          <div className="flex flex-col text-right" dir="rtl">
             <h2
-              className={`${theme.styles.welcomeText} text-sm font-semibold poppins-text mb-1`}
+              className={`${theme.styles.welcomeText} text-[18px] font-semibold poppins-text mb-1`}
             >
               مرحباً
             </h2>
@@ -173,6 +173,7 @@ const ArabicCard = ({ streak }) => {
               {user.name} !
             </h1>
           </div>
+
           <img
             src={khedmah}
             alt="Khedmah Logo"
@@ -280,7 +281,9 @@ const ArabicCard = ({ streak }) => {
                             {moment(
                               period.date_range.split(" - ")[0],
                               "D/M/YYYY"
-                            ).locale("ar").format("MMMM")}
+                            )
+                              .locale("ar")
+                              .format("MMMM")}
                           </span>
                           <span className="text-[10px] text-gray-500">
                             {period.points_earned} / {period.points_required}

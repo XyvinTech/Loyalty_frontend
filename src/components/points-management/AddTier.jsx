@@ -70,7 +70,6 @@ const AddTier = ({ isOpen, onClose, editData }) => {
     if (editData) {
       setValue("name.en", editData?.data?.name?.en || "");
       setValue("name.ar", editData?.data?.name?.ar || "");
-      // Fixed: Use !== undefined to properly handle 0 values
       setValue(
         "points_required",
         editData?.data?.points_required !== undefined

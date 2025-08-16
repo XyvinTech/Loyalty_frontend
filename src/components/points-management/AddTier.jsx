@@ -70,8 +70,19 @@ const AddTier = ({ isOpen, onClose, editData }) => {
     if (editData) {
       setValue("name.en", editData?.data?.name?.en || "");
       setValue("name.ar", editData?.data?.name?.ar || "");
-      setValue("points_required", editData?.data?.points_required || "");
-      setValue("hierarchy_level", editData?.data?.hierarchy_level || "");
+      // Fixed: Use !== undefined to properly handle 0 values
+      setValue(
+        "points_required",
+        editData?.data?.points_required !== undefined
+          ? editData.data.points_required
+          : ""
+      );
+      setValue(
+        "hierarchy_level",
+        editData?.data?.hierarchy_level !== undefined
+          ? editData.data.hierarchy_level
+          : 0
+      );
       setValue("isActive", editData?.data?.isActive ?? true);
       setValue("description.en", editData?.data?.description?.en || []);
       setValue("description.ar", editData?.data?.description?.ar || []);
@@ -281,7 +292,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
               ))}
             </div>
             <div className="flex-1">
-              <label className={labelClass}>Hierachy Level</label>
+              <label className={labelClass}>Hierarchy Level</label>
               <input
                 type="number"
                 {...register("hierarchy_level", { valueAsNumber: true })}

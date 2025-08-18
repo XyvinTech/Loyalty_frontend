@@ -4,6 +4,8 @@ import {
   HomeIcon as HomeSolidIcon,
   ClockIcon as ClockSolidIcon,
   TagIcon as TagSolidIcon,
+  Squares2X2Icon,
+  Squares2X2Icon as Squares2X2SolidIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
@@ -60,6 +62,13 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
       icon: ClockIcon,
       activeIcon: ClockSolidIcon,
       href: "/user/history/ar",
+    },
+    {
+      id: "categories",
+      label: "الفئات",
+      icon: Squares2X2Icon,
+      activeIcon: Squares2X2SolidIcon,
+      href: "/user/categories",
     },
     {
       id: "offers",

@@ -4,9 +4,10 @@ import {
   HomeIcon as HomeSolidIcon,
   ClockIcon as ClockSolidIcon,
   TagIcon as TagSolidIcon,
+  Squares2X2Icon,
+  Squares2X2Icon as Squares2X2SolidIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import PropTypes from "prop-types";
 
@@ -62,6 +63,13 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       href: "/user/history",
     },
     {
+      id: "categories",
+      label: "Categories",
+      icon: Squares2X2Icon,
+      activeIcon: Squares2X2SolidIcon,
+      href: "/user/categories",
+    },
+    {
       id: "offers",
       label: "Offers",
       icon: TagIcon,
@@ -101,14 +109,13 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   };
 
   // Show authentication error if not authenticated
- if (!isAuthenticated) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-    </div>
-  );
-}
-
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">

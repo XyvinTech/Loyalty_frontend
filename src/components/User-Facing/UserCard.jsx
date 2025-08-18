@@ -5,7 +5,7 @@ import moment from "moment";
 import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import { CalendarDaysIcon, FlagIcon } from "@heroicons/react/24/solid";
-import { FireIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, FireIcon } from "@heroicons/react/24/outline";
 
 import bronzeimage from "../../assets/bronse loyality.webp";
 import goldImage from "../../assets/Gold1 loyality.webp";
@@ -156,7 +156,7 @@ const UserCard = ({ streak }) => {
         </div>
 
         {/* Progress or streaks */}
-        <div className="px-4 pb-4">
+        <div className="px-9 pb-0 pt-0">
           {streak ? (
             <div className="px-4 pb-0 pt-6">
               {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
@@ -185,25 +185,27 @@ const UserCard = ({ streak }) => {
                             className="flex flex-col items-center text-center min-w-[64px]"
                           >
                             <div
-                              className={`w-5 h-5 flex items-center justify-center rounded-full ${
+                              className={`flex items-center justify-center rounded-full ${
                                 isCompleted
-                                  ? "" // remove hardcoded bg
-                                  : isCurrent
-                                  ? "text-amber-500"
-                                  : "text-gray-400"
+                                  ? "w-5 h-5" // bigger circle when completed
+                                  : "w-6 h-6" // default size
+                              } ${
+                                isCurrent ? "text-[#F6CD00]" : "text-gray-400"
                               }`}
-                              style={
-                                isCompleted ? { backgroundColor: theme.bg } : {}
-                              }
+                              style={{ backgroundColor: theme.bg }}
                             >
                               {isCompleted ? (
                                 <span className="text-white font-bold text-xs">
-                                  ✔
+                                  <CheckIcon className="w-4 h-4" />
                                 </span>
                               ) : isCurrent ? (
-                                <FireIcon className="w-5 h-5 animate-pulse" />
+                                <span className="text-white font-bold text-xs">
+                                  <CheckIcon className="w-6 h-6" />
+                                </span>
                               ) : (
-                                <CalendarDaysIcon className="w-5 h-5" />
+                                <span className="text-white font-bold text-xs">
+                                  <CheckIcon className="w-4 h-4" />
+                                </span>
                               )}
                             </div>
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import khedmah from "../../assets/Frame 92.png";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
+import { CheckIcon, ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
 import { getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
@@ -198,7 +198,7 @@ const ArabicCard = ({ streak }) => {
           /> */}
         </div>
         {streak ? (
-          <div className="px-4 pb-4">
+          <div className="px-12 pr-6 pb-0 pt-6">
             {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
               <div className="relative w-full">
                 <div className="absolute top-[14px] left-0 w-full h-[2px] bg-gray-200 rounded-full" />
@@ -225,25 +225,27 @@ const ArabicCard = ({ streak }) => {
                           className="flex flex-col items-center text-center min-w-[64px]"
                         >
                           <div
-                            className={`w-5 h-5 flex items-center justify-center rounded-full ${
+                            className={`flex items-center justify-center rounded-full ${
                               isCompleted
-                                ? ""
-                                : isCurrent
-                                ? "text-amber-500"
-                                : "text-gray-400"
+                                ? "w-5 h-5" // bigger circle when completed
+                                : "w-6 h-6" // default size
+                            } ${
+                              isCurrent ? "text-[#F6CD00]" : "text-gray-400"
                             }`}
-                            style={
-                              isCompleted ? { backgroundColor: theme.bg } : {}
-                            }
+                            style={{ backgroundColor: theme.bg }}
                           >
                             {isCompleted ? (
                               <span className="text-white font-bold text-xs">
-                                ✔
+                                <CheckIcon className="w-4 h-4" />
                               </span>
                             ) : isCurrent ? (
-                              <FireIcon className="w-5 h-5 animate-pulse" />
+                              <span className="text-white font-bold text-xs">
+                                <CheckIcon className="w-6 h-6" />
+                              </span>
                             ) : (
-                              <CalendarDaysIcon className="w-5 h-5" />
+                              <span className="text-white font-bold text-xs">
+                                <CheckIcon className="w-4 h-4" />
+                              </span>
                             )}
                           </div>
 

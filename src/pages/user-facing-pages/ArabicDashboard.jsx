@@ -1,4 +1,3 @@
-
 import bronze from "../../assets/background.png";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -24,8 +23,16 @@ const ArabicDashboard = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-
+  const [showDashboard, setShowDashboard] = useState(false);
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDashboard(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    if (!showDashboard) return;
     const fetchCustomerData = async () => {
       try {
         const tier = customerData?.customer_tier?.en;
@@ -65,8 +72,14 @@ const ArabicDashboard = () => {
     };
 
     fetchCustomerData();
-  }, [customerID, apiKey, customerData]);
-
+  }, [customerID, apiKey, customerData, showDashboard]);
+  if (!showDashboard) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-white">
       <div className="relative">
@@ -104,7 +117,9 @@ const ArabicDashboard = () => {
                 <div key={item?._id} className="min-w-[70px] mb-3">
                   <div
                     onClick={() =>
-                      navigate("/user/offers/ar", { state: { brand: item?._id } })
+                      navigate("/user/offers/ar", {
+                        state: { brand: item?._id },
+                      })
                     }
                     style={{ border: "2px solid rgba(0, 0, 0, 0.15)" }}
                     className="w-[74px] h-[74px] cursor-pointer flex items-center justify-center rounded-[12px] bg-white shadow-lg"

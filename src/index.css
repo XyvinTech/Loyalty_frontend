@@ -27,7 +27,9 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
-
+.windsong-text {
+  font-family: 'WindSong', cursive;
+}
 /* For Firefox */
 .scrollbar-hide {
   scrollbar-width: none;

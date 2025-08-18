@@ -1,8 +1,8 @@
+import { useEffect, useState } from "react";
 import UserCard from "../../components/User-Facing/UserCard";
 import OfferCard from "../../components/User-Facing/OfferCard";
 import bronze from "../../assets/background.png";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import sdkApi from "../../api/sdk";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import silver from "../../assets/silver.png";
@@ -23,8 +23,19 @@ const DashboardUser = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
+  const [showDashboard, setShowDashboard] = useState(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDashboard(true);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!showDashboard) return; 
+
     const fetchCustomerData = async () => {
       try {
         const tier = customerData?.customer_tier?.en;
@@ -49,7 +60,6 @@ const DashboardUser = () => {
             setBackgroundImage(bronze);
         }
 
-        // fetch all in parallel
         const [offers, brandData, categoriesData] = await Promise.all([
           sdkApi.getMerchantOffers(customerID, apiKey, { limit: 20 }),
           sdkApi.getBrands(customerID, apiKey, { limit: 20 }),
@@ -65,11 +75,18 @@ const DashboardUser = () => {
     };
 
     fetchCustomerData();
-  }, [customerID, apiKey, customerData]);
+  }, [customerID, apiKey, customerData, showDashboard]);
+
+  if (!showDashboard) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Background + UserCard */}
       <div className="relative">
         <div
           className="rounded-b-2xl h-50"

@@ -13,24 +13,31 @@ import PropTypes from "prop-types";
 
 const UserLayout = ({ children, currentPage = "home" }) => {
   const [activePage, setActivePage] = useState(currentPage);
+  const [tierColor, setTierColor] = useState("#DF9872"); // default Bronze
+  const [loading, setLoading] = useState(true); // loading state
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [tierColor, setTierColor] = useState("#DF9872"); // default to Bronze
+  const { isAuthenticated, customerID, apiKey, customerData } = useCustomerAuth();
 
-  const { isAuthenticated, customerID, apiKey, customerData } =
-    useCustomerAuth();
+  // Simulate 3s loading
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (customerData) {
       const tier = customerData?.customer_tier?.en;
       switch (tier) {
         case "Bronze":
-          setTierColor("#DF9872"); // bronze color
+          setTierColor("#DF9872");
           break;
         case "Silver":
-          setTierColor("#C0C0C0"); // silver color
+          setTierColor("#C0C0C0");
           break;
         case "Gold":
-          setTierColor("#FFD700"); // gold color
+          setTierColor("#FFD700");
           break;
         default:
           setTierColor("#DF9872");
@@ -38,7 +45,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     }
   }, [customerData]);
 
-  // Update active page based on current route
+  // Update active page
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("dashboard")) setActivePage("home");
@@ -48,53 +55,20 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   }, [location.pathname]);
 
   const navigationItems = [
-    {
-      id: "home",
-      label: "Home",
-      icon: HomeIcon,
-      activeIcon: HomeSolidIcon,
-      href: "/user/dashboard",
-    },
-    {
-      id: "history",
-      label: "History",
-      icon: ClockIcon,
-      activeIcon: ClockSolidIcon,
-      href: "/user/history",
-    },
-    {
-      id: "categories",
-      label: "Categories",
-      icon: Squares2X2Icon,
-      activeIcon: Squares2X2SolidIcon,
-      href: "/user/categories",
-    },
-    {
-      id: "offers",
-      label: "Offers",
-      icon: TagIcon,
-      activeIcon: TagSolidIcon,
-      href: "/user/offers",
-    },
-    // {
-    //   id: "support",
-    //   label: "Support",
-    //   icon: ChatBubbleLeftRightIcon,
-    //   activeIcon: ChatBubbleLeftRightIcon,
-    //   href: "/user/support",
-    // },
+    { id: "home", label: "Home", icon: HomeIcon, activeIcon: HomeSolidIcon, href: "/user/dashboard" },
+    { id: "history", label: "History", icon: ClockIcon, activeIcon: ClockSolidIcon, href: "/user/history" },
+    { id: "categories", label: "Categories", icon: Squares2X2Icon, activeIcon: Squares2X2SolidIcon, href: "/user/categories" },
+    { id: "offers", label: "Offers", icon: TagIcon, activeIcon: TagSolidIcon, href: "/user/offers" },
   ];
 
   const handleNavigation = (item) => {
     if (!isAuthenticated) {
-      // If not authenticated, show error
       console.warn("Navigation attempted without authentication");
       return;
     }
 
     setActivePage(item.id);
 
-    // Navigate with optional URL parameters for better bookmarking/sharing
     const searchParams = new URLSearchParams();
     if (customerID && apiKey) {
       searchParams.set("customerID", customerID);
@@ -108,8 +82,8 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     navigate(url);
   };
 
-  // Show authentication error if not authenticated
-  if (!isAuthenticated) {
+  // Show loading for 3s
+  if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
@@ -131,9 +105,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
                 key={item.id}
                 onClick={() => handleNavigation(item)}
                 className={`flex flex-col items-center space-y-1 py-2 px-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "font-semibold"
-                    : "text-gray-500 hover:text-gray-700"
+                  isActive ? "font-semibold" : "text-gray-500 hover:text-gray-700"
                 }`}
                 style={isActive ? { color: tierColor } : {}}
               >

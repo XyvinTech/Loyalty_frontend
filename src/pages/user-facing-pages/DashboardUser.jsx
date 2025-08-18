@@ -28,7 +28,7 @@ const DashboardUser = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowDashboard(true);
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -190,7 +190,7 @@ const DashboardUser = () => {
                   }
                   className="flex flex-col items-center min-w-[89px] w-[89px]"
                 >
-                  <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mb-2 border">
+                  <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mb-2">
                     <img
                       src={category?.image}
                       alt={category?.title?.en}

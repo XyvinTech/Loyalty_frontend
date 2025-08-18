@@ -897,9 +897,9 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
               )}
             </div>
 
-            <div className={cardClass}>
+           <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Discount Configuration</h3>
-              <div className="grid grid-cols-3 gap-4">
+              <div className={`grid gap-4 ${watch("discountDetails.type") === "BUY-1-GET-1" ? "grid-cols-1" : "grid-cols-3"}`}>
                 <div>
                   <label className={labelClass}>Discount Type</label>
                   <select
@@ -919,35 +919,38 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className={labelClass}>Discount Value</label>
-                  <input
-                    type="number"
-                    {...register("discountDetails.value")}
-                    className={inputClass}
-                    defaultValue={0}
-                    placeholder="Discount amount"
-                  />
-                </div>
-                <div>
-                  <label className={labelClass}>Redeemable Points</label>
-                  <input
-                    type="number"
-                    {...register("redeemablePointsCount", {
-                      min: { value: 0, message: "Points must be non-negative" },
-                    })}
-                    className={inputClass}
-                    placeholder="Points required"
-                  />
-                  {errors.redeemablePointsCount && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.redeemablePointsCount.message}
-                    </p>
-                  )}
-                </div>
+                {watch("discountDetails.type") !== "BUY-1-GET-1" && (
+                  <>
+                    <div>
+                      <label className={labelClass}>Discount Value</label>
+                      <input
+                        type="number"
+                        {...register("discountDetails.value")}
+                        className={inputClass}
+                        placeholder="Discount amount"
+                        defaultValue={0}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Redeemable Points</label>
+                      <input
+                        type="number"
+                        {...register("redeemablePointsCount", {
+                          min: { value: 0, message: "Points must be non-negative" },
+                        })}
+                        className={inputClass}
+                        placeholder="Points required"
+                      />
+                      {errors.redeemablePointsCount && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.redeemablePointsCount.message}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Offer Validity</h3>
               <div className="grid grid-cols-2 gap-4">

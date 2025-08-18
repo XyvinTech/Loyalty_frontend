@@ -18,7 +18,8 @@ const UserLayout = ({ children, currentPage = "home" }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customerID, apiKey, customerData } = useCustomerAuth();
+  const { isAuthenticated, customerID, apiKey, customerData } =
+    useCustomerAuth();
 
   // Simulate 3s loading
   useEffect(() => {
@@ -55,10 +56,34 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   }, [location.pathname]);
 
   const navigationItems = [
-    { id: "home", label: "Home", icon: HomeIcon, activeIcon: HomeSolidIcon, href: "/user/dashboard" },
-    { id: "history", label: "History", icon: ClockIcon, activeIcon: ClockSolidIcon, href: "/user/history" },
-    { id: "categories", label: "Categories", icon: Squares2X2Icon, activeIcon: Squares2X2SolidIcon, href: "/user/categories" },
-    { id: "offers", label: "Offers", icon: TagIcon, activeIcon: TagSolidIcon, href: "/user/offers" },
+    {
+      id: "home",
+      label: "Home",
+      icon: HomeIcon,
+      activeIcon: HomeSolidIcon,
+      href: "/user/dashboard",
+    },
+    {
+      id: "history",
+      label: "History",
+      icon: ClockIcon,
+      activeIcon: ClockSolidIcon,
+      href: "/user/history",
+    },
+    {
+      id: "categories",
+      label: "Categories",
+      icon: Squares2X2Icon,
+      activeIcon: Squares2X2SolidIcon,
+      href: "/user/categories",
+    },
+    {
+      id: "offers",
+      label: "Offers",
+      icon: TagIcon,
+      activeIcon: TagSolidIcon,
+      href: "/user/offers",
+    },
   ];
 
   const handleNavigation = (item) => {
@@ -86,7 +111,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
       </div>
     );
   }
@@ -105,7 +130,9 @@ const UserLayout = ({ children, currentPage = "home" }) => {
                 key={item.id}
                 onClick={() => handleNavigation(item)}
                 className={`flex flex-col items-center space-y-1 py-2 px-3 rounded-lg transition-colors ${
-                  isActive ? "font-semibold" : "text-gray-500 hover:text-gray-700"
+                  isActive
+                    ? "font-semibold"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 style={isActive ? { color: tierColor } : {}}
               >

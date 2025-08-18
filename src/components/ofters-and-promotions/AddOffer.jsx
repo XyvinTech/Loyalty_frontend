@@ -130,7 +130,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       redemptionUrl: "",
       discountDetails: {
         type: "",
-        value: "",
+        value: 0,
       },
       redeemablePointsCount: 0,
       validityPeriod: {
@@ -188,7 +188,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
       if (editData.discountDetails) {
         setValue("discountDetails.type", editData.discountDetails.type);
-        setValue("discountDetails.value", editData.discountDetails.value);
+        setValue("discountDetails.value", editData.discountDetails.value || 0);
       }
 
       if (editData.validityPeriod) {
@@ -401,7 +401,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       couponCategoryId: data.couponCategoryId,
       discountDetails: {
         type: data.discountDetails.type,
-        value: data.discountDetails.value,
+        value: data.discountDetails.value || 0
       },
       redeemablePointsCount: data.redeemablePointsCount,
       validityPeriod: {
@@ -911,6 +911,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                     <option value="">Select Type</option>
                     <option value="PERCENTAGE">Percentage</option>
                     <option value="FIXED">Fixed Amount</option>
+                    <option value="BUY-1-GET-1">Buy 1 Get 1</option>
                   </select>
                   {errors.discountDetails?.type && (
                     <p className="text-red-500 text-xs mt-1">
@@ -922,21 +923,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                   <label className={labelClass}>Discount Value</label>
                   <input
                     type="number"
-                    {...register("discountDetails.value", {
-                      required: "Discount value is required",
-                      min: {
-                        value: 0,
-                        message: "Discount value must be positive",
-                      },
-                    })}
+                    {...register("discountDetails.value")}
                     className={inputClass}
+                    defaultValue={0}
                     placeholder="Discount amount"
                   />
-                  {errors.discountDetails?.value && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.discountDetails.value.message}
-                    </p>
-                  )}
                 </div>
                 <div>
                   <label className={labelClass}>Redeemable Points</label>

@@ -299,9 +299,9 @@ const UserCard = ({ streak }) => {
                 </div>
               </div>
             ) : (
-              <div className="bg-gray-50 rounded-lg p-4 text-center">
+              <div className=" rounded-lg p-4 text-center">
                 <span className="text-gray-500 text-xs font-medium">
-                  No streak details available
+                  Yeh!! Enjoy the {user.membership} tier Benefits
                 </span>
               </div>
             )}

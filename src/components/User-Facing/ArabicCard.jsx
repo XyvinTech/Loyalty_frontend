@@ -306,7 +306,7 @@ const ArabicCard = ({ streak }) => {
             ) : (
               <div className="bg-gray-50 rounded-lg p-4 text-center">
                 <span className="text-gray-500 text-xs font-medium">
-                  No streak details available
+                  🎉 استمتع بمزايا فئة {user.membership}
                 </span>
               </div>
             )}

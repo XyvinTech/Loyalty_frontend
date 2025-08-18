@@ -10,9 +10,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { FireIcon } from "@heroicons/react/24/outline";
 
-import bronzeimage from "../../assets/bronse loyality.png";
-import goldImage from "../../assets/Gold1 loyality.png";
-import silverImage from "../../assets/SIL loyality.png";
+import bronzeimage from "../../assets/bronse loyality.webp";
+import goldImage from "../../assets/Gold1 loyality.webp";
+import silverImage from "../../assets/SIL loyality.webp";
 import fireImage from "../../assets/Group (1).png";
 import bronzebg from "../../assets/Ellipse 3.png";
 

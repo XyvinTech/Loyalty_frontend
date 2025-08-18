@@ -1,15 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import khedmah from "../../assets/Frame 92.png";
 import sdkApi from "../../api/sdk";
 import moment from "moment";
-import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
+import { getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import {
-  CalendarDaysIcon,
-  FlagIcon,
-} from "@heroicons/react/24/solid";
+import { CalendarDaysIcon } from "@heroicons/react/24/solid";
 import { FireIcon } from "@heroicons/react/24/outline";
-
 import bronzeimage from "../../assets/bronse loyality.webp";
 import goldImage from "../../assets/Gold1 loyality.webp";
 import silverImage from "../../assets/SIL loyality.webp";
@@ -134,7 +130,8 @@ const UserCard = ({ streak }) => {
               className="text-[14px] italic windsong-text"
               style={{ color: theme.welcomeColor }}
             >
-              Welcome
+                           مرحباً
+
             </p>
 
             <h1
@@ -159,7 +156,7 @@ const UserCard = ({ streak }) => {
         </div>
 
         {/* Progress or streaks */}
-       <div className="px-4 pb-4">
+        <div className="px-4 pb-4">
           {streak ? (
             <div className="px-4 pb-0 pt-6">
               {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
@@ -167,7 +164,7 @@ const UserCard = ({ streak }) => {
                   <div className="absolute top-[12px] left-0 w-full h-[4px] bg-gray-200 rounded-full" />
 
                   <div
-                    className="absolute top-[12px] left-0 h-[4px] rounded-full  transition-all duration-500"
+                    className="absolute top-[12px] right-0 h-[4px] rounded-full  transition-all duration-500"
                     style={{
                       width: `${user.nextTierProgress.streak.percentage}%`,
                       backgroundImage: theme.nameMembershipGradient,
@@ -190,7 +187,7 @@ const UserCard = ({ streak }) => {
                             <div
                               className={`w-5 h-5 flex items-center justify-center rounded-full ${
                                 isCompleted
-                                  ? "" // remove hardcoded bg
+                                  ? "" 
                                   : isCurrent
                                   ? "text-amber-500"
                                   : "text-gray-400"

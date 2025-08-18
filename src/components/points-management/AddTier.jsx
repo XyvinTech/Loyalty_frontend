@@ -16,6 +16,9 @@ const tierSchema = z.object({
   points_required: z
     .number()
     .nonnegative("Points required must be 0 or greater"),
+  hierarchy_level: z
+    .number()
+    .nonnegative("Hierarchy level must be 0 or greater"),
   isActive: z.boolean(),
   description: z.object({
     en: z.array(z.string()).optional(),
@@ -51,6 +54,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
     defaultValues: {
       name: { en: "", ar: "" },
       points_required: "",
+      hierarchy_level: 0,
       isActive: true,
       description: { en: [], ar: [] },
       tier_point_multiplier: [{ appType: "", multiplier: "" }],
@@ -71,6 +75,12 @@ const AddTier = ({ isOpen, onClose, editData }) => {
         editData?.data?.points_required !== undefined
           ? editData.data.points_required
           : ""
+      );
+      setValue(
+        "hierarchy_level",
+        editData?.data?.hierarchy_level !== undefined
+          ? editData.data.hierarchy_level
+          : 0
       );
       setValue("isActive", editData?.data?.isActive ?? true);
       setValue("description.en", editData?.data?.description?.en || []);
@@ -116,6 +126,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
         reset({
           name: { en: "", ar: "" },
           points_required: "",
+          hierarchy_level: "",
           isActive: true,
           description: { en: [], ar: [] },
           tier_point_multiplier: [{ appType: "", multiplier: "" }],
@@ -279,6 +290,24 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                 </div>
               ))}
             </div>
+            
+            {/* Hierarchy Level field - only shown when editing */}
+            {editData?.data && (
+              <div className="flex-1">
+                <label className={labelClass}>Hierarchy Level</label>
+                <input
+                  type="number"
+                  {...register("hierarchy_level", { valueAsNumber: true })}
+                  className={inputClass}
+                />
+                {errors.hierarchy_level && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.hierarchy_level.message}
+                  </p>
+                )}
+              </div>
+            )}
+
             <div className={cardClass}>
               <div className="flex justify-between items-center mb-3">
                 <h3 className={sectionHeadingClass}>
@@ -386,7 +415,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                       {errors.tier_point_multiplier.message}
                     </p>
                   )}
-              </div>
+                </div>
             </div>
           </div>
 

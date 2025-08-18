@@ -206,7 +206,7 @@ const sdkApi = {
       return response.data;
     } catch (error) {
       console.error("Error redeeming points:", error);
-      throw error;
+      throw error.response?.data || error.message;
     }
   },
 };

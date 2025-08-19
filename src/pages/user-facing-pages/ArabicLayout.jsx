@@ -4,6 +4,8 @@ import {
   HomeIcon as HomeSolidIcon,
   ClockIcon as ClockSolidIcon,
   TagIcon as TagSolidIcon,
+  Squares2X2Icon,
+  Squares2X2Icon as Squares2X2SolidIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
@@ -11,12 +13,19 @@ import PropTypes from "prop-types";
 
 const ArabicLayout = ({ children, currentPage = "home" }) => {
   const [activePage, setActivePage] = useState(currentPage);
+  const [tierColor, setTierColor] = useState("#DF9872"); // Bronze default
+  const [loading, setLoading] = useState(true); // initial loading state
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [tierColor, setTierColor] = useState("#DF9872"); // Bronze default
-
   const { isAuthenticated, customerID, apiKey, customerData } =
     useCustomerAuth();
+
+  // Simulate loading delay (2 sec)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (customerData) {
@@ -62,19 +71,19 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
       href: "/user/history/ar",
     },
     {
+      id: "categories",
+      label: "الفئات",
+      icon: Squares2X2Icon,
+      activeIcon: Squares2X2SolidIcon,
+      href: "/user/categories/ar",
+    },
+    {
       id: "offers",
       label: "العروض",
       icon: TagIcon,
       activeIcon: TagSolidIcon,
       href: "/user/offers/ar",
     },
-    // {
-    //   id: "support",
-    //   label: "الدعم",
-    //   icon: ChatBubbleLeftRightIcon,
-    //   activeIcon: ChatBubbleLeftRightIcon,
-    //   href: "/user/support/ar",
-    // },
   ];
 
   const handleNavigation = (item) => {
@@ -98,10 +107,11 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
     navigate(url);
   };
 
-  if (!isAuthenticated) {
+  // Show spinner while loading or if not authenticated
+  if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
       </div>
     );
   }

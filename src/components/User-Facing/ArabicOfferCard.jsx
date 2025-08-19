@@ -1,5 +1,5 @@
 import moment from "moment/moment";
-import "moment/locale/ar"; 
+import "moment/locale/ar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const ArabicOfferCard = ({ data, tier }) => {
@@ -40,12 +40,9 @@ const ArabicOfferCard = ({ data, tier }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 right-3">
           {discountDetails?.type === "PERCENTAGE" && (
-            <div
-              className="px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg backdrop-blur-sm"
-              style={{ backgroundColor: `${tier}E6` }}
-            >
+            <div className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-xl bg-yellow-600  ">
               {`${discountDetails?.value}% خصم`}
             </div>
           )}

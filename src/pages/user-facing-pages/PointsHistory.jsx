@@ -2,14 +2,88 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import bronze from "../../assets/background.png";
-import plus from "../../assets/plus.png";
-import minus from "../../assets/minus.png";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
-import { getTierTheme } from "../../components/User-Facing/themes/tierThemes";
 import UserCard from "../../components/User-Facing/UserCard";
+import {
+  ArrowUpCircleIcon,
+  ArrowDownCircleIcon,
+  AdjustmentsHorizontalIcon,
+  XCircleIcon,
+  ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+  GiftIcon,
+} from "@heroicons/react/24/solid";
 
 const PAGE_SIZE = 20;
+const getTransactionMeta = (transaction) => {
+  switch (transaction.type) {
+    case "earn":
+      return {
+        title: "Points Earned",
+        icon: <ArrowUpCircleIcon className="w-6 h-6 text-green-500" />,
+        bg: "bg-[#E5FFF1]",
+        color: "text-[#00BC06]",
+        sign: "+",
+      };
+    case "redeem":
+      return {
+        title: "Points Redeemed",
+        icon: <ArrowDownCircleIcon className="w-6 h-6 text-red-500" />,
+        bg: "bg-[#FFE7E7]",
+        color: "text-[#ED4747]",
+        sign: "-",
+      };
+    case "adjust":
+      return {
+        title: "Points Adjusted",
+        icon: <AdjustmentsHorizontalIcon className="w-6 h-6 text-blue-500" />,
+        bg: "bg-blue-50",
+        color: "text-blue-600",
+        sign: "",
+      };
+    case "expire":
+      return {
+        title: "Points Expired",
+        icon: <XCircleIcon className="w-6 h-6 text-gray-500" />,
+        bg: "bg-gray-100",
+        color: "text-gray-500",
+        sign: "-",
+      };
+    case "tier_downgrade":
+      return {
+        title: "Tier Downgrade",
+        icon: <ArrowTrendingDownIcon className="w-6 h-6 text-orange-500" />,
+        bg: "bg-orange-50",
+        color: "text-orange-600",
+        sign: "",
+      };
+    case "tier_upgrade":
+      return {
+        title: "Tier Upgrade",
+        icon: <ArrowTrendingUpIcon className="w-6 h-6 text-purple-500" />,
+        bg: "bg-purple-50",
+        color: "text-purple-600",
+        sign: "",
+      };
+    case "offer-redeem":
+      return {
+        title: "Offer Redeemed",
+        icon: <GiftIcon className="w-5 h-5 text-pink-500" />,
+        bg: "bg-pink-50",
+        color: "text-pink-600",
+        sign: "",
+      };
+    default:
+      return {
+        title: "Transaction",
+        icon: <AdjustmentsHorizontalIcon className="w-6 h-6 text-gray-400" />,
+        bg: "bg-gray-100",
+        color: "text-gray-500",
+        sign: "",
+      };
+  }
+};
 
 const PointsHistory = () => {
   const [customer, setCustomer] = useState(null);
@@ -115,14 +189,6 @@ const PointsHistory = () => {
     [isLoadingMore, pagination]
   );
 
-  const customerTier =
-    customer?.customer_tier?.en || customerData?.customer_tier?.en || "Bronze";
-  const theme = getTierTheme(customerTier);
-  const formatPoints = (num) => num?.toLocaleString("de-DE") || "0";
-  const customerName = customer?.name || customerData?.name || "Customer";
-  const pointBalance =
-    customer?.point_balance || customerData?.point_balance || 0;
-
   // Auth error UI
   if (!isAuthenticated) {
     return (
@@ -219,7 +285,7 @@ const PointsHistory = () => {
         >
           {" "}
           <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4 mb-200">
-            <UserCard  streak/>
+            <UserCard streak />
           </div>
         </div>
 
@@ -240,10 +306,11 @@ const PointsHistory = () => {
                 <h3 className="text-lg font-semibold text-gray-800 poppins-text">
                   Transaction History
                 </h3>
-            
               </div>
               {transactions.map((item, idx) => {
                 const lastItem = transactions.length === idx + 1;
+                const meta = getTransactionMeta(item);
+
                 return (
                   <div
                     key={item.id}
@@ -251,43 +318,33 @@ const PointsHistory = () => {
                     className="flex items-center mb-2 border-b border-b-[#F8F8F8] p-3"
                   >
                     <div
-                      className={`flex items-center justify-center w-10 h-10 rounded-full mr-3 
-                        ${
-                          item.type === "earned"
-                            ? "bg-[#E5FFF1]"
-                            : "bg-[#FFE7E7]"
-                        }`}
+                      className={`flex items-center justify-center w-10 h-10 rounded-full mr-3 ${meta.bg}`}
                     >
-                      {item.type === "earned" ? (
-                        <img src={plus} alt="plus" className="w-5 h-7" />
-                      ) : (
-                        <img src={minus} alt="minus" className="w-6 h-6" />
-                      )}
+                      {meta.icon}
                     </div>
                     <div className="flex-1 poppins-text">
                       <div className="font-medium text-[#1E2022] text-sm mb-2">
-                        {item.title}
+                        {meta.title}
                       </div>
                       <div className="text-xs opacity-40">
                         {item.transaction_id}
                       </div>
                     </div>
-                    <div
-                      className={`font-medium text-xs poppins-text ${
-                        item.type === "earned"
-                          ? "text-[#00BC06]"
-                          : "text-[#ED4747]"
-                      }`}
-                    >
-                      {item.type === "earned" ? "+" : "-"}
-                      {item.points} <span className="text-xs">pts</span>
-                      <div className="text-[#000] opacity-40 text-xs mt-1">
-                        {item.date}
+                    {item.type !== "offer-redeem" && (
+                      <div
+                        className={`font-medium text-xs poppins-text ${meta.color}`}
+                      >
+                        {meta.sign} {item.points}
+                        <span className="text-xs">pts</span>
+                        <div className="text-[#000] opacity-40 text-xs mt-1">
+                          {item.date}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}
+
               {isLoadingMore && (
                 <div className="flex justify-center py-3 text-xs text-gray-500">
                   Loading more transactions...

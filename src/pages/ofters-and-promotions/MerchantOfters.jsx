@@ -23,6 +23,7 @@ const MerchantOffers = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const { getMerchantOffers, offerById, deleteMerchantOffer } = useOffers();
   const { data: singleData } = offerById(data?.id);
   const [activeTab, setActiveTab] = useState("ALL");
@@ -33,8 +34,13 @@ const MerchantOffers = () => {
     dataUpdatedAt,
   } = getMerchantOffers(
     activeTab === "ALL"
-      ? { limit: itemsPerPage, page: currentPage }
-      : { type: activeTab, limit: itemsPerPage, page: currentPage }
+      ? { limit: itemsPerPage, page: currentPage, search: searchQuery }
+      : {
+          type: activeTab,
+          limit: itemsPerPage,
+          page: currentPage,
+          search: searchQuery,
+        }
   );
   const deleteMutation = deleteMerchantOffer();
   const offers = offerData?.data || [];
@@ -94,10 +100,15 @@ const MerchantOffers = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
-          {/* <StyledSearchInput
+          <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
-          /> */}
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
 
           <StyledButton
             name={
@@ -196,9 +207,9 @@ const MerchantOffers = () => {
                       <div className="text-xs">
                         <span className="text-gray-500">Valid Until</span>
                         <p className="font-medium text-gray-900">
-                          {moment(offer.validityPeriod?.endDate).locale("en").format(
-                            "DD MMM YYYY"
-                          )}
+                          {moment(offer.validityPeriod?.endDate)
+                            .locale("en")
+                            .format("DD MMM YYYY")}
                         </p>
                       </div>
                     </div>
@@ -207,10 +218,20 @@ const MerchantOffers = () => {
                       <div>
                         <span className="text-gray-500">Discount</span>
                         <p className="font-medium text-gray-900">
-                          {offer.discountDetails?.value}%{" "}
-                          {offer.discountDetails?.type.toLowerCase()}
+                          {offer.discountDetails?.type === "PERCENTAGE" && (
+                            <>{offer.discountDetails?.value}% Off</>
+                          )}
+
+                          {offer.discountDetails?.type === "FIXED" && (
+                            <>{offer.discountDetails?.value} OMR Off</>
+                          )}
+
+                          {offer.discountDetails?.type === "BUY-1-GET-1" && (
+                            <>Buy 1 Get 1 Free</>
+                          )}
                         </p>
                       </div>
+
                       <div>
                         <span className="text-gray-500">Usage</span>
                         <p className="font-medium text-gray-900">
@@ -268,9 +289,9 @@ const MerchantOffers = () => {
                         <div className="text-center text-xs">
                           <span className="text-gray-500">Valid Until</span>
                           <p className="font-medium text-gray-900">
-                            {moment(offer.validityPeriod?.endDate).locale("en").format(
-                              "DD MMM YYYY"
-                            )}
+                            {moment(offer.validityPeriod?.endDate)
+                              .locale("en")
+                              .format("DD MMM YYYY")}
                           </p>
                         </div>
                         <div className="text-center text-xs">

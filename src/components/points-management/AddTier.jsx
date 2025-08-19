@@ -290,19 +290,24 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                 </div>
               ))}
             </div>
-            <div className="flex-1">
-              <label className={labelClass}>Hierarchy Level</label>
-              <input
-                type="number"
-                {...register("hierarchy_level", { valueAsNumber: true })}
-                className={inputClass}
-              />
-              {errors.hierarchy_level && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.hierarchy_level.message}
-                </p>
-              )}
-            </div>
+            
+            {/* Hierarchy Level field - only shown when editing */}
+            {editData?.data && (
+              <div className="flex-1">
+                <label className={labelClass}>Hierarchy Level</label>
+                <input
+                  type="number"
+                  {...register("hierarchy_level", { valueAsNumber: true })}
+                  className={inputClass}
+                />
+                {errors.hierarchy_level && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.hierarchy_level.message}
+                  </p>
+                )}
+              </div>
+            )}
+
             <div className={cardClass}>
               <div className="flex justify-between items-center mb-3">
                 <h3 className={sectionHeadingClass}>
@@ -410,7 +415,7 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                       {errors.tier_point_multiplier.message}
                     </p>
                   )}
-              </div>
+                </div>
             </div>
           </div>
 

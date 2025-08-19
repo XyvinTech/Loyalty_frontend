@@ -1,18 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
 import khedmah from "../../assets/Frame 92.png";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
+import { CheckIcon, ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
-import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
+import { getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import moment from "moment";
-import "moment/locale/ar"; // Arabic locale
+import "moment/locale/ar";
+import bronzeimage from "../../assets/bronse loyality.webp";
+import goldImage from "../../assets/Gold1 loyality.webp";
+import silverImage from "../../assets/SIL loyality.webp";
+import fireImage from "../../assets/Group (1).png";
+import bronzebg from "../../assets/Ellipse 3.png";
 moment.locale("ar");
-import {
-  CheckCircleIcon,
-  FireIcon,
-  CalendarDaysIcon,
-  FlagIcon,
-} from "@heroicons/react/24/solid";
+import { FireIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
 moment.updateLocale("ar", {
   months: [
     "يناير",
@@ -29,6 +29,7 @@ moment.updateLocale("ar", {
     "ديسمبر",
   ],
 });
+
 const ArabicCard = ({ streak }) => {
   const [user, setUser] = useState({
     name: "",
@@ -36,6 +37,7 @@ const ArabicCard = ({ streak }) => {
     points: 0,
     nextTierPoints: 5000,
     avatar: null,
+    tier: "Bronze",
     requiredPoint: 0,
     nextTierName: null,
     nextTierProgress: null,
@@ -49,7 +51,37 @@ const ArabicCard = ({ streak }) => {
 
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
-
+  const getTierTheme = (tier) => {
+    switch (tier.toLowerCase()) {
+      case "bronze":
+        return {
+          welcomeColor: "#9A653D",
+          nameMembershipGradient: "linear-gradient(90deg, #9A653D, #CBAD8B)",
+          img: bronzebg,
+          bg: "#f8c44c",
+          image: bronzeimage,
+        };
+      case "silver":
+        return {
+          welcomeColor: "#A6A6A6",
+          nameMembershipGradient: "linear-gradient(90deg, #FFFFFF, #828282)",
+          image: silverImage,
+          img: bronzebg,
+          bg: "#bcbcbc",
+        };
+      case "gold":
+        return {
+          welcomeColor: "#B87F06",
+          nameMembershipGradient: "linear-gradient(90deg, #F6D27E, #D99A00)",
+          image: goldImage,
+        };
+      default:
+        return {
+          welcomeColor: "#9A653D",
+          nameMembershipGradient: "linear-gradient(90deg, #9A653D, #CBAD8B)",
+        };
+    }
+  };
   useEffect(() => {
     const fetchCustomerData = async () => {
       if (!isAuthenticated || !customerID || !apiKey) {
@@ -65,6 +97,7 @@ const ArabicCard = ({ streak }) => {
 
         if (response.status === 200 && response.data) {
           const customerData = response.data;
+          const tier = customerData.customer_tier?.en || "Bronze";
           const tierName = customerData.customer_tier?.ar || "Bronze";
           const currentPoints = customerData.point_balance || 0;
           const nextTierInfo = getNextTierInfo(tierName, currentPoints);
@@ -74,6 +107,7 @@ const ArabicCard = ({ streak }) => {
           setUser({
             name: customerData.name || "Customer",
             membership: tierName,
+            tier: tier,
             points: currentPoints,
             nextTierPoints: nextTierInfo.nextTier
               ? nextTierInfo.pointsToNext
@@ -99,52 +133,26 @@ const ArabicCard = ({ streak }) => {
     fetchCustomerData();
   }, [customerID, apiKey, isAuthenticated, updateCustomerData]);
 
-  const theme = getTierTheme(user.membership);
+  const theme = getTierTheme(user.tier);
   const formatPoints = (num) => num.toLocaleString("en-US");
-
-  if (!isAuthenticated) {
-    return (
-      <div
-        className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-right"
-        dir="rtl"
-      >
-        <p className="text-red-500 text-sm font-medium">
-          Customer ID and API Key are required
-        </p>
-        <p className="text-gray-500 text-xs mt-2">
-          الرجاء الدخول باستخدام customerID و apiKey صالحين
-        </p>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
-      <div
-        className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6"
-        dir="rtl"
-      >
-        <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-          <div className="h-6 bg-gray-200 rounded mb-4"></div>
-          <div className="h-8 bg-gray-200 rounded mb-2"></div>
-          <div className="h-2 bg-gray-200 rounded mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-        </div>
-      </div>
-    );
-  }
+      <div className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto bg-gray-100 animate-pulse">
+        <div className="absolute inset-0 bg-gray-200" />
 
-  if (error) {
-    return (
-      <div
-        className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-right"
-        dir="rtl"
-      >
-        <p className="text-red-500 text-sm">{error}</p>
-        <p className="text-gray-500 text-xs mt-2">
-          يرجى التحقق من بيانات الدخول أو المحاولة مرة أخرى
-        </p>
+        <div className="relative z-10 h-full flex flex-col justify-between p-4">
+          <div>
+            <div className="h-4 w-20 bg-gray-300 rounded mb-2"></div>
+            <div className="h-5 w-32 bg-gray-300 rounded mb-2"></div>
+            <div className="h-6 w-20 bg-gray-300 rounded"></div>
+          </div>
+
+          <div>
+            <div className="h-2 w-full bg-gray-300 rounded mb-2"></div>
+            <div className="h-2 w-2/3 bg-gray-300 rounded"></div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -152,82 +160,54 @@ const ArabicCard = ({ streak }) => {
   return (
     <div
       dir="rtl"
-      className={`relative ${theme.colors.background.card} rounded-2xl max-w-md mx-auto overflow-hidden ${theme.styles.cardBorder} ${theme.colors.shadow}`}
+      className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto"
     >
-      <div
-        className={`absolute inset-0 ${theme.colors.background.overlay} opacity-30 rounded-2xl pointer-events-none`}
-      ></div>
-
+      <img
+        src={theme.image}
+        alt="Loyalty Background"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
       <div className="relative z-10">
-        <div className="flex justify-between items-center px-4 py-4" dir="rtl">
-          <div className="flex flex-col text-right" dir="rtl">
-            <h2
-              className={`${theme.styles.welcomeText} text-[18px] font-semibold poppins-text mb-1`}
+        <div className="text-start pl-30 px-4 flex justify-between items-start  pt-4">
+          <div className="pt-5">
+            <p
+              className="text-[14px] italic windsong-text"
+              style={{ color: theme.welcomeColor }}
             >
               مرحباً
-            </h2>
-            <h1
-              className="text-base font-semibold poppins-text capitalize"
-              style={{ color: theme.colors.text.primary }}
-            >
-              {user.name} !
-            </h1>
-          </div>
+            </p>
 
-          <img
+            <h1
+              className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
+              style={{ backgroundImage: theme.nameMembershipGradient }}
+            >
+              {user.name}
+            </h1>
+
+            <h2
+              className="uppercase text-2xl font-bold bg-clip-text text-transparent"
+              style={{ backgroundImage: theme.nameMembershipGradient }}
+            >
+              {user.membership}
+            </h2>
+          </div>
+          {/* <img
             src={khedmah}
             alt="Khedmah Logo"
             className="w-11 h-11 rounded-lg"
-          />
-        </div>
-
-        <div className="relative flex items-center px-4 mb-2">
-          <div className="relative z-10 pr-20 flex flex-col text-right">
-            <span
-              className="font-semibold text-xl leading-none poppins-text"
-              style={{ color: theme.colors.text.primary }}
-            >
-              {user.membership}
-            </span>
-            <div className="flex items-center justify-end mt-1 text-xs">
-              <span
-                className="poppins-text"
-                style={{ color: theme.colors.text.muted }}
-              >
-                {formatPoints(user.points)}
-              </span>
-              <span
-                className="mr-1 poppins-text"
-                style={{ color: theme.colors.text.muted }}
-              >
-                نقاط
-              </span>
-              <ChevronLeftIcon
-                className="w-4 h-4 mr-1"
-                style={{ color: theme.colors.text.muted }}
-              />
-            </div>
-          </div>
-          <img
-            src={theme.badge}
-            alt={`${user.membership} Badge`}
-            className={`absolute right-[-12px] top-1/3 -translate-y-1/2 w-29 h-29 z-0 ${theme.styles.badgeGlow}`}
-          />
+          /> */}
         </div>
         {streak ? (
-          <div className="px-4 pb-4">
+          <div className="px-12 pr-6 pb-0 pt-6">
             {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
               <div className="relative w-full">
                 <div className="absolute top-[14px] left-0 w-full h-[2px] bg-gray-200 rounded-full" />
 
                 <div
-                  className="absolute top-[14px] right-0 h-[2px] rounded-full bg-green-500 transition-all duration-500"
+                  className="absolute top-[14px] right-0 h-[2px] rounded-full  transition-all duration-500"
                   style={{
-                    width: `${
-                      (user.nextTierProgress.streak.completed_periods /
-                        user.nextTierProgress.streak.period_details.length) *
-                      100
-                    }%`,
+                    width: `${user.nextTierProgress.streak.percentage}%`,
+                    backgroundImage: theme.nameMembershipGradient,
                   }}
                 />
 
@@ -245,39 +225,32 @@ const ArabicCard = ({ streak }) => {
                           className="flex flex-col items-center text-center min-w-[64px]"
                         >
                           <div
-                            className={`w-6 h-6 flex items-center justify-center ${
-                              isCompleted
-                                ? "text-green-600"
-                                : isCurrent
-                                ? "text-amber-500"
-                                : "text-gray-400"
+                            className={`flex items-center justify-center rounded-full ${
+                              isCompleted ? "w-5 h-5" : "w-6 h-6"
+                            } ${
+                              isCurrent ? "text-[#F6CD00]" : "text-gray-400"
                             }`}
+                            style={{ backgroundColor: theme.bg }}
                           >
                             {isCompleted ? (
-                              <CheckCircleIcon className="w-5 h-5" />
+                              <span className="text-white font-bold text-xs">
+                                <CheckIcon className="w-4 h-4" />
+                              </span>
                             ) : isCurrent ? (
-                              typeof FireIcon !== "undefined" ? (
-                                <FireIcon className="w-5 h-5 animate-pulse" />
-                              ) : (
-                                <svg
-                                  className="w-5 h-5 animate-pulse"
-                                  viewBox="0 0 24 24"
-                                  fill="currentColor"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path d="M12 2s1.5 2 1.5 3.5S12 8 12 8s2-1 2-3 1-3 1-3-3 1-3 0z" />
-                                  <path
-                                    d="M12 10c-3.866 0-7 3.134-7 7a7 7 0 0014 0c0-3.866-3.134-7-7-7z"
-                                    opacity="0.9"
-                                  />
-                                </svg>
-                              )
+                              <span className="text-white font-bold text-xs">
+                                <CheckIcon className="w-6 h-6" />
+                              </span>
                             ) : (
-                              <CalendarDaysIcon className="w-5 h-5" />
+                              <span className="text-white font-bold text-xs">
+                                <CheckIcon className="w-4 h-4" />
+                              </span>
                             )}
                           </div>
 
-                          <span className="text-[11px] mt-1 text-gray-800">
+                          <span
+                            className="text-[11px] mt-1 "
+                            style={{ color: theme.bg }}
+                          >
                             {moment(
                               period.date_range.split(" - ")[0],
                               "D/M/YYYY"
@@ -285,28 +258,37 @@ const ArabicCard = ({ streak }) => {
                               .locale("ar")
                               .format("MMMM")}
                           </span>
-                          <span className="text-[10px] text-gray-500">
-                            {period.points_earned} / {period.points_required}
-                          </span>
+                          {isCurrent && (
+                            <span className="text-[10px] text-white">
+                              {period.points_earned} / {period.points_required}
+                            </span>
+                          )}
                         </div>
                       );
                     }
                   )}
 
                   <div className="flex flex-col items-center text-center min-w-[64px]">
-                    <div className="w-6 h-6 flex items-center justify-center text-green-700">
-                      <FlagIcon className="w-8 h-8" />
+                    <div
+                      className="w-6 h-6 flex items-center justify-center rounded-full bg-center bg-cover"
+                      style={{ backgroundImage: `url(${theme.img})` }}
+                    >
+                      <img
+                        src={fireImage}
+                        alt="Fire"
+                        className="w-[9px] h-[11px]"
+                      />
                     </div>
-                    <span className="text-[16px] mt-1 text-gray-800">
+                    {/* <span className="text-[16px] mt-1 text-gray-800">
                       {user.nextTierName}
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               </div>
             ) : (
               <div className="bg-gray-50 rounded-lg p-4 text-center">
                 <span className="text-gray-500 text-xs font-medium">
-                  No streak details available
+                  🎉 استمتع بمزايا فئة {user.membership}
                 </span>
               </div>
             )}

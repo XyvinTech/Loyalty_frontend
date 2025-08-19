@@ -1,5 +1,5 @@
 import moment from "moment/moment";
-moment.locale('en');
+moment.locale("en");
 import { useNavigate, useSearchParams } from "react-router-dom";
 const OfferCard = ({ data, tier }) => {
   const {
@@ -36,10 +36,7 @@ const OfferCard = ({ data, tier }) => {
 
         <div className="absolute top-3 right-3">
           {discountDetails?.type === "PERCENTAGE" && (
-            <div
-              className="px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg backdrop-blur-sm"
-              style={{ backgroundColor: `${tier}E6` }}
-            >
+            <div className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-xl bg-yellow-600  ">
               {`${discountDetails?.value}% OFF`}
             </div>
           )}
@@ -76,7 +73,10 @@ const OfferCard = ({ data, tier }) => {
                 : "For specific users"}
             </div>
             <div className="text-[10px] font-medium text-gray-800">
-          Valid till {moment(validityPeriod?.endDate).locale('en').format("DD-MM-YYYY")}
+              Valid till{" "}
+              {moment(validityPeriod?.endDate)
+                .locale("en")
+                .format("DD-MM-YYYY")}
             </div>
           </div>
         </div>

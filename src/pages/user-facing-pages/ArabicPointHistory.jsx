@@ -2,14 +2,91 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import bronze from "../../assets/background.png";
-import plus from "../../assets/plus.png";
-import minus from "../../assets/minus.png";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import { getTierTheme } from "../../components/User-Facing/themes/tierThemes";
 import ArabicCard from "../../components/User-Facing/ArabicCard";
+import {
+  ArrowUpCircleIcon,
+  ArrowDownCircleIcon,
+  AdjustmentsHorizontalIcon,
+  XCircleIcon,
+  ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+  GiftIcon,
+} from "@heroicons/react/24/solid";
 
 const PAGE_SIZE = 20;
+
+// Arabic meta mapping
+const getTransactionMetaArabic = (transaction) => {
+  switch (transaction.type) {
+    case "earn":
+      return {
+        title: "النقاط المكتسبة",
+        icon: <ArrowUpCircleIcon className="w-6 h-6 text-green-500" />,
+        bg: "bg-[#E5FFF1]",
+        color: "text-[#00BC06]",
+        sign: "+",
+      };
+    case "redeem":
+      return {
+        title: "النقاط المستبدلة",
+        icon: <ArrowDownCircleIcon className="w-6 h-6 text-red-500" />,
+        bg: "bg-[#FFE7E7]",
+        color: "text-[#ED4747]",
+        sign: "-",
+      };
+    case "adjust":
+      return {
+        title: "تعديل النقاط",
+        icon: <AdjustmentsHorizontalIcon className="w-6 h-6 text-blue-500" />,
+        bg: "bg-blue-50",
+        color: "text-blue-600",
+        sign: "",
+      };
+    case "expire":
+      return {
+        title: "انتهت صلاحية النقاط",
+        icon: <XCircleIcon className="w-6 h-6 text-gray-500" />,
+        bg: "bg-gray-100",
+        color: "text-gray-500",
+        sign: "-",
+      };
+    case "tier_downgrade":
+      return {
+        title: "تم تخفيض المستوى",
+        icon: <ArrowTrendingDownIcon className="w-6 h-6 text-orange-500" />,
+        bg: "bg-orange-50",
+        color: "text-orange-600",
+        sign: "",
+      };
+    case "tier_upgrade":
+      return {
+        title: "تمت ترقية المستوى",
+        icon: <ArrowTrendingUpIcon className="w-6 h-6 text-purple-500" />,
+        bg: "bg-purple-50",
+        color: "text-purple-600",
+        sign: "",
+      };
+    case "offer-redeem":
+      return {
+        title: "تم استبدال العرض",
+        icon: <GiftIcon className="w-5 h-5 text-pink-500" />,
+        bg: "bg-pink-50",
+        color: "text-pink-600",
+        sign: "",
+      };
+    default:
+      return {
+        title: "معاملة",
+        icon: <AdjustmentsHorizontalIcon className="w-6 h-6 text-gray-400" />,
+        bg: "bg-gray-100",
+        color: "text-gray-500",
+        sign: "",
+      };
+  }
+};
 
 const ArabicPointsHistory = () => {
   const [customer, setCustomer] = useState(null);
@@ -209,16 +286,14 @@ const ArabicPointsHistory = () => {
           }}
         >
           <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4 mb-20">
-            <ArabicCard  streak/>
+            <ArabicCard streak />
           </div>
         </div>
 
         <div className="w-full bg-white top-65 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
           {transactions.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-sm">
-                لا يوجد سجل للمعاملات
-              </p>
+              <p className="text-gray-500 text-sm">لا يوجد سجل للمعاملات</p>
               <p className="text-gray-400 text-xs mt-2">
                 سيظهر سجل معاملاتك هنا بمجرد أن تبدأ في كسب أو استبدال النقاط
               </p>
@@ -232,50 +307,41 @@ const ArabicPointsHistory = () => {
               </div>
               {transactions.map((item, idx) => {
                 const lastItem = transactions.length === idx + 1;
+                const meta = getTransactionMetaArabic(item);
+
                 return (
                   <div
                     key={item.id}
-                    ref={lastItem ? lastRowRef : null}
-                    className="flex items-center mb-2 border-b border-b-[#F8F8F8] p-3"
+                    className="grid grid-cols-12 items-center gap-3 border-b border-b-[#F8F8F8] p-3"
                   >
                     <div
-                      className={`flex items-center justify-center w-10 h-10 rounded-full mr-3 
-                        ${
-                          item.type === "earned"
-                            ? "bg-[#E5FFF1]"
-                            : "bg-[#FFE7E7]"
-                        }`}
+                      className={`flex items-center justify-center w-10 h-10 rounded-full col-span-2 ${meta.bg}`}
                     >
-                      {item.type === "earned" ? (
-                        <img src={plus} alt="plus" className="w-5 h-7" />
-                      ) : (
-                        <img src={minus} alt="minus" className="w-6 h-6" />
-                      )}
+                      {meta.icon}
                     </div>
-                    <div className="flex-1 poppins-text">
-                      <div className="font-medium text-[#1E2022] text-sm mb-2">
-                        {item.type === "earned" ? "النقاط المكتسبة" : "النقاط المستبدلة"}
+
+                    <div className="col-span-10 text-right poppins-text">
+                      <div className="flex items-center justify-between">
+                        <div className="font-medium text-[#1E2022] text-sm">
+                          {meta.title}
+                        </div>
+                        {item.type !== "offer-redeem" && (
+                          <div className={`font-medium text-sm ${meta.color}`}>
+                            {meta.sign} {item.points}
+                            <span className="text-xs"> نقطة</span>
+                          </div>
+                        )}
                       </div>
-                      <div className="text-xs opacity-40">
-                        {item.transaction_id}
-                      </div>
-                    </div>
-                    <div
-                      className={`font-medium text-xs poppins-text ${
-                        item.type === "earned"
-                          ? "text-[#00BC06]"
-                          : "text-[#ED4747]"
-                      }`}
-                    >
-                      {item.type === "earned" ? "+" : "-"}
-                      {item.points} <span className="text-xs">نقطة</span>
-                      <div className="text-[#000] opacity-40 text-xs mt-1">
-                        {item.date}
+
+                      <div className="flex items-center justify-between mt-1 text-xs opacity-40">
+                        <span>{item.transaction_id}</span>
+                        <span>{item.date}</span>
                       </div>
                     </div>
                   </div>
                 );
               })}
+
               {isLoadingMore && (
                 <div className="flex justify-center py-3 text-xs text-gray-500">
                   جاري تحميل المزيد من المعاملات...

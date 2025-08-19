@@ -130,8 +130,9 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       redemptionUrl: "",
       discountDetails: {
         type: "",
-        value: "",
+        value: 0,
       },
+      priority: 0,
       redeemablePointsCount: 0,
       validityPeriod: {
         startDate: "",
@@ -170,6 +171,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
         "description.en",
         editData.description?.en || editData.description || ""
       );
+       setValue("priority", editData.priority || 0);
       setValue("posterImage", editData.posterImage || "");
       setValue("numberOfCodes", editData.code?.length || "");
       setImagePreview(editData.posterImage);
@@ -188,7 +190,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
       if (editData.discountDetails) {
         setValue("discountDetails.type", editData.discountDetails.type);
-        setValue("discountDetails.value", editData.discountDetails.value);
+        setValue("discountDetails.value", editData.discountDetails.value || 0);
       }
 
       if (editData.validityPeriod) {
@@ -398,10 +400,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       numberOfCodes: data.numberOfCodes,
       description: data.description,
       posterImage: imageUrl,
+      priority: data.priority,
       couponCategoryId: data.couponCategoryId,
       discountDetails: {
         type: data.discountDetails.type,
-        value: data.discountDetails.value,
+        value: data.discountDetails.value || 0,
       },
       redeemablePointsCount: data.redeemablePointsCount,
       validityPeriod: {
@@ -899,7 +902,13 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Discount Configuration</h3>
-              <div className="grid grid-cols-3 gap-4">
+              <div
+                className={`grid gap-4 ${
+                  watch("discountDetails.type") === "BUY-1-GET-1"
+                    ? "grid-cols-1"
+                    : "grid-cols-3"
+                }`}
+              >
                 <div>
                   <label className={labelClass}>Discount Type</label>
                   <select
@@ -911,6 +920,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                     <option value="">Select Type</option>
                     <option value="PERCENTAGE">Percentage</option>
                     <option value="FIXED">Fixed Amount</option>
+                    <option value="BUY-1-GET-1">Buy 1 Get 1</option>
                   </select>
                   {errors.discountDetails?.type && (
                     <p className="text-red-500 text-xs mt-1">
@@ -918,45 +928,60 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className={labelClass}>Discount Value</label>
-                  <input
-                    type="number"
-                    {...register("discountDetails.value", {
-                      required: "Discount value is required",
-                      min: {
-                        value: 0,
-                        message: "Discount value must be positive",
-                      },
-                    })}
-                    className={inputClass}
-                    placeholder="Discount amount"
-                  />
-                  {errors.discountDetails?.value && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.discountDetails.value.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className={labelClass}>Redeemable Points</label>
-                  <input
-                    type="number"
-                    {...register("redeemablePointsCount", {
-                      min: { value: 0, message: "Points must be non-negative" },
-                    })}
-                    className={inputClass}
-                    placeholder="Points required"
-                  />
-                  {errors.redeemablePointsCount && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.redeemablePointsCount.message}
-                    </p>
-                  )}
-                </div>
+                {watch("discountDetails.type") !== "BUY-1-GET-1" && (
+                  <>
+                    <div>
+                      <label className={labelClass}>Discount Value</label>
+                      <input
+                        type="number"
+                        {...register("discountDetails.value")}
+                        className={inputClass}
+                        placeholder="Discount amount"
+                        defaultValue={0}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Redeemable Points</label>
+                      <input
+                        type="number"
+                        {...register("redeemablePointsCount", {
+                          min: {
+                            value: 0,
+                            message: "Points must be non-negative",
+                          },
+                        })}
+                        className={inputClass}
+                        placeholder="Points required"
+                      />
+                      {errors.redeemablePointsCount && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.redeemablePointsCount.message}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-
+            <div className={cardClass}>
+              <div>
+                <label className={labelClass}>Priority</label>
+                <input
+                  type="number"
+                  {...register("priority", {
+                    required: "Priority is required",
+                  })}
+                  className={inputClass}
+                  placeholder="Enter priority)"
+                  defaultValue={0}
+                />
+                {errors.priority && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.priority.message}
+                  </p>
+                )}
+              </div>
+            </div>
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Offer Validity</h3>
               <div className="grid grid-cols-2 gap-4">

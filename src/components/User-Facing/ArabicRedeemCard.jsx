@@ -6,7 +6,7 @@ import { AppMainButton } from "../../ui/AppMainButton";
 import { XMarkIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
-const RedeemCard = ({ onClose, image }) => {
+const ArabicRedeemCard = ({ onClose, image }) => {
   const [code, setCode] = useState(["", "", "", ""]);
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -80,8 +80,8 @@ const RedeemCard = ({ onClose, image }) => {
       </div>
 
       <div className="px-5 pt-5 text-[#2C2C2C] poppins-text">
-        <h3 className="text-sm text-gray-500 font-medium">
-          Request the merchant to enter the 4 digit code:
+        <h3 className="text-sm text-gray-500 font-medium text-right">
+          طلب من التاجر إدخال الرمز السري المكون من 4 أرقام
         </h3>
         <div className="grid grid-cols-4 gap-3 px-4 py-4">
           {code.map((digit, index) => (
@@ -99,7 +99,11 @@ const RedeemCard = ({ onClose, image }) => {
             />
           ))}
         </div>
-        <AppMainButton loading={loading} onClick={handleSubmit} name="Redeem" />
+        <AppMainButton
+          loading={loading}
+          onClick={handleSubmit}
+          name="استبدال"
+        />
       </div>
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-30 z-50">
@@ -108,7 +112,7 @@ const RedeemCard = ({ onClose, image }) => {
               <>
                 <CheckCircleIcon className="w-16 h-16 text-green-500 mb-3 animate-bounce" />
                 <p className="text-lg font-semibold text-gray-800">
-                  Redeemed Successfully!
+                  تم الاستبدال بنجاح!
                 </p>
               </>
             ) : (
@@ -126,4 +130,4 @@ const RedeemCard = ({ onClose, image }) => {
   );
 };
 
-export default RedeemCard;
+export default ArabicRedeemCard;

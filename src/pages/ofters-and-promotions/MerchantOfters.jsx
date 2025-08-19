@@ -212,6 +212,14 @@ const MerchantOffers = () => {
                             .format("DD MMM YYYY")}
                         </p>
                       </div>
+
+                      {/* ✅ Priority Display */}
+                      <div className="text-xs">
+                        <span className="text-gray-500">Priority</span>
+                        <p className="font-medium text-gray-900">
+                          {offer.priority ?? "N/A"}
+                        </p>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-xs my-2">

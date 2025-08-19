@@ -1,6 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import RedeemCard from "../../components/User-Facing/RedeemCard";
 import { useEffect, useState } from "react";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";

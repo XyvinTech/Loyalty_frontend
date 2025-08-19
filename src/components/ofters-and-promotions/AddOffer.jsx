@@ -400,7 +400,8 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       numberOfCodes: data.numberOfCodes,
       description: data.description,
       posterImage: imageUrl,
-      priority: data.priority,
+      
+      priority: data.priority?data.priority:0,
       couponCategoryId: data.couponCategoryId,
       discountDetails: {
         type: data.discountDetails.type,
@@ -412,7 +413,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
         endDate: data.validityPeriod.endDate,
       },
       eligibilityCriteria: {
-        userTypes: data.eligibilityCriteria.userTypes.map((item) => item.value),
+        // userTypes: data.eligibilityCriteria.userTypes.map((item) => item.value),
         tiers: data.eligibilityCriteria.tiers.map((item) => item.value),
         minPointsBalance: data.eligibilityCriteria.minPointsBalance,
       },
@@ -964,6 +965,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
               </div>
             </div>
             <div className={cardClass}>
+              {editData&&
               <div>
                 <label className={labelClass}>Priority</label>
                 <input
@@ -981,6 +983,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                   </p>
                 )}
               </div>
+              }
             </div>
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Offer Validity</h3>
@@ -1029,7 +1032,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Eligibility Criteria</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <label className={labelClass}>User Types</label>
                   <Controller
                     name="eligibilityCriteria.userTypes"
@@ -1056,7 +1059,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                       />
                     )}
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className={labelClass}>Tiers</label>
                   <Controller

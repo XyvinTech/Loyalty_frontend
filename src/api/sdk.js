@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create SDK API client
 const sdkApiClient = axios.create({
-   baseURL: import.meta.env.VITE_SDK_API,
+   baseURL: "http://141.105.172.45:7733/api/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

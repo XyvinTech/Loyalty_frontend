@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -22,13 +22,16 @@ body {
   background: #718096;
 }
 .poppins-text {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+.alexandria-text {
+ font-family: 'Alexandria', sans-serif;
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 .windsong-text {
-  font-family: 'WindSong', cursive;
+  font-family: "WindSong", cursive;
 }
 /* For Firefox */
 .scrollbar-hide {

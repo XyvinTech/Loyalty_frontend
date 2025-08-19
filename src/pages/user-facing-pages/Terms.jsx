@@ -3,7 +3,7 @@ import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 const Terms = () => {
   return (
-    <div className="min-h-screen bg-white px-4 py-6 sm:px-6 sm:py-8">
+    <div className="min-h-screen bg-white px-4 py-6 sm:px-6 sm:py-8 poppins-text">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <DocumentTextIcon className="w-8 h-8 text-blue-600 mx-auto mb-4" />

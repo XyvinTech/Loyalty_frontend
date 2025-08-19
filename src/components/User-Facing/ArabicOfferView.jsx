@@ -14,7 +14,7 @@ const ArabicOfferView = ({ product, onClick }) => {
 
   return (
     <div
-      className="flex items-center gap-4 bg-white p-4 cursor-pointer w-full max-w-xl"
+      className="flex items-center gap-4 bg-white p-4 cursor-pointer w-full max-w-xl alexandria-text"
       onClick={onClick}
     >
       <img
@@ -26,10 +26,10 @@ const ArabicOfferView = ({ product, onClick }) => {
       <div className="flex-1 text-right">
         {" "}
         {/* Right aligned for Arabic */}
-        <p className="text-base font-semibold text-black poppins-text">
+        <p className="text-base font-semibold text-black alexandria-text">
           {product?.title?.ar}
         </p>
-        <p className="text-sm text-gray-800 poppins-text">
+        <p className="text-sm text-gray-800 alexandria-text">
           {product?.merchantId?.title?.ar}
         </p>
         <div

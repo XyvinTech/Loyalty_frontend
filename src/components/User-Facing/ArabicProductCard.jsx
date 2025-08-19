@@ -25,7 +25,7 @@ const ArabicProductCard = ({ product, onClick }) => {
           />
         </div>
       </div>
-      <div className="mb-1 p-2 poppins-text">
+      <div className="mb-1 p-2 alexandria-text">
         <span className="text-sm font-semibold leading-tight  line-clamp-2">
           {product?.title?.ar}
         </span>

@@ -97,7 +97,7 @@ const ArabicDashboard = () => {
 
       <div className="bg-white rounded-t-3xl p-4 mt-10">
         {/* Brands */}
-        <div className="flex items-center justify-between mt-6 poppins-text mb-4">
+        <div className="flex items-center justify-between mt-6 alexandria-text mb-4">
           <AppButton
             name={"عرض جميع العلامات التجارية"}
             variant={variant}
@@ -136,7 +136,7 @@ const ArabicDashboard = () => {
 
         {/* Offers */}
         <div
-          className="flex items-center mt-6 poppins-text mb-4 flex-row-reverse justify-between"
+          className="flex items-center mt-6 alexandria-text mb-4 flex-row-reverse justify-between"
           dir="rtl"
         >
           <AppButton
@@ -144,7 +144,9 @@ const ArabicDashboard = () => {
             variant={variant}
             onClick={() => navigate("/user/offers/ar")}
           />
-          <h2 className="text-sm font-semibold">عروض العلامة التجارية</h2>
+          <h2 className="text-sm font-semibold alexandria-text">
+            عروض العلامة التجارية
+          </h2>
         </div>
 
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
@@ -164,7 +166,7 @@ const ArabicDashboard = () => {
 
         {/* Categories */}
         <div
-          className="flex items-center justify-between mt-6 poppins-text mb-4"
+          className="flex items-center justify-between mt-6 alexandria-text mb-4"
           dir="rtl"
         >
           <h2 className="text-sm font-semibold">الفئات</h2>
@@ -203,7 +205,7 @@ const ArabicDashboard = () => {
                       className="w-16 h-16 rounded-full object-cover"
                     />
                   </div>
-                  <p className="text-[10px] text-center poppins-text line-clamp-2 leading-tight h-[28px]">
+                  <p className="text-[10px] text-center alexandria-text line-clamp-2 leading-tight h-[28px]">
                     {category?.title?.ar}
                   </p>
                 </div>

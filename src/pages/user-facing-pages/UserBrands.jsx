@@ -65,7 +65,7 @@ const UserBrands = () => {
   );
 
   const NoBrandsFound = () => (
-    <div className="flex flex-col items-center justify-center py-12 px-4 col-span-2">
+    <div className="flex flex-col items-center justify-center py-12 px-4 col-span-2 poppins-text">
       <div className="text-6xl text-gray-300 mb-4">🏢</div>
       <h3 className="text-lg font-medium text-gray-600 mb-2">
         No brands found
@@ -77,7 +77,7 @@ const UserBrands = () => {
   );
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen">
+    <div className="max-w-md mx-auto bg-white min-h-screen poppins-text">
       <div className="flex justify-between items-center p-4 ">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate(-1)}>

@@ -196,7 +196,7 @@ const ArabicPointsHistory = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6 alexandria-text">
         <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
           <div className="text-red-500 text-lg font-semibold mb-2">
             يتطلب تسجيل الدخول
@@ -225,7 +225,7 @@ const ArabicPointsHistory = () => {
               backgroundImage: `url(${backgroundImage})`,
             }}
           >
-            <div className="p-4 poppins-text items-center bg-white rounded-2xl space-y-2 animate-pulse">
+            <div className="p-4 alexandria-text items-center bg-white rounded-2xl space-y-2 animate-pulse">
               <div className="h-6 bg-gray-200 rounded w-32 mb-2"></div>
               <div className="h-8 bg-gray-200 rounded w-24 mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-28"></div>
@@ -301,7 +301,7 @@ const ArabicPointsHistory = () => {
           ) : (
             <>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 poppins-text">
+                <h3 className="text-lg font-semibold text-gray-800 alexandria-text">
                   سجل النقاط
                 </h3>
               </div>
@@ -320,7 +320,7 @@ const ArabicPointsHistory = () => {
                       {meta.icon}
                     </div>
 
-                    <div className="col-span-10 text-right poppins-text">
+                    <div className="col-span-10 text-right alexandria-text">
                       <div className="flex items-center justify-between">
                         <div className="font-medium text-[#1E2022] text-sm">
                           {meta.title}

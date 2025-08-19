@@ -21,7 +21,7 @@ const OfferCard = ({ data, tier }) => {
       onClick={() => {
         navigate(couponUrl);
       }}
-      className="rounded-[22px] bg-white transition-all  duration-200 hover:shadow-lg cursor-pointer overflow-hidden"
+      className="rounded-[22px] bg-white transition-all  duration-200 hover:shadow-lg cursor-pointer overflow-hidden poppins-text"
       style={{
         border: `1px solid ${tier}`,
       }}

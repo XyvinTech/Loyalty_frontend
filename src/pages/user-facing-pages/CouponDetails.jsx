@@ -40,7 +40,7 @@ const CouponDetails = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen pb-6">
+    <div className="max-w-md mx-auto bg-white min-h-screen pb-6 poppins-text">
       <div className="relative bg-[#23243A]  pb-0">
         <button
           className="absolute top-4 left-4 bg-white w-8 h-8 bg-opacity-50 rounded-full p-0 flex items-center justify-center cursor-pointer"

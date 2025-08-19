@@ -274,7 +274,7 @@ const PointsHistory = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 poppins-text">
       <div className="relative">
         <div
           className="h-92 flex items-center justify-center px-4"

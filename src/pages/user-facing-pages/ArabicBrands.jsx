@@ -65,7 +65,7 @@ const ArabicBrands = () => {
   );
 
   const NoBrandsFound = () => (
-    <div className="flex flex-col items-center justify-center py-12 px-4 col-span-2">
+    <div className="flex flex-col items-center justify-center py-12 px-4 col-span-2 alexandria-text">
       <div className="text-6xl text-gray-300 mb-4">🏢</div>
       <h3 className="text-lg font-medium text-gray-600 mb-2">
         لم يتم العثور على علامات تجارية
@@ -77,14 +77,17 @@ const ArabicBrands = () => {
   );
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen" dir="rtl">
+    <div
+      className="max-w-md mx-auto bg-white min-h-screen alexandria-text"
+      dir="rtl"
+    >
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="w-6 h-6" />
           </button>
           <div>
-            <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
+            <h1 className="text-2xl font-semibold text-[#404040] alexandria-text">
               العلامات التجارية
             </h1>
           </div>
@@ -119,7 +122,9 @@ const ArabicBrands = () => {
                   key={index}
                   product={brand}
                   onClick={() =>
-                    navigate("/user/offers/ar", { state: { brand: brand?._id } })
+                    navigate("/user/offers/ar", {
+                      state: { brand: brand?._id },
+                    })
                   }
                 />
               ))

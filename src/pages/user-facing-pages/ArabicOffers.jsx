@@ -128,7 +128,7 @@ const ArabicOffers = () => {
   );
 
   const NoOffersFound = () => (
-    <div className="flex flex-col items-center justify-center py-12 px-4">
+    <div className="flex flex-col items-center justify-center py-12 px-4 alexandria-text">
       <div className="text-6xl text-gray-300 mb-4">🔍</div>
       <h3 className="text-lg font-medium text-gray-600 mb-2">
         لا توجد عروض متاحة
@@ -142,13 +142,13 @@ const ArabicOffers = () => {
   );
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen" dir="rtl">
+    <div className="max-w-md mx-auto bg-white min-h-screen alexandria-text" dir="rtl">
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
+          <h1 className="text-2xl font-semibold text-[#404040] alexandria-text">
             العروض
           </h1>
         </div>
@@ -163,13 +163,13 @@ const ArabicOffers = () => {
             <button
               key={category?._id}
               onClick={() => setActiveCategory(category?._id)}
-              className={`px-4 py-2 rounded-[10px] whitespace-nowrap text-sm font-medium transition-all duration-200 poppins-text ${
+              className={`px-4 py-2 rounded-[10px] whitespace-nowrap text-sm font-medium transition-all duration-200 alexandria-text ${
                 activeCategory === category?._id
                   ? "bg-[#404040] text-white"
                   : "border border-[#404040] hover:bg-gray-200 text-[#404040]"
               }`}
             >
-              {category?.title?.ar }
+              {category?.title?.ar}
             </button>
           ))}
         </div>

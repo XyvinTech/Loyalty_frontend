@@ -65,7 +65,7 @@ const ArabicCategories = () => {
   );
 
   const NoCategoriesFound = () => (
-    <div className="flex flex-col items-center justify-center py-12 px-4 col-span-2">
+    <div className="flex flex-col items-center justify-center py-12 px-4 col-span-2 alexandria-text">
       <div className="text-6xl text-gray-300 mb-4">📂</div>
       <h3 className="text-lg font-medium text-gray-600 mb-2">
         لم يتم العثور على فئات
@@ -77,7 +77,10 @@ const ArabicCategories = () => {
   );
 
   return (
-    <div className="max-w-md min-h-screen bg-white flex flex-col justify-between" dir="rtl">
+    <div
+      className="max-w-md min-h-screen bg-white flex flex-col justify-between alexandria-text"
+      dir="rtl"
+    >
       <div>
         <div className="flex justify-between items-center p-4">
           <div className="flex items-center gap-2">

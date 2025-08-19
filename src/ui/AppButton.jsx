@@ -10,7 +10,7 @@ const AppButton = ({ name, variant = "bronze", onClick }) => {
   return (
     <button
       onClick={onClick}
-      className={`text-xs font-medium text-[#0F0F10] px-[10px] py-[8px] rounded-[10px] ${backgroundClass}`}
+      className={`text-xs  font-medium text-[#0F0F10] px-[10px] py-[8px] rounded-[10px] ${backgroundClass}`}
     >
       {name}
     </button>

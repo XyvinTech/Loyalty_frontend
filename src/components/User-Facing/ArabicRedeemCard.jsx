@@ -79,7 +79,7 @@ const ArabicRedeemCard = ({ onClose, image }) => {
         />
       </div>
 
-      <div className="px-5 pt-5 text-[#2C2C2C] poppins-text">
+      <div className="px-5 pt-5 text-[#2C2C2C] alexandria-text">
         <h3 className="text-sm text-gray-500 font-medium text-right">
           طلب من التاجر إدخال الرمز السري المكون من 4 أرقام
         </h3>
@@ -95,7 +95,7 @@ const ArabicRedeemCard = ({ onClose, image }) => {
               maxLength={1}
               inputMode="numeric"
               pattern="\d{1}"
-              className="w-[48px] h-[58px] text-center text-lg font-semibold border border-[#FFD95E] rounded-[10px] bg-[#FFFBF5] focus:outline-none poppins-text"
+              className="w-[48px] h-[58px] text-center text-lg font-semibold border border-[#FFD95E] rounded-[10px] bg-[#FFFBF5] focus:outline-none alexandria-text"
             />
           ))}
         </div>

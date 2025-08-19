@@ -39,7 +39,7 @@ const ArabicCouponDetail = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen pb-6">
+    <div className="max-w-md mx-auto bg-white min-h-screen pb-6 alexandria-text">
       <div className="relative bg-[#23243A]  pb-0">
         <button
           className="absolute top-4 left-4 bg-white w-8 h-8 bg-opacity-50 rounded-full p-0 flex items-center justify-center cursor-pointer"
@@ -54,7 +54,7 @@ const ArabicCouponDetail = () => {
         />
       </div>
 
-      <div className="px-5 pt-5 text-[#2C2C2C] poppins-text" dir="rtl">
+      <div className="px-5 pt-5 text-[#2C2C2C] alexandria-text" dir="rtl">
         <div className="flex items-center mb-2">
           <img
             src={offerData?.merchantId?.image}
@@ -80,7 +80,7 @@ const ArabicCouponDetail = () => {
                 .locale("ar")
                 .format("DD MMMM YYYY")}
             </li>
-          
+
             {offerData?.merchantId?.description?.ar && (
               <li className="break-words whitespace-pre-line text-xs leading-relaxed">
                 <strong>تفاصيل التاجر</strong>{" "}

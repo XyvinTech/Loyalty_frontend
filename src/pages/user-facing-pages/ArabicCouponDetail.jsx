@@ -6,6 +6,7 @@ import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import { AppMainButton } from "../../ui/AppMainButton";
 import moment from "moment";
+import ArabicRedeemCard from "../../components/User-Facing/ArabicRedeemCard";
 const ArabicCouponDetail = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -118,7 +119,7 @@ const ArabicCouponDetail = () => {
       {showRedeemCard && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-40 transition-opacity flex items-center justify-center">
           <div className="w-[86%] max-w-md rounded-2xl ">
-            <RedeemCard
+            <ArabicRedeemCard
               onClose={() => setShowRedeemCard(false)}
               image={offerData?.posterImage}
             />

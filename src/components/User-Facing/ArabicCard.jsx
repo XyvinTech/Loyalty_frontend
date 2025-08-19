@@ -226,9 +226,7 @@ const ArabicCard = ({ streak }) => {
                         >
                           <div
                             className={`flex items-center justify-center rounded-full ${
-                              isCompleted
-                                ? "w-5 h-5" // bigger circle when completed
-                                : "w-6 h-6" // default size
+                              isCompleted ? "w-5 h-5" : "w-6 h-6"
                             } ${
                               isCurrent ? "text-[#F6CD00]" : "text-gray-400"
                             }`}

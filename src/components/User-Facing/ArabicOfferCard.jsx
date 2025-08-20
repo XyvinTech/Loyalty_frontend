@@ -42,9 +42,12 @@ const ArabicOfferCard = ({ data, tier }) => {
 
         <div className="absolute top-3 right-3">
           {discountDetails?.type === "PERCENTAGE" && (
-            <div className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-xl bg-yellow-600  ">
+            <div className="px-3 py-1 rounded-full text-[10px] font-medium text-white shadow-xl bg-yellow-600  ">
               {`${discountDetails?.value}% خصم`}
             </div>
+          )}
+          {discountDetails?.type === "BUY-1-GET-1" && (
+            <div className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-xl bg-yellow-600  "></div>
           )}
         </div>
       </div>

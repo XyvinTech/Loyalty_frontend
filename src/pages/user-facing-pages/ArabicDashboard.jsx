@@ -103,7 +103,7 @@ const ArabicDashboard = () => {
             variant={variant}
             onClick={() => navigate("/user/brands/ar")}
           />
-          <h2 className="text-sm font-semibold">العلامات التجارية</h2>
+          <h2 className="text-sm font-medium">العلامات التجارية</h2>
         </div>
 
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
@@ -144,7 +144,7 @@ const ArabicDashboard = () => {
             variant={variant}
             onClick={() => navigate("/user/offers/ar")}
           />
-          <h2 className="text-sm font-semibold alexandria-text">
+          <h2 className="text-sm font-medium alexandria-text">
             عروض العلامة التجارية
           </h2>
         </div>
@@ -169,7 +169,7 @@ const ArabicDashboard = () => {
           className="flex items-center justify-between mt-6 alexandria-text mb-4"
           dir="rtl"
         >
-          <h2 className="text-sm font-semibold">الفئات</h2>
+          <h2 className="text-sm font-medium">الفئات</h2>
           <AppButton
             name={"عرض جميع الفئات"}
             variant={variant}

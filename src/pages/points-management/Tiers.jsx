@@ -122,12 +122,12 @@ const Tiers = () => {
             >
               <PencilIcon className="w-4 h-4" />
             </button>
-            <button
+            {/* <button
               className="text-slate-400 hover:text-rose-600 p-1.5 rounded-md hover:bg-rose-50 transition-colors"
               onClick={() => handleDeleteOpen(item?._id)}
             >
               <TrashIcon className="w-4 h-4" />
-            </button>
+            </button> */}
           </div>
         </td>
       </tr>

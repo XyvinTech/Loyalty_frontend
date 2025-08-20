@@ -670,13 +670,13 @@ const Customer = () => {
                       >
                         <PencilIcon className="w-4 h-4" />
                       </button>
-                      <button
+                      {/* <button
                         className="text-slate-400 hover:text-red-700 p-1 rounded-lg hover:bg-red-50"
                         onClick={() => handleDeleteOpen(item._id)}
                         title="Delete"
                       >
                         <TrashIcon className="w-4 h-4" />
-                      </button>
+                      </button> */}
                     </div>
                   </td>
                 </tr>

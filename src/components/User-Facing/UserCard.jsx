@@ -127,7 +127,7 @@ const UserCard = ({ streak }) => {
       />
 
       <div className="relative z-10 h-full flex flex-col justify-between">
-        {/* Tier Info */}
+      
         <div className="text-start pl-30 px-4 flex justify-between items-start  pt-4">
           <div className="pt-5">
             <p

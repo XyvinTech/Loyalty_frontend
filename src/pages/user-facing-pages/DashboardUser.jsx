@@ -8,7 +8,7 @@ import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
-
+import khedmah from "../../assets/logo.png"
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
@@ -87,6 +87,17 @@ const DashboardUser = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <div className="flex items-center justify-between px-6 py-4">
+      <h1 className="text-lg font-semibold text-[#0C3262] poppins-text">Welcome to</h1>
+      <div className="flex flex-col items-end">
+        <img
+          src={khedmah} 
+          alt="Khedmah Logo"
+          className="h-12 object-contain"
+        />
+        <span className="text-sm font-semibold text-[#024BA3] italic">Rewards</span>
+      </div>
+    </div>
       <div className="relative">
         <div
           className="rounded-b-2xl h-50"
@@ -100,7 +111,7 @@ const DashboardUser = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-t-3xl p-4 mt-10">
+      <div className="bg-white rounded-t-3xl p-4 mt-30">
         {/* Brands */}
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
           <h2 className="text-sm font-semibold">Brands</h2>

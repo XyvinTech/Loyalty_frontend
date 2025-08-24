@@ -13,6 +13,7 @@ import fireImage from "../../assets/Group (1).png";
 import bronzebg from "../../assets/Ellipse 3.png";
 moment.locale("ar");
 import { FireIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
+import { useLocation } from "react-router-dom";
 moment.updateLocale("ar", {
   months: [
     "يناير",
@@ -51,6 +52,9 @@ const ArabicCard = ({ streak }) => {
 
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
+      const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const urlName = queryParams.get("name");
   const getTierTheme = (tier) => {
     switch (tier.toLowerCase()) {
       case "bronze":
@@ -181,7 +185,7 @@ const ArabicCard = ({ streak }) => {
               className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
               style={{ backgroundImage: theme.nameMembershipGradient }}
             >
-              {user.name}
+              {urlName}
             </h1>
 
             <h2

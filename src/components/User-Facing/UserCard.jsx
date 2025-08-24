@@ -12,6 +12,7 @@ import goldImage from "../../assets/Gold1 loyality.webp";
 import silverImage from "../../assets/SIL loyality.webp";
 import fireImage from "../../assets/Group (1).png";
 import bronzebg from "../../assets/Ellipse 3.png";
+import { useLocation } from "react-router-dom";
 
 const UserCard = ({ streak }) => {
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,9 @@ const UserCard = ({ streak }) => {
 
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
-
+ const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const urlName = queryParams.get("name");
   useEffect(() => {
     const fetchCustomerData = async () => {
       if (!isAuthenticated || !customerID || !apiKey) return;
@@ -138,7 +141,7 @@ const UserCard = ({ streak }) => {
               className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
               style={{ backgroundImage: theme.nameMembershipGradient }}
             >
-              {user.name}
+              {urlName}
             </h1>
 
             <h2

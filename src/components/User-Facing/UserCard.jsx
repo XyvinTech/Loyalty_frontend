@@ -131,7 +131,7 @@ const UserCard = ({ streak, show }) => {
 
   return (
     <>
-      <div className="relative max-w-md w-full h-full min-h-[170px] rounded-2xl overflow-hidden shadow-lg mx-auto">
+      <div className="relative max-w-md w-full h-full  rounded-2xl overflow-hidden shadow-lg mx-auto">
         <img
           src={theme.image}
           alt="Loyalty Background"
@@ -210,22 +210,51 @@ const UserCard = ({ streak, show }) => {
                   <div className="flex-1 flex items-center justify-between mx-0 relative mt-6">
                     <div className="absolute top-2 left-0 w-full h-[4px] bg-gray-200 rounded-full" />
 
-                    <div
-                      className="absolute top-2 left-0 h-[4px]  rounded-full transition-all duration-500"
-                      style={{
-                        width: `${user.nextTierProgress.streak.percentage}%`,
-                        background: theme.transactionColor,
-                      }}
-                    />
-
+                    <div className="absolute top-2 left-0 flex w-full h-[4px] rounded-full overflow-hidden">
+                      {user.nextTierProgress.streak.period_details.map(
+                        (period, index) => (
+                          <div
+                            key={index}
+                            className="h-full transition-all duration-500 relative"
+                            style={{
+                              width: `${
+                                100 /
+                                user.nextTierProgress.streak.required_periods
+                              }%`,
+                              background: period.completed
+                                ? theme.transactionColor 
+                                : `linear-gradient(to right, ${theme.transactionColor} ${period.percentage}%, #e5e7eb ${period.percentage}%)`,
+                            }}
+                          />
+                        )
+                      )}
+                    </div>
                     {user.nextTierProgress.streak.period_details.map(
                       (period, index) => (
                         <div
                           key={index}
                           className="flex flex-col items-center text-center relative z-10"
+                          style={{
+                            width: `${
+                              100 /
+                              user.nextTierProgress.streak.required_periods
+                            }%`,
+                          }}
                         >
-                          <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[#FFDD00] mb-1">
-                            <CheckIcon className="w-3 h-3 text-black" />
+                          <div
+                            className={`flex items-center justify-center w-5 h-5 rounded-full mb-1 border-2 ${
+                              period.completed
+                                ? "bg-[#FFDD00] border-[#FFDD00]" // completed
+                                : "bg-white border-gray-400" // not completed
+                            }`}
+                          >
+                            {period.completed ? (
+                              <CheckIcon className="w-3 h-3 text-black" />
+                            ) : (
+                              <span className="text-[10px] text-gray-500">
+                                ✕
+                              </span>
+                            )}
                           </div>
 
                           <span className="text-[12px] text-[#0C3262] font-medium">
@@ -243,6 +272,7 @@ const UserCard = ({ streak, show }) => {
                       )
                     )}
                   </div>
+
                   <div className="flex flex-col items-center min-w-[64px]">
                     <img
                       src={getTierTheme(user.nextTierName).img}

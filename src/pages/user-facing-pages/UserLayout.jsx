@@ -18,7 +18,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customerID, apiKey, customerData } =
+  const { isAuthenticated, customerID, apiKey, name, customerData } =
     useCustomerAuth();
 
   // Simulate 3s loading
@@ -98,6 +98,9 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     if (customerID && apiKey) {
       searchParams.set("customerID", customerID);
       searchParams.set("apiKey", apiKey);
+    }
+    if (name) {
+      searchParams.set("name", name);
     }
 
     const url = searchParams.toString()

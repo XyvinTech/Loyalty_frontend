@@ -7,6 +7,7 @@ export const useCustomerAuth = () => {
   const [customerAuth, setCustomerAuth] = useState({
     customerID: null,
     apiKey: null,
+    name: null,
     isAuthenticated: false,
     customerData: null,
   });
@@ -26,6 +27,7 @@ export const useCustomerAuth = () => {
     const clearedAuth = {
       customerID: null,
       apiKey: null,
+      name: null,
       isAuthenticated: false,
       customerData: null,
     };
@@ -33,10 +35,11 @@ export const useCustomerAuth = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  const setAuth = useCallback((customerID, apiKey, customerData = null) => {
+  const setAuth = useCallback((customerID, apiKey, name = null, customerData = null) => {
     const authData = {
       customerID,
       apiKey,
+      name,
       isAuthenticated: true,
       customerData,
     };
@@ -57,6 +60,7 @@ export const useCustomerAuth = () => {
       console.error("Failed to refresh customer data:", error);
     }
   }, [customerAuth, updateCustomerData]);
+
   useEffect(() => {
     const fetchCustomerData = async () => {
       const { customerID, apiKey, customerData, isAuthenticated } = customerAuth;
@@ -81,11 +85,13 @@ export const useCustomerAuth = () => {
       const queryParams = new URLSearchParams(window.location.search);
       const urlCustomerID = queryParams.get("customerID");
       const urlApiKey = queryParams.get("apiKey");
+      const urlName = queryParams.get("name");
 
       if (urlCustomerID && urlApiKey) {
         const authData = {
           customerID: urlCustomerID,
           apiKey: urlApiKey,
+          name: urlName,
           isAuthenticated: true,
           customerData: null,
         };
@@ -110,6 +116,7 @@ export const useCustomerAuth = () => {
       setCustomerAuth({
         customerID: null,
         apiKey: null,
+        name: null,
         isAuthenticated: false,
         customerData: null,
       });

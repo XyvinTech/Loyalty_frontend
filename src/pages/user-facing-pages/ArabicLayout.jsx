@@ -18,7 +18,7 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customerID, apiKey, customerData } =
+  const { isAuthenticated, customerID, apiKey, customerData,name } =
     useCustomerAuth();
 
   // Simulate loading delay (2 sec)
@@ -99,7 +99,9 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
       searchParams.set("customerID", customerID);
       searchParams.set("apiKey", apiKey);
     }
-
+  if (name) {
+      searchParams.set("name", name);
+    }
     const url = searchParams.toString()
       ? `${item.href}?${searchParams.toString()}`
       : item.href;

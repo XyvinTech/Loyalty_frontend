@@ -139,15 +139,9 @@ const UserCard = ({ streak }) => {
         />
 
         <div className="relative z-10 h-full flex flex-col justify-between">
-          {/* Top Section */}
+        
           <div className="text-start pl-27 px-4 flex justify-between items-start pt-0">
             <div className="pt-5">
-              {/* <p
-                className="text-[14px] italic windsong-text"
-                style={{ color: theme.welcomeColor }}
-              >
-                Welcome
-              </p> */}
 
               <h1
                 className="text-base font-bold poppins-text uppercase bg-clip-text text-transparent"
@@ -164,7 +158,7 @@ const UserCard = ({ streak }) => {
               </h2>
             </div>
           </div>
-          <div className="flex justify-end items-center px-4 pb-4 pt-12">
+          <div className="flex justify-end items-center px-4 pb-4 pt-15">
             <button
               className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}

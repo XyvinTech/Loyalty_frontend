@@ -112,8 +112,11 @@ const DashboardUser = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-t-3xl p-4 pt-70">
-        {/* Brands */}
+      <div
+        className={`bg-white rounded-t-3xl p-4 ${
+          customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-70"
+        }`}
+      >
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
           <h2 className="text-sm font-semibold">Brands</h2>
           <AppButton

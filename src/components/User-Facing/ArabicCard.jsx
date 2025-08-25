@@ -202,7 +202,7 @@ const ArabicCard = ({ streak, show }) => {
               </h1>
 
               <h2
-                className="uppercase text-2xl font-bold bg-clip-text text-transparent text-left"
+                className="uppercase text-base font-bold bg-clip-text text-transparent text-left"
                 style={{ backgroundImage: theme.membershipGradient }}
               >
                 {user.membership}
@@ -214,7 +214,7 @@ const ArabicCard = ({ streak, show }) => {
               className=" text-[10px]  bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}
             >
-              Balance Points:{" "}
+              Point Balance:{" "}
               <span
                 className="px-2 py-1 rounded-full"
                 style={{ background: theme.nameGradient }}
@@ -272,13 +272,8 @@ const ArabicCard = ({ streak, show }) => {
                             key={index}
                             className="h-full transition-all duration-500 relative"
                             style={{
-                              width: `${
-                                100 /
-                                user.nextTierProgress.streak.required_periods
-                              }%`,
-                              background: period.completed
-                                ? theme.transactionColor
-                                : `linear-gradient(to right, ${theme.transactionColor} ${period.percentage}%, #e5e7eb ${period.percentage}%)`,
+                              width: "100%",
+                              background: theme.transactionColor,
                             }}
                           />
                         )

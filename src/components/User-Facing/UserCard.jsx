@@ -142,14 +142,14 @@ const UserCard = ({ streak, show }) => {
           <div className="text-start pl-27 px-4 flex justify-between items-start pt-0">
             <div className="pt-5">
               <h1
-                className="text-base font-bold poppins-text uppercase bg-clip-text text-transparent"
+                className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
                 style={{ backgroundImage: theme.nameGradient }}
               >
                 {urlName}
               </h1>
 
               <h2
-                className="uppercase text-lg font-bold bg-clip-text text-transparent"
+                className="uppercase text-base font-bold bg-clip-text text-transparent"
                 style={{ backgroundImage: theme.membershipGradient }}
               >
                 {user.membership}
@@ -161,7 +161,7 @@ const UserCard = ({ streak, show }) => {
               className=" text-[10px]  bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}
             >
-              Balance Points:{" "}
+              Point Balance:{" "}
               <span
                 className="px-2 py-1 rounded-full"
                 style={{ background: theme.nameGradient }}
@@ -219,13 +219,8 @@ const UserCard = ({ streak, show }) => {
                             key={index}
                             className="h-full transition-all duration-500 relative"
                             style={{
-                              width: `${
-                                100 /
-                                user.nextTierProgress.streak.required_periods
-                              }%`,
-                              background: period.completed
-                                ? theme.transactionColor
-                                : `linear-gradient(to right, ${theme.transactionColor} ${period.percentage}%, #e5e7eb ${period.percentage}%)`,
+                              width: "100%",
+                              background: theme.transactionColor,
                             }}
                           />
                         )

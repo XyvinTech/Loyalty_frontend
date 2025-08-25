@@ -374,7 +374,7 @@ const HowtoGet = () => {
               <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                 <span className="text-sm">2</span>
               </div>
-              <p>Reach Silver or Gold tier for bonus point multipliers and longer expiry periods</p>
+              <p>Reach Silver or Gold tier for higher point multipliers and longer expiry periods</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">

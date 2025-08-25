@@ -8,7 +8,7 @@ import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
 import ArabicCard from "../../components/User-Facing/ArabicCard";
 import ArabicOfferCard from "../../components/User-Facing/ArabicOfferCard";
-import khedmah from "../../assets/logo.png";
+import khedmah from "../../assets/WhatsApp Image 2025-08-25 at 17.24.42_5bf6082a.jpg";
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
@@ -86,15 +86,12 @@ const ArabicDashboard = () => {
         {/* <h1 className="text-lg font-semibold text-[#0C3262] poppins-text">
                 Welcome to
               </h1> */}
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end mt-3">
           <img
             src={khedmah}
             alt="Khedmah Logo"
             className="h-12 object-contain"
           />
-          <span className="text-sm font-semibold text-[#024BA3] italic">
-            Rewards
-          </span>
         </div>
       </div>
       <div className="relative">

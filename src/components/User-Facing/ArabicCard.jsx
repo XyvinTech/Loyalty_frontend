@@ -19,7 +19,7 @@ import silverbg from "../../assets/silvertier.webp";
 import goldbg from "../../assets/goldtier.webp";
 moment.locale("ar");
 import { FireIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AppButton from "../../ui/AppButton";
 moment.updateLocale("ar", {
   months: [
@@ -50,6 +50,7 @@ const ArabicCard = ({ streak, show }) => {
     nextTierName: null,
     nextTierProgress: null,
   });
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const progress = useMemo(() => {
@@ -332,7 +333,7 @@ const ArabicCard = ({ streak, show }) => {
                           <ArrowRightIcon className="w-4 h-4" />
                         </>
                       }
-                      onClick={() => navigate("/user/how-to")}
+                      onClick={() => navigate("/user/how-to/ar")}
                       variant={theme.variant}
                     />
                   </div>

@@ -138,6 +138,8 @@ const router = createBrowserRouter([
           { path: "/user/categories/ar", element: <ArabicCategories /> },
           { path: "/user/support", element: <UserSupport /> },
           { path: "/user/terms-and-conditions/ar", element: <Terms /> },
+          { path: "/user/how-to/ar", element: <HowtoGet /> },
+
         ],
       },
       

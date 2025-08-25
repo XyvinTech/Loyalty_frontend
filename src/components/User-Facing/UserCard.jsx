@@ -169,14 +169,16 @@ const UserCard = ({ streak, show }) => {
                 {user.points}
               </span>
             </h2>
-            <button
-              className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
-              style={{ color: theme.transactionColor }}
-              onClick={() => navigate("/user/history")}
-            >
-              See Transactions
-              <span className="ml-1">{">"}</span>
-            </button>
+            {show && (
+              <button
+                className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
+                style={{ color: theme.transactionColor }}
+                onClick={() => navigate("/user/history")}
+              >
+                See Transactions
+                <span className="ml-1">{">"}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>{" "}
@@ -222,7 +224,7 @@ const UserCard = ({ streak, show }) => {
                                 user.nextTierProgress.streak.required_periods
                               }%`,
                               background: period.completed
-                                ? theme.transactionColor 
+                                ? theme.transactionColor
                                 : `linear-gradient(to right, ${theme.transactionColor} ${period.percentage}%, #e5e7eb ${period.percentage}%)`,
                             }}
                           />

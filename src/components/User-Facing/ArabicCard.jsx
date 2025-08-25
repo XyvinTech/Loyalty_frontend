@@ -209,15 +209,29 @@ const ArabicCard = ({ streak, show }) => {
               </h2>
             </div>
           </div>
-          <div className="flex justify-end items-center px-4 pb-4 pt-12">
-            <button
-              className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
+          <div className="flex flex-col items-end px-4 pb-4 pt-15 space-y-2">
+            <h2
+              className=" text-[10px]  bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}
-              onClick={() => navigate("/user/history/ar")}
             >
-              See Transactions
-              <span className="ml-1">{">"}</span>
-            </button>
+              Balance Points:{" "}
+              <span
+                className="px-2 py-1 rounded-full"
+                style={{ background: theme.nameGradient }}
+              >
+                {user.points}
+              </span>
+            </h2>
+            {show && (
+              <button
+                className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
+                style={{ color: theme.transactionColor }}
+                onClick={() => navigate("/user/history/ar")}
+              >
+                See Transactions
+                <span className="ml-1">{">"}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>{" "}

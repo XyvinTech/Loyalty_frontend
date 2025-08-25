@@ -30,7 +30,6 @@ moment.updateLocale("ar", {
     "ديسمبر",
   ],
 });
-
 const ArabicCard = ({ streak }) => {
   const [user, setUser] = useState({
     name: "",

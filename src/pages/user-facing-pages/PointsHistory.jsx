@@ -276,7 +276,7 @@ const PointsHistory = () => {
     <div className="min-h-screen bg-gray-50 poppins-text">
       <div className="relative">
         <div
-          className="h-92 flex items-center justify-center px-4"
+          className="h-200 flex items-center justify-center px-4"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: "cover",
@@ -288,7 +288,7 @@ const PointsHistory = () => {
           </div>
         </div>
 
-        <div className="w-full bg-white top-75 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
+        <div className="w-full bg-white top-82 absolute rounded-t-3xl p-4 mt-10 pb-20 max-h-[80vh] overflow-auto">
           {transactions.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-500 text-sm">

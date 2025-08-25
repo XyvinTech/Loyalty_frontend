@@ -139,10 +139,8 @@ const UserCard = ({ streak }) => {
         />
 
         <div className="relative z-10 h-full flex flex-col justify-between">
-        
           <div className="text-start pl-27 px-4 flex justify-between items-start pt-0">
             <div className="pt-5">
-
               <h1
                 className="text-base font-bold poppins-text uppercase bg-clip-text text-transparent"
                 style={{ backgroundImage: theme.nameGradient }}
@@ -158,7 +156,19 @@ const UserCard = ({ streak }) => {
               </h2>
             </div>
           </div>
-          <div className="flex justify-end items-center px-4 pb-4 pt-15">
+          <div className="flex flex-col items-end px-4 pb-4 pt-15 space-y-2">
+            <h2
+              className=" text-[10px]  bg-clip-text text-transparent"
+              style={{ color: theme.transactionColor }}
+            >
+              Balance Points:{" "}
+              <span
+                className="px-2 py-1 rounded-full"
+                style={{ background: theme.nameGradient }}
+              >
+                {user.points}
+              </span>
+            </h2>
             <button
               className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}

@@ -1,7 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import khedmah from "../../assets/Frame 92.png";
-import { CheckIcon, ChevronLeftIcon } from "@heroicons/react/24/outline"; // flipped icon
+import {
+  ArrowRightIcon,
+  CheckIcon,
+  ChevronLeftIcon,
+} from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
+import walking from "../../assets/Vector.png";
 import { getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import moment from "moment";
@@ -9,11 +14,13 @@ import "moment/locale/ar";
 import bronzeimage from "../../assets/bronse loyality.webp";
 import goldImage from "../../assets/Gold1 loyality.webp";
 import silverImage from "../../assets/SIL loyality.webp";
-import fireImage from "../../assets/Group (1).png";
-import bronzebg from "../../assets/Ellipse 3.png";
+import bronzebg from "../../assets/bronzetier.webp";
+import silverbg from "../../assets/silvertier.webp";
+import goldbg from "../../assets/goldtier.webp";
 moment.locale("ar");
 import { FireIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
 import { useLocation } from "react-router-dom";
+import AppButton from "../../ui/AppButton";
 moment.updateLocale("ar", {
   months: [
     "يناير",
@@ -39,6 +46,7 @@ const ArabicCard = ({ streak }) => {
     avatar: null,
     tier: "Bronze",
     requiredPoint: 0,
+    nextTierEn: null,
     nextTierName: null,
     nextTierProgress: null,
   });
@@ -51,40 +59,53 @@ const ArabicCard = ({ streak }) => {
 
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
-      const location = useLocation();
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const urlName = queryParams.get("name");
   const getTierTheme = (tier) => {
     switch (tier.toLowerCase()) {
       case "bronze":
         return {
-          welcomeColor: "#9A653D",
-          nameMembershipGradient: "linear-gradient(90deg, #9A653D, #CBAD8B)",
+          welcomeColor: "#FFDDBD",
+          nameGradient: "linear-gradient(90deg, #F7CAA6, #FFFFFF, #A16133)",
+          membershipGradient:
+            "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
+          transactionColor: "#784019",
           img: bronzebg,
           bg: "#f8c44c",
+          variant: "bronze",
           image: bronzeimage,
         };
       case "silver":
         return {
-          welcomeColor: "#A6A6A6",
-          nameMembershipGradient: "linear-gradient(90deg, #FFFFFF, #828282)",
+          welcomeColor: "#434343",
+          nameGradient: "linear-gradient(90deg, #D8D8D8, #FFFFFF)",
+          membershipGradient: "linear-gradient(270deg, #090909, #6F6F6F)",
+          transactionColor: "#0E0E0E",
           image: silverImage,
-          img: bronzebg,
+          img: silverbg,
+          variant: "silver",
           bg: "#bcbcbc",
         };
       case "gold":
         return {
-          welcomeColor: "#B87F06",
-          nameMembershipGradient: "linear-gradient(90deg, #F6D27E, #D99A00)",
+          welcomeColor: "#FFDDBD",
+          nameGradient: "linear-gradient(90deg,#FBC000, #FFFFFF,#FFDD00)",
+          membershipGradient:
+            "linear-gradient(270deg, #FFF08B, #FED500,#FFE289,#FDCD01,#FFC100)",
+          transactionColor: "#784019",
           image: goldImage,
+          img: goldbg,
+          variant: "gold",
         };
       default:
         return {
           welcomeColor: "#9A653D",
-          nameMembershipGradient: "linear-gradient(90deg, #9A653D, #CBAD8B)",
+          nameGradient: "linear-gradient(90deg, #9A653D, #CBAD8B)",
         };
     }
   };
+
   useEffect(() => {
     const fetchCustomerData = async () => {
       if (!isAuthenticated || !customerID || !apiKey) {
@@ -117,6 +138,7 @@ const ArabicCard = ({ streak }) => {
               : 0,
             avatar: null,
             requiredPoint,
+            nextTierEn: customerData.next_tier?.en || null,
             nextTierName: customerData.next_tier?.ar || null,
             nextTierProgress:
               customerData.next_tier?.next_tier_progress || null, // ✅ Fixed: corrected the path
@@ -161,99 +183,92 @@ const ArabicCard = ({ streak }) => {
   }
 
   return (
-    <div
-      dir="rtl"
-      className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto"
-    >
-      <img
-        src={theme.image}
-        alt="Loyalty Background"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="relative z-10">
-        <div className="text-start pl-30 px-4 flex justify-between items-start  pt-4">
-          <div className="pt-5">
-            <p
-              className="text-[14px] italic windsong-text"
-              style={{ color: theme.welcomeColor }}
-            >
-              مرحباً
-            </p>
+    <>
+      <div className="relative max-w-md w-full h-full min-h-[170px] rounded-2xl overflow-hidden shadow-lg mx-auto">
+        <img
+          src={theme.image}
+          alt="Loyalty Background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="relative z-10">
+          <div className="text-left pl-27 px-0 flex justify-start items-start pt-4">
+            <div className="pt-5">
+              <h1
+                className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent text-left"
+                style={{ backgroundImage: theme.nameGradient }}
+              >
+                {urlName}
+              </h1>
 
-            <h1
-              className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
-              style={{ backgroundImage: theme.nameMembershipGradient }}
-            >
-              {urlName}
-            </h1>
-
-            <h2
-              className="uppercase text-2xl font-bold bg-clip-text text-transparent"
-              style={{ backgroundImage: theme.nameMembershipGradient }}
-            >
-              {user.membership}
-            </h2>
+              <h2
+                className="uppercase text-2xl font-bold bg-clip-text text-transparent text-left"
+                style={{ backgroundImage: theme.membershipGradient }}
+              >
+                {user.membership}
+              </h2>
+            </div>
           </div>
-          {/* <img
-            src={khedmah}
-            alt="Khedmah Logo"
-            className="w-11 h-11 rounded-lg"
-          /> */}
+          <div className="flex justify-end items-center px-4 pb-4 pt-12">
+            <button
+              className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
+              style={{ color: theme.transactionColor }}
+              onClick={() => navigate("/user/history/ar")}
+            >
+              See Transactions
+              <span className="ml-1">{">"}</span>
+            </button>
+          </div>
         </div>
+      </div>{" "}
+      <div className="px-0 pb-0 pt-0 ">
         {streak ? (
-          <div className="px-12 pr-6 pb-0 pt-6">
+          <div className="px-0 pt-6">
             {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
-              <div className="relative w-full">
-                <div className="absolute top-[14px] left-0 w-full h-[2px] bg-gray-200 rounded-full" />
+              <>
+                <div className="relative w-full flex items-center justify-between mt-5 ">
+                  <div className="flex flex-col items-center min-w-[40px]">
+                    <img
+                      src={walking}
+                      alt="Walker"
+                      className="w-[18px] h-[32px]"
+                    />
+                  </div>
 
-                <div
-                  className="absolute top-[14px] right-0 h-[2px] rounded-full  transition-all duration-500"
-                  style={{
-                    width: `${user.nextTierProgress.streak.percentage}%`,
-                    backgroundImage: theme.nameMembershipGradient,
-                  }}
-                />
+                  <div className="flex flex-col items-center min-w-[64px] relative">
+                    <span className="absolute -top-6 text-xs font-semibold text-[#0C3262] whitespace-nowrap">
+                      You are here !
+                    </span>
+                    <img
+                      src={theme.img}
+                      alt={user.membership}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-sm font-bold text-[#0C3262]">
+                      {user.membership}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex items-center justify-between mx-0 relative mt-6">
+                    <div className="absolute top-2 left-0 w-full h-[4px] bg-gray-200 rounded-full" />
 
-                <div className="flex justify-between relative z-10">
-                  {user.nextTierProgress.streak.period_details.map(
-                    (period, index) => {
-                      const isCompleted = period.completed;
-                      const isCurrent =
-                        index ===
-                        user.nextTierProgress.streak.completed_periods;
+                    <div
+                      className="absolute top-2 left-0 h-[4px]  rounded-full transition-all duration-500"
+                      style={{
+                        width: `${user.nextTierProgress.streak.percentage}%`,
+                        background: theme.transactionColor,
+                      }}
+                    />
 
-                      return (
+                    {user.nextTierProgress.streak.period_details.map(
+                      (period, index) => (
                         <div
                           key={index}
-                          className="flex flex-col items-center text-center min-w-[64px]"
+                          className="flex flex-col items-center text-center relative z-10"
                         >
-                          <div
-                            className={`flex items-center justify-center rounded-full ${
-                              isCompleted ? "w-5 h-5" : "w-6 h-6"
-                            } ${
-                              isCurrent ? "text-[#F6CD00]" : "text-gray-400"
-                            }`}
-                            style={{ backgroundColor: theme.bg }}
-                          >
-                            {isCompleted ? (
-                              <span className="text-white font-bold text-xs">
-                                <CheckIcon className="w-4 h-4" />
-                              </span>
-                            ) : isCurrent ? (
-                              <span className="text-white font-bold text-xs">
-                                <CheckIcon className="w-6 h-6" />
-                              </span>
-                            ) : (
-                              <span className="text-white font-bold text-xs">
-                                <CheckIcon className="w-4 h-4" />
-                              </span>
-                            )}
+                          <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[#FFDD00] mb-1">
+                            <CheckIcon className="w-3 h-3 text-black" />
                           </div>
 
-                          <span
-                            className="text-[11px] mt-1 "
-                            style={{ color: theme.bg }}
-                          >
+                          <span className="text-[12px] text-[#0C3262] font-medium">
                             {moment(
                               period.date_range.split(" - ")[0],
                               "D/M/YYYY"
@@ -261,43 +276,48 @@ const ArabicCard = ({ streak }) => {
                               .locale("ar")
                               .format("MMMM")}
                           </span>
-                          {isCurrent && (
-                            <span className="text-[10px] text-white">
-                              {period.points_earned} / {period.points_required}
-                            </span>
-                          )}
+                          <span className="text-[11px] text-[#0C3262]">
+                            {period.points_earned} / {period.points_required}
+                          </span>
                         </div>
-                      );
-                    }
-                  )}
-
-                  <div className="flex flex-col items-center text-center min-w-[64px]">
-                    <div
-                      className="w-6 h-6 flex items-center justify-center rounded-full bg-center bg-cover"
-                      style={{ backgroundImage: `url(${theme.img})` }}
-                    >
-                      <img
-                        src={fireImage}
-                        alt="Fire"
-                        className="w-[9px] h-[11px]"
-                      />
-                    </div>
-                    {/* <span className="text-[16px] mt-1 text-gray-800">
+                      )
+                    )}
+                  </div>
+                  <div className="flex flex-col items-center min-w-[64px]">
+                    <img
+                      src={getTierTheme(user.nextTierEn).img}
+                      alt={user.nextTierName}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-sm font-bold text-[#0C3262]">
                       {user.nextTierName}
-                    </span> */}
+                    </span>
                   </div>
                 </div>
-              </div>
+                <div className="mt-6 flex justify-center items-center pb-18">
+                  <AppButton
+                    name={
+                      <>
+                        How to get to silver or gold ?
+                        <ArrowRightIcon className="w-4 h-4" />
+                      </>
+                    }
+                    onClick={() => navigate("/user/how-to")}
+                    variant={theme.variant}
+                  />
+                </div>
+              </>
             ) : (
-              <div className="bg-gray-50 rounded-lg p-4 text-center">
-                <span className="text-gray-500 text-xs font-medium">
-                  🎉 استمتع بمزايا فئة {user.membership}
-                </span>
+              <div className="mt-6 flex justify-center items-center pb-0">
+                <AppButton
+                  name={<>Yeh!! Enjoy the {user.membership} tier Benefits</>}
+                  variant={theme.variant}
+                />
               </div>
             )}
           </div>
         ) : (
-          <div className="px-4 pb-4 text-right">
+          <div className="px-4 pb-4">
             <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
               <div
                 className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
@@ -306,13 +326,13 @@ const ArabicCard = ({ streak }) => {
             </div>
             <span className="text-[#8E8E8E] text-[12px] poppins-text">
               {user?.requiredPoint === 0
-                ? "أعلى مستوى تم الوصول إليه!"
-                : `${user.requiredPoint} نقاط إلى ${user.nextTierName}`}
+                ? "Maximum Level Reached!"
+                : `${user.requiredPoint} points to ${user.nextTierName}`}
             </span>
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

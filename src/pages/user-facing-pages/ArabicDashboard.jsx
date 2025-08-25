@@ -82,21 +82,21 @@ const ArabicDashboard = () => {
   }
   return (
     <div className="min-h-screen bg-white">
-         <div className="flex items-center justify-center px-6 py-4">
-              {/* <h1 className="text-lg font-semibold text-[#0C3262] poppins-text">
+      <div className="flex items-center justify-center px-6 py-4">
+        {/* <h1 className="text-lg font-semibold text-[#0C3262] poppins-text">
                 Welcome to
               </h1> */}
-              <div className="flex flex-col items-end">
-                <img
-                  src={khedmah}
-                  alt="Khedmah Logo"
-                  className="h-12 object-contain"
-                />
-                <span className="text-sm font-semibold text-[#024BA3] italic">
-                  Rewards
-                </span>
-              </div>
-            </div>
+        <div className="flex flex-col items-end">
+          <img
+            src={khedmah}
+            alt="Khedmah Logo"
+            className="h-12 object-contain"
+          />
+          <span className="text-sm font-semibold text-[#024BA3] italic">
+            Rewards
+          </span>
+        </div>
+      </div>
       <div className="relative">
         <div
           className="rounded-b-2xl h-50"
@@ -106,11 +106,11 @@ const ArabicDashboard = () => {
           }}
         ></div>
         <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4">
-          <ArabicCard streak />
+          <ArabicCard streak show />
         </div>
       </div>
 
-      <div className="bg-white rounded-t-3xl p-4 pt-60">
+      <div className="bg-white rounded-t-3xl p-4 pt-70">
         {/* Brands */}
         <div className="flex items-center justify-between mt-6 alexandria-text mb-4">
           <AppButton

@@ -108,11 +108,11 @@ const DashboardUser = () => {
           }}
         ></div>
         <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-4">
-          <UserCard streak />
+          <UserCard streak show />
         </div>
       </div>
 
-      <div className="bg-white rounded-t-3xl p-4 pt-60">
+      <div className="bg-white rounded-t-3xl p-4 pt-70">
         {/* Brands */}
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">
           <h2 className="text-sm font-semibold">Brands</h2>

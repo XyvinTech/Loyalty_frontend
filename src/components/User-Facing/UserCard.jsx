@@ -14,7 +14,7 @@ import goldbg from "../../assets/goldtier.webp";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppButton from "../../ui/AppButton";
 
-const UserCard = ({ streak }) => {
+const UserCard = ({ streak, show }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({
     name: "",
@@ -254,18 +254,20 @@ const UserCard = ({ streak }) => {
                     </span>
                   </div>
                 </div>
-                <div className="mt-6 flex justify-center items-center pb-18">
-                  <AppButton
-                    name={
-                      <>
-                        How to get to silver or gold ?
-                        <ArrowRightIcon className="w-4 h-4" />
-                      </>
-                    }
-                    onClick={() => navigate("/user/how-to")}
-                    variant={theme.variant}
-                  />
-                </div>
+                {show && (
+                  <div className="mt-6 flex justify-center items-center pb-18">
+                    <AppButton
+                      name={
+                        <>
+                          How to get to silver or gold ?
+                          <ArrowRightIcon className="w-4 h-4" />
+                        </>
+                      }
+                      onClick={() => navigate("/user/how-to")}
+                      variant={theme.variant}
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <div className="mt-6 flex justify-center items-center pb-0">

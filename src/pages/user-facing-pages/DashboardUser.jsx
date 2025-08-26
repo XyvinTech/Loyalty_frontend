@@ -8,6 +8,7 @@ import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+import { useNavigate } from "react-router-dom";
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
@@ -15,6 +16,7 @@ const SkeletonBox = ({ className }) => (
 
 const DashboardUser = () => {
   const { navigateWithParams } = useNavigationWithParams();
+  const navigate = useNavigate();
   const [variant, setVariant] = useState("primary");
   const [offerData, setOfferData] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -130,9 +132,7 @@ const DashboardUser = () => {
                 <div key={item?._id} className="min-w-[70px] mb-3">
                   <div
                     onClick={() =>
-                      navigateWithParams("/user/offers", {
-                        state: { brand: item?._id },
-                      })
+                      navigateWithParams("/user/offers", { brand: item?._id })
                     }
                     style={{ border: "2px solid rgba(0, 0, 0, 0.15)" }}
                     className="w-[74px] h-[74px] cursor-pointer flex items-center justify-center rounded-[12px] bg-white shadow-lg"
@@ -196,7 +196,7 @@ const DashboardUser = () => {
                   key={category?._id}
                   onClick={() =>
                     navigateWithParams("/user/offers", {
-                      state: { category: category?._id },
+                      category: category?._id,
                     })
                   }
                   className="flex flex-col items-center min-w-[89px] w-[89px]"

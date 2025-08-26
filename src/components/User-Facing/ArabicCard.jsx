@@ -250,7 +250,7 @@ const ArabicCard = ({ streak, show }) => {
 
                   <div className="flex flex-col items-center min-w-[64px] relative">
                     <span className="absolute -top-6 text-xs font-semibold text-[#0C3262] whitespace-nowrap">
-                      You are here !
+                      أنت هنا
                     </span>
                     <img
                       src={theme.img}

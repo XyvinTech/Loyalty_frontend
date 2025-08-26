@@ -83,32 +83,27 @@ const ArabicDashboard = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex items-center justify-center px-6 py-4">
-        {/* <h1 className="text-lg font-semibold text-[#0C3262] poppins-text">
-                Welcome to
-              </h1> */}
-        <div className="flex flex-col items-end mt-3">
-          <img
-            src={khedmah}
-            alt="Khedmah Logo"
-            className="h-12 object-contain"
-          />
+        <div className="flex flex-col items-end">
+          <span className="text-[24px] mt-2 font-semibold text-[#024BA3] italic">
+            مكافآت
+          </span>
         </div>
       </div>
       <div className="relative">
         <div
-          className="rounded-b-2xl h-50"
+          className="rounded-b-2xl h-40"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: "cover",
           }}
         ></div>
-        <div className="absolute left-1/2 top-10 -translate-x-1/2 w-full px-4">
+        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-3">
           <ArabicCard streak show />
         </div>
       </div>
       <div
         className={`bg-white rounded-t-3xl p-4 ${
-          customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-70"
+          customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-75"
         }`}
       >
         <div className="flex items-center justify-between mt-6 alexandria-text mb-4">

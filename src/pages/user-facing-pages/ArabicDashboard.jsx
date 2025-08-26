@@ -1,5 +1,4 @@
 import bronze from "../../assets/background.png";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import sdkApi from "../../api/sdk";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
@@ -9,13 +8,14 @@ import AppButton from "../../ui/AppButton";
 import ArabicCard from "../../components/User-Facing/ArabicCard";
 import ArabicOfferCard from "../../components/User-Facing/ArabicOfferCard";
 import khedmah from "../../assets/WhatsApp Image 2025-08-25 at 17.24.42_5bf6082a.jpg";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
 );
 
 const ArabicDashboard = () => {
-  const navigate = useNavigate();
+  const { navigateWithParams } = useNavigationWithParams();
   const [variant, setVariant] = useState("primary");
   const [offerData, setOfferData] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -115,7 +115,7 @@ const ArabicDashboard = () => {
           <AppButton
             name={"عرض جميع العلامات التجارية"}
             variant={variant}
-            onClick={() => navigate("/user/brands/ar")}
+            onClick={() => navigateWithParams("/user/brands/ar")}
           />
           <h2 className="text-sm font-medium">العلامات التجارية</h2>
         </div>
@@ -131,7 +131,7 @@ const ArabicDashboard = () => {
                 <div key={item?._id} className="min-w-[70px] mb-3">
                   <div
                     onClick={() =>
-                      navigate("/user/offers/ar", {
+                      navigateWithParams("/user/offers/ar", {
                         state: { brand: item?._id },
                       })
                     }
@@ -156,7 +156,7 @@ const ArabicDashboard = () => {
           <AppButton
             name={"عرض جميع عروض العلامة التجارية"}
             variant={variant}
-            onClick={() => navigate("/user/offers/ar")}
+            onClick={() => navigateWithParams("/user/offers/ar")}
           />
           <h2 className="text-sm font-medium alexandria-text">
             عروض العلامة التجارية
@@ -187,7 +187,7 @@ const ArabicDashboard = () => {
           <AppButton
             name={"عرض جميع الفئات"}
             variant={variant}
-            onClick={() => navigate("/user/categories/ar")}
+            onClick={() => navigateWithParams("/user/categories/ar")}
           />
         </div>
 
@@ -206,7 +206,7 @@ const ArabicDashboard = () => {
                 <div
                   key={category?._id}
                   onClick={() =>
-                    navigate("/user/offers/ar", {
+                    navigateWithParams("/user/offers/ar", {
                       state: { category: category?._id },
                     })
                   }

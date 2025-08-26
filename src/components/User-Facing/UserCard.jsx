@@ -11,8 +11,9 @@ import silverImage from "../../assets/SIL loyality.webp";
 import bronzebg from "../../assets/bronzetier.webp";
 import silverbg from "../../assets/silvertier.webp";
 import goldbg from "../../assets/goldtier.webp";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AppButton from "../../ui/AppButton";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 
 const UserCard = ({ streak, show }) => {
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ const UserCard = ({ streak, show }) => {
 
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
-  const navigate = useNavigate();
+  const { navigateWithParams } = useNavigationWithParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const urlName = queryParams.get("name");
@@ -173,7 +174,7 @@ const UserCard = ({ streak, show }) => {
               <button
                 className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
                 style={{ color: theme.transactionColor }}
-                onClick={() => navigate("/user/history")}
+                onClick={() => navigateWithParams("/user/history")}
               >
                 See Transactions
                 <span className="ml-1">{">"}</span>
@@ -290,7 +291,7 @@ const UserCard = ({ streak, show }) => {
                           <ArrowRightIcon className="w-4 h-4" />
                         </>
                       }
-                      onClick={() => navigate("/user/how-to")}
+                      onClick={() => navigateWithParams("/user/how-to")}
                       variant={theme.variant}
                     />
                   </div>
@@ -301,6 +302,7 @@ const UserCard = ({ streak, show }) => {
                 <AppButton
                   name={<>Yeh!! Enjoy the {user.membership} tier Benefits</>}
                   variant={theme.variant}
+                  onClick={() => navigateWithParams("/user/how-to")}
                 />
               </div>
             )}

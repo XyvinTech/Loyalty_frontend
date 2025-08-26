@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import khedmah from "../../assets/Frame 92.png";
 import {
   ArrowRightIcon,
   CheckIcon,
@@ -18,9 +17,9 @@ import bronzebg from "../../assets/bronzetier.webp";
 import silverbg from "../../assets/silvertier.webp";
 import goldbg from "../../assets/goldtier.webp";
 moment.locale("ar");
-import { FireIcon, CalendarDaysIcon } from "@heroicons/react/24/solid";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AppButton from "../../ui/AppButton";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 moment.updateLocale("ar", {
   months: [
     "يناير",
@@ -50,7 +49,7 @@ const ArabicCard = ({ streak, show }) => {
     nextTierName: null,
     nextTierProgress: null,
   });
-  const navigate = useNavigate();
+  const { navigateWithParams } = useNavigationWithParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const progress = useMemo(() => {
@@ -226,7 +225,7 @@ const ArabicCard = ({ streak, show }) => {
               <button
                 className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
                 style={{ color: theme.transactionColor }}
-                onClick={() => navigate("/user/history/ar")}
+                onClick={() => navigateWithParams("/user/history/ar")}
               >
                 See Transactions
                 <span className="ml-1">{">"}</span>
@@ -342,7 +341,7 @@ const ArabicCard = ({ streak, show }) => {
                           <ArrowRightIcon className="w-4 h-4" />
                         </>
                       }
-                      onClick={() => navigate("/user/how-to/ar")}
+                      onClick={() => navigateWithParams("/user/how-to/ar")}
                       variant={theme.variant}
                     />
                   </div>
@@ -352,6 +351,7 @@ const ArabicCard = ({ streak, show }) => {
               <div className="mt-6 flex justify-center items-center pb-0">
                 <AppButton
                   name={<>Yeh!! Enjoy the {user.membership} tier Benefits</>}
+                  onClick={() => navigateWithParams("/user/how-to/ar")}
                   variant={theme.variant}
                 />
               </div>

@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import UserCard from "../../components/User-Facing/UserCard";
 import OfferCard from "../../components/User-Facing/OfferCard";
 import bronze from "../../assets/background.png";
-import { useNavigate } from "react-router-dom";
 import sdkApi from "../../api/sdk";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
-import khedmah from "../../assets/logo.png";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
 );
 
 const DashboardUser = () => {
-  const navigate = useNavigate();
+  const { navigateWithParams } = useNavigationWithParams();
   const [variant, setVariant] = useState("primary");
   const [offerData, setOfferData] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -89,12 +88,7 @@ const DashboardUser = () => {
     <div className="min-h-screen bg-white">
       <div className="flex items-center justify-center px-6 py-4">
         <div className="flex flex-col items-end">
-          <img
-            src={khedmah}
-            alt="Khedmah Logo"
-            className="h-12 object-contain"
-          />
-          <span className="text-sm font-semibold text-[#024BA3] italic">
+          <span className="text-[24px] mt-2 font-semibold text-[#024BA3] italic">
             Rewards
           </span>
         </div>
@@ -122,7 +116,7 @@ const DashboardUser = () => {
           <AppButton
             name={"View All Brands"}
             variant={variant}
-            onClick={() => navigate("/user/brands")}
+            onClick={() => navigateWithParams("/user/brands")}
           />
         </div>
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
@@ -136,7 +130,9 @@ const DashboardUser = () => {
                 <div key={item?._id} className="min-w-[70px] mb-3">
                   <div
                     onClick={() =>
-                      navigate("/user/offers", { state: { brand: item?._id } })
+                      navigateWithParams("/user/offers", {
+                        state: { brand: item?._id },
+                      })
                     }
                     style={{ border: "2px solid rgba(0, 0, 0, 0.15)" }}
                     className="w-[74px] h-[74px] cursor-pointer flex items-center justify-center rounded-[12px] bg-white shadow-lg"
@@ -157,7 +153,7 @@ const DashboardUser = () => {
           <AppButton
             name={"View All Brand Offers"}
             variant={variant}
-            onClick={() => navigate("/user/offers")}
+            onClick={() => navigateWithParams("/user/offers")}
           />
         </div>
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
@@ -181,7 +177,7 @@ const DashboardUser = () => {
           <AppButton
             name={"View All Categories"}
             variant={variant}
-            onClick={() => navigate("/user/categories")}
+            onClick={() => navigateWithParams("/user/categories")}
           />
         </div>
         <div className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4">
@@ -199,7 +195,7 @@ const DashboardUser = () => {
                 <div
                   key={category?._id}
                   onClick={() =>
-                    navigate("/user/offers", {
+                    navigateWithParams("/user/offers", {
                       state: { category: category?._id },
                     })
                   }

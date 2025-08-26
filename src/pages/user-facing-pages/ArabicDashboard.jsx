@@ -127,7 +127,7 @@ const ArabicDashboard = () => {
                   <div
                     onClick={() =>
                       navigateWithParams("/user/offers/ar", {
-                        state: { brand: item?._id },
+                        brand: item?._id,
                       })
                     }
                     style={{ border: "2px solid rgba(0, 0, 0, 0.15)" }}
@@ -202,7 +202,7 @@ const ArabicDashboard = () => {
                   key={category?._id}
                   onClick={() =>
                     navigateWithParams("/user/offers/ar", {
-                      state: { category: category?._id },
+                      category: category?._id,
                     })
                   }
                   className="flex flex-col items-center min-w-[89px] w-[89px]"

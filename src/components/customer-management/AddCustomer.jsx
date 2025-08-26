@@ -8,12 +8,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAppTypes } from "../../hooks/useAppTypes";
 import { useCustomers } from "../../hooks/useCustomers";
+import { useTiers } from "../../hooks/useTiers";
+
 const schema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().min(1, "Email is required"),
-  phone: z.string().min(1, "Phone is required"),
-  app_type: z.array(z.string()).nonempty("At least one event must be selected"),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  app_type: z.array(z.string()).optional(),
+  tier: z.string().optional(),
 });
+
 const AddCustomer = ({ isOpen, onClose, editData }) => {
   const {
     register,
@@ -29,24 +33,37 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
       email: "",
       phone: "",
       app_type: [],
+      tier: "",
     },
   });
+
   const { useCreateCustomer, useUpdateCustomer } = useCustomers();
   const createMutation = useCreateCustomer();
   const updateMutation = useUpdateCustomer();
   const { addToast } = useUiStore();
   const { useGetAppTypes } = useAppTypes();
   const { data: appTypes } = useGetAppTypes();
+  const { useGetTiers } = useTiers();
+  const { data: tiers } = useGetTiers();
+
+  const tierOptions =
+    tiers?.data?.map((tier) => ({
+      value: tier._id,
+      label: tier?.name?.en,
+    })) || [];
+
   useEffect(() => {
     if (editData) {
       reset({
         name: editData?.data?.name,
         email: editData?.data?.email,
         phone: editData?.data?.phone,
-        app_type: editData?.data?.app_type.map((item) => item._id) || [],
+        app_type: editData?.data?.app_type?.map((item) => item._id) || [],
+        tier: editData?.data?.tier?._id || "",
       });
     }
   }, [editData, reset]);
+
   const onSubmit = async (data) => {
     if (editData) {
       updateMutation.mutate(
@@ -95,16 +112,20 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
       email: "",
       phone: "",
       app_type: [],
+      tier: "",
     });
     onClose();
   };
+
   if (!isOpen) return null;
+
   const inputClass =
     "w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-colors";
   const labelClass = "block text-xs font-medium text-gray-500 mb-1";
+
   return (
     <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 mt-10">
-      <div className="bg-white rounded-lg w-full max-w-md p-6">
+      <div className="bg-white rounded-lg w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-gray-900">
             {editData ? "Edit" : "Add Customer"}
@@ -125,6 +146,7 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
               <p className="text-red-500 text-sm">{errors.name.message}</p>
             )}
           </div>
+
           <div>
             <label className={labelClass}>Email</label>
             <input {...register("email")} className={inputClass} />
@@ -132,6 +154,7 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
               <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
           </div>
+
           <div>
             <label className={labelClass}>Phone</label>
             <input {...register("phone")} className={inputClass} />
@@ -139,6 +162,7 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
               <p className="text-red-500 text-sm">{errors.phone.message}</p>
             )}
           </div>
+
           <div>
             <label className={labelClass}>App Type</label>
             <Select
@@ -171,13 +195,41 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
                 }),
               }}
             />
-
             {errors.app_type && (
-              <p className="text-red-500 text-sm">
-                {errors.app_type.message}
-              </p>
+              <p className="text-red-500 text-sm">{errors.app_type.message}</p>
             )}
           </div>
+
+          <div>
+            <label className={labelClass}>Tier (Optional)</label>
+            <Select
+              isClearable
+              options={tierOptions}
+              value={tierOptions.find(option => option.value === watch("tier")) || null}
+              onChange={(selectedOption) =>
+                setValue("tier", selectedOption ? selectedOption.value : "")
+              }
+              placeholder="Select a tier..."
+              className="basic-single-select"
+              classNamePrefix="select"
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  border: "1px solid #E5E7EB",
+                  borderRadius: "0.375rem",
+                  padding: "2px",
+                  boxShadow: "none",
+                  "&:hover": {
+                    borderColor: "#10B981",
+                  },
+                }),
+              }}
+            />
+            {errors.tier && (
+              <p className="text-red-500 text-sm">{errors.tier.message}</p>
+            )}
+          </div>
+
           <div className="flex justify-end gap-3 mt-6">
             <StyledButton
               name="Cancel"
@@ -188,6 +240,7 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
               name={editData ? "Update" : "Add Customer"}
               type="submit"
               variant="primary"
+              disabled={createMutation.isPending || updateMutation.isPending}
             />
           </div>
         </form>

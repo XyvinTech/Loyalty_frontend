@@ -27,139 +27,171 @@ const FilterModal = ({ filters, onClose, onApply }) => {
   };
 
   return (
- <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 mt-10">
-  <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
-    
-    <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-      <h2 className="text-lg font-semibold">Filter Customers</h2>
-      <button
-        onClick={onClose}
-        className="text-gray-400 hover:text-gray-500"
-      >
-        <XMarkIcon className="h-6 w-6" />
-      </button>
+    <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 mt-10">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
+        <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
+          <h2 className="text-lg font-semibold">Filter Customers</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500"
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+        </div>
+
+        <div className="px-6 py-4 overflow-y-auto space-y-4 flex-1">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.status || ""}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  status: e.target.value || undefined,
+                })
+              }
+            >
+              <option value="">All Status</option>
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Registration Date From
+            </label>
+            <input
+              type="date"
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.start_date || ""}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  start_date: e.target.value || undefined,
+                })
+              }
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Registration Date To
+            </label>
+            <input
+              type="date"
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.end_date || ""}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  end_date: e.target.value || undefined,
+                })
+              }
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Minimum Points
+            </label>
+            <input
+              type="number"
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.min_points || ""}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  min_points: e.target.value || undefined,
+                })
+              }
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Maximum Points
+            </label>
+            <input
+              type="number"
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.max_points || ""}
+              onChange={(e) =>
+                setLocalFilters({
+                  ...localFilters,
+                  max_points: e.target.value || undefined,
+                })
+              }
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Sort By
+            </label>
+            <select
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.sort_by || "createdAt"}
+              onChange={(e) =>
+                setLocalFilters({ ...localFilters, sort_by: e.target.value })
+              }
+            >
+              <option value="createdAt">Registration Date</option>
+              <option value="total_points">Points</option>
+              <option value="name">Name</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Sort Order
+            </label>
+            <select
+              className="w-full rounded-md border border-gray-300 p-2"
+              value={localFilters.sort_order || "desc"}
+              onChange={(e) =>
+                setLocalFilters({ ...localFilters, sort_order: e.target.value })
+              }
+            >
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </div>
+        </div>
+        <div className="px-6 py-4 border-t flex justify-end space-x-3 sticky bottom-0 bg-white z-10">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <StyledButton
+            name={"Apply"}
+            onClick={handleApply}
+            // className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
+          />
+        </div>
+      </div>
     </div>
-
-    <div className="px-6 py-4 overflow-y-auto space-y-4 flex-1">
-    
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-        <select
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.status || ""}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, status: e.target.value || undefined })
-          }
-        >
-          <option value="">All Status</option>
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Registration Date From</label>
-        <input
-          type="date"
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.start_date || ""}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, start_date: e.target.value || undefined })
-          }
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Registration Date To</label>
-        <input
-          type="date"
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.end_date || ""}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, end_date: e.target.value || undefined })
-          }
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Minimum Points</label>
-        <input
-          type="number"
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.min_points || ""}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, min_points: e.target.value || undefined })
-          }
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Maximum Points</label>
-        <input
-          type="number"
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.max_points || ""}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, max_points: e.target.value || undefined })
-          }
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
-        <select
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.sort_by || "createdAt"}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, sort_by: e.target.value })
-          }
-        >
-          <option value="createdAt">Registration Date</option>
-          <option value="total_points">Points</option>
-          <option value="name">Name</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
-        <select
-          className="w-full rounded-md border border-gray-300 p-2"
-          value={localFilters.sort_order || "desc"}
-          onChange={(e) =>
-            setLocalFilters({ ...localFilters, sort_order: e.target.value })
-          }
-        >
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
-        </select>
-      </div>
-    </div>
-    <div className="px-6 py-4 border-t flex justify-end space-x-3 sticky bottom-0 bg-white z-10">
-      <button
-        onClick={onClose}
-        className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-      >
-        Cancel
-      </button>
-     <StyledButton
-     name={"Apply"}
-        onClick={handleApply}
-        // className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
-      />
-    </div>
-  </div>
-</div>
-
   );
 };
 
 // Customer Detail Modal Component
-const CustomerDetailModal = ({ customer, onClose }) => {
+const CustomerDetailModal = ({ customer, onClose, isLoading }) => {
+  console.log("====================================");
+  console.log("customer", customer);
+  console.log("====================================");
   if (!customer) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50">
+      <div
+        className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 
+                  min-h-[60vh] max-h-[70vh] overflow-y-auto"
+      >
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-gray-900">
@@ -173,168 +205,74 @@ const CustomerDetailModal = ({ customer, onClose }) => {
             </button>
           </div>
 
-          <div className="space-y-6">
-            {/* Basic Information */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Basic Information
-              </h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Customer ID:</span>
-                  <span className="text-sm font-mono">
-                    {customer.customer_id}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Name:</span>
-                  <span className="text-sm">{customer.name}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Email:</span>
-                  <span className="text-sm">{customer.email}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Phone:</span>
-                  <span className="text-sm">{customer.phone}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Status:</span>
-                  <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      customer.status
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {customer.status ? "Active" : "Inactive"}
-                  </span>
-                </div>
-              </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-8">
+              <Loader />
             </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Basic Information */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Basic Information
+                </h3>
+                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Customer ID:</span>
+                    <span className="text-sm font-mono">
+                      {customer?.data?.customer_id}
+                    </span>
+                  </div>
 
-            {/* Loyalty Information */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Loyalty Information
-              </h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Total Points:</span>
-                  <span className="text-sm font-semibold text-indigo-600">
-                    {customer.total_points}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Tier:</span>
-                  <span className="text-sm">{customer.tier?.name?.en}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Coins:</span>
-                  <span className="text-sm">{customer.coins}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Referral Code:</span>
-                  <span className="text-sm font-mono">
-                    {customer.referral_code}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* App & Device Information */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                App & Device Information
-              </h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div>
-                  <span className="text-sm text-gray-600 block mb-1">
-                    App Types:
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {customer.app_type?.map((type, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm"
-                      >
-                        {type.name}
-                      </span>
-                    ))}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Status:</span>
+                    <span
+                      className={`px-2 py-1 text-xs font-medium rounded-full ${
+                        customer?.data?.status
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {customer?.data?.status ? "Active" : "Inactive"}
+                    </span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Device Type:</span>
-                  <span className="text-sm capitalize">
-                    {customer.device_type || "Not specified"}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Last Active:</span>
-                  <span className="text-sm">
-                    {new Date(customer.last_active).toLocaleString()}
-                  </span>
-                </div>
               </div>
-            </div>
 
-            {/* Notification Preferences */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Notification Preferences
-              </h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
-                    Email Notifications:
-                  </span>
-                  <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      customer.notification_preferences?.email
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {customer.notification_preferences?.email
-                      ? "Enabled"
-                      : "Disabled"}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
-                    SMS Notifications:
-                  </span>
-                  <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      customer.notification_preferences?.sms
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {customer.notification_preferences?.sms
-                      ? "Enabled"
-                      : "Disabled"}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
-                    Push Notifications:
-                  </span>
-                  <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      customer.notification_preferences?.push
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {customer.notification_preferences?.push
-                      ? "Enabled"
-                      : "Disabled"}
-                  </span>
+              {/* Loyalty Information */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Loyalty Information
+                </h3>
+                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Total Points:</span>
+                    <span className="text-sm font-semibold text-indigo-600">
+                      {customer?.data?.total_points}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Tier:</span>
+                    <span className="text-sm">
+                      {customer?.data?.tier?.name?.en}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Coins:</span>
+                    <span className="text-sm">{customer?.data?.coins}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">
+                      Referral Code:
+                    </span>
+                    <span className="text-sm font-mono">
+                      {customer?.data?.referral_code}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
@@ -358,12 +296,19 @@ const Customer = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [data, setData] = useState(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null); // Changed from selectedCustomer
+  const [editCustomerId, setEditCustomerId] = useState(null); // Separate state for editing
+  const [deleteCustomerId, setDeleteCustomerId] = useState(null); // Separate state for deleting
 
   const { useGetCustomers, useDeleteCustomer, useGetCustomerById } =
     useCustomers();
-  const { data: customerData } = useGetCustomerById(data?.id);
+
+  // Fetch customer data for editing
+  const { data: editCustomerData } = useGetCustomerById(editCustomerId);
+
+  // Fetch customer data for viewing details
+  const { data: selectedCustomerData, isLoading: isLoadingSelectedCustomer } =
+    useGetCustomerById(selectedCustomerId);
 
   const {
     data: customers,
@@ -394,17 +339,17 @@ const Customer = () => {
   };
 
   const handleEdit = (id) => {
-    setData({ id });
+    setEditCustomerId(id);
     setAddOpen(true);
   };
 
   const handleDeleteOpen = async (id) => {
-    setData(id);
+    setDeleteCustomerId(id);
     setDeleteOpen(true);
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate(data, {
+    deleteMutation.mutate(deleteCustomerId, {
       onSuccess: (response) => {
         addToast({
           type: "success",
@@ -419,7 +364,7 @@ const Customer = () => {
       },
     });
     setDeleteOpen(false);
-    setData(null);
+    setDeleteCustomerId(null);
   };
 
   const handleSelectAll = () => {
@@ -455,6 +400,19 @@ const Customer = () => {
     setSelectedRows([]);
   };
 
+  const handleViewCustomer = (customerId) => {
+    setSelectedCustomerId(customerId);
+  };
+
+  const handleCloseCustomerDetail = () => {
+    setSelectedCustomerId(null);
+  };
+
+  const handleCloseAddCustomer = () => {
+    setAddOpen(false);
+    setEditCustomerId(null);
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -484,7 +442,7 @@ const Customer = () => {
             onClick={() => setShowFilterModal(true)}
             variant="secondary"
           />
-     
+
           <StyledButton
             name={
               <>
@@ -611,9 +569,6 @@ const Customer = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Tier
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
@@ -643,22 +598,12 @@ const Customer = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {item.tier?.name?.en}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        item.status
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {item.status ? "Active" : "Inactive"}
-                    </span>
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center justify-end gap-2">
                       <button
                         className="text-slate-400 hover:text-indigo-700 p-1 rounded-lg hover:bg-indigo-50"
-                        onClick={() => setSelectedCustomer(item)}
+                        onClick={() => handleViewCustomer(item._id)}
                         title="View Details"
                       >
                         <EyeIcon className="w-4 h-4" />
@@ -697,11 +642,8 @@ const Customer = () => {
 
       <AddCustomer
         isOpen={addOpen}
-        onClose={() => {
-          setAddOpen(false);
-          setData(null);
-        }}
-        editData={customerData}
+        onClose={handleCloseAddCustomer}
+        editData={editCustomerData}
       />
 
       <DeleteModal
@@ -712,10 +654,11 @@ const Customer = () => {
       />
 
       {/* Customer Detail Modal */}
-      {selectedCustomer && (
+      {selectedCustomerId && (
         <CustomerDetailModal
-          customer={selectedCustomer}
-          onClose={() => setSelectedCustomer(null)}
+          customer={selectedCustomerData}
+          onClose={handleCloseCustomerDetail}
+          isLoading={isLoadingSelectedCustomer}
         />
       )}
 

@@ -4,18 +4,17 @@ import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import { AppMainButton } from "../../ui/AppMainButton";
 import { XMarkIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 const RedeemCard = ({ onClose, image }) => {
   const [code, setCode] = useState(["", "", "", ""]);
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const { customerID, apiKey, customerName } = useCustomerAuth();
+  const { customerID, apiKey } = useCustomerAuth();
   const [showPopup, setShowPopup] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const couponId = searchParams.get("couponId");
   const [transactionId, setTransactionId] = useState("");
-
+  const customerName = searchParams.get("name");
   const handleChange = (index) => (e) => {
     const value = e.target.value;
     if (/^[a-zA-Z0-9]{0,1}$/.test(value)) {

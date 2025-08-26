@@ -14,12 +14,12 @@ const ArabicRedeemCard = ({ onClose, image }) => {
   const [code, setCode] = useState(["", "", "", ""]);
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const { customerID, apiKey, customerName } = useCustomerAuth(); // assume we can get customer name here
+  const { customerID, apiKey } = useCustomerAuth();
   const [showPopup, setShowPopup] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const couponId = searchParams.get("couponId");
-
+  const customerName = searchParams.get("name");
   const handleChange = (index) => (e) => {
     const value = e.target.value;
     if (/^[a-zA-Z0-9]{0,1}$/.test(value)) {

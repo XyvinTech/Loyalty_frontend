@@ -7,9 +7,11 @@ import ProductCard from "../../components/User-Facing/ProductCard";
 import { useNavigate } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 
 const UserBrands = () => {
   const [brands, setBrands] = useState([]);
+  const { navigateWithParams } = useNavigationWithParams();
   const [page, setPage] = useState(1);
   const [rows] = useState(100);
   const [search, setSearch] = useState("");
@@ -119,7 +121,7 @@ const UserBrands = () => {
                   key={index}
                   product={brand}
                   onClick={() =>
-                    navigate("/user/offers", { state: { brand: brand?._id } })
+                    navigateWithParams("/user/offers", { state: { brand: brand?._id } })
                   }
                 />
               ))

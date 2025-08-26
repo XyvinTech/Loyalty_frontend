@@ -7,9 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import ArabicProductCard from "../../components/User-Facing/ArabicProductCard";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 
 const ArabicBrands = () => {
   const [brands, setBrands] = useState([]);
+  const { navigateWithParams } = useNavigationWithParams();
   const [page, setPage] = useState(1);
   const [rows] = useState(100);
   const [search, setSearch] = useState("");
@@ -122,7 +124,7 @@ const ArabicBrands = () => {
                   key={index}
                   product={brand}
                   onClick={() =>
-                    navigate("/user/offers/ar", {
+                    navigateWithParams("/user/offers/ar", {
                       state: { brand: brand?._id },
                     })
                   }

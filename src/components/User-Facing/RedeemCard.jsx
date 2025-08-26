@@ -111,7 +111,7 @@ const RedeemCard = ({ onClose, image }) => {
             </button>
             {showPopup === "success" ? (
               <>
-                <div className="relative mb-8 mt-4 ">
+                <div className="relative mb-2 mt-4 ">
                   <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-xl">
                     <span className="text-white text-4xl font-bold">✓</span>
                   </div>
@@ -136,6 +136,7 @@ const RedeemCard = ({ onClose, image }) => {
                     “History”
                   </span>{" "}
                   section in the app to view the details.
+                  <br />
                   <br />
                   Thanks for being part of{" "}
                   <span className="font-bold text-green-600">Khedmah</span> –

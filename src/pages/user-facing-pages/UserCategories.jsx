@@ -7,6 +7,7 @@ import ProductCard from "../../components/User-Facing/ProductCard";
 import { useNavigate } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 
 const UserCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -18,6 +19,7 @@ const UserCategories = () => {
 
   const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
+   const { navigateWithParams } = useNavigationWithParams();
 
   const fetchData = async (reset = false) => {
     try {
@@ -116,7 +118,7 @@ const UserCategories = () => {
                     key={index}
                     product={category}
                     onClick={() =>
-                      navigate("/user/offers", {
+                      navigateWithParams("/user/offers", {
                         state: { category: category?._id },
                       })
                     }

@@ -108,7 +108,7 @@ const DashboardUser = () => {
 
       <div
         className={`bg-white rounded-t-3xl p-4 ${
-          customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-70"
+          customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-75"
         }`}
       >
         <div className="flex items-center justify-between mt-6 poppins-text mb-4">

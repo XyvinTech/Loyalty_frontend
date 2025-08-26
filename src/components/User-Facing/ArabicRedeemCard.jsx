@@ -119,7 +119,7 @@ const ArabicRedeemCard = ({ onClose, image }) => {
             </button>
             {showPopup === "success" ? (
               <>
-                <div className="relative mb-8 mt-4 ">
+                <div className="relative mb-2 mt-4 ">
                   <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-xl">
                     <span className="text-white text-4xl font-bold">✓</span>
                   </div>
@@ -143,6 +143,7 @@ const ArabicRedeemCard = ({ onClose, image }) => {
                   </span>{" "}
                   في التطبيق
                   <br />
+                  <br/>
                   شكراً لكونك عضواً مميزاً في خدمة - استمر معنا لتستمتع بعروض
                   حصرية ومميزات أكثر!
                 </p>

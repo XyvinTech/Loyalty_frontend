@@ -19,6 +19,7 @@ const TriggerServices = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [addOpen, setAddOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [Id, setId] = useState(null);
@@ -35,12 +36,11 @@ const TriggerServices = () => {
   } = useGetTriggerServices({
     limit: itemsPerPage,
     page: currentPage,
+    search: searchQuery,
   });
   const { data: triggerService } = useGetTriggerServiceById(Id?.id);
   const deleteMutation = useDeleteTriggerService();
   const { addToast } = useUiStore();
-  const apiUrl = import.meta.env.VITE_API;
-  const BASE_URL = import.meta.env.VITE_IMAGE; // "http://localhost:3002"
 
   useEffect(() => {
     setCurrentPage(1);
@@ -138,6 +138,11 @@ const TriggerServices = () => {
           <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
           />
 
           <StyledButton
@@ -218,7 +223,6 @@ const TriggerServices = () => {
                       src={item?.icon}
                       alt="icon"
                       className="w-6 h-6 object-contain"
-
                     />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 max-w-xs truncate">

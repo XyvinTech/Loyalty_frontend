@@ -3,8 +3,10 @@ import apiClient from "./client";
 const rootUrl = "/sub-admin";
 
 const subAdminApi = {
-    getSubAdmin: async () => {
-        const response = await apiClient.get(rootUrl);
+    getSubAdmin: async (params) => {
+        const response = await apiClient.get(rootUrl,{
+            params
+        });
         return response.data;
     },
 

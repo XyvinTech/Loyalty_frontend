@@ -84,7 +84,7 @@ const KhedmahOffer = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <RefreshButton isLoading={isLoading} onClick={() => refetch()} />
-          <StyledSearchInput
+          {/* <StyledSearchInput
             placeholder="Search offers"
             className="w-full sm:w-auto"
           />
@@ -95,7 +95,7 @@ const KhedmahOffer = () => {
               </>
             }
             variant="download"
-          />
+          /> */}
           <StyledButton
             name={
               <>
@@ -182,7 +182,7 @@ const KhedmahOffer = () => {
                       <div className="text-xs">
                         <span className="text-gray-500">Valid Until</span>
                         <p className="font-medium text-gray-900">
-                          {moment(offer.validityPeriod?.endDate).format(
+                          {moment(offer.validityPeriod?.endDate).locale("en").format(
                             "DD MMM YYYY"
                           )}
                         </p>
@@ -263,7 +263,7 @@ const KhedmahOffer = () => {
                         <div className="text-center text-xs">
                           <span className="text-gray-500">Valid Until</span>
                           <p className="font-medium text-gray-900">
-                            {moment(offer.validityPeriod?.endDate).format(
+                            {moment(offer.validityPeriod?.endDate).locale("en").format(
                               "DD MMM YYYY"
                             )}
                           </p>

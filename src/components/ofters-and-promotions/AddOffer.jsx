@@ -45,6 +45,65 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
   const { useGetTiers } = useTiers();
   const { data: tiers } = useGetTiers();
   const [bulkCodes, setBulkCodes] = useState([]);
+  const merchantOptions = useMemo(
+    () =>
+      merchants?.data?.map((merchant) => ({
+        value: merchant._id,
+        label: merchant.title?.en || merchant.title,
+        data: merchant,
+      })) || [],
+    [merchants]
+  );
+
+  const couponCategoryOptions = useMemo(
+    () =>
+      couponCategories?.data?.map((category) => ({
+        value: category._id,
+        label: category.title?.en || category.title,
+        data: category,
+      })) || [],
+    [couponCategories]
+  );
+
+  // Custom styles for the select components
+  const selectStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      border: "1px solid #E5E7EB",
+      borderRadius: "0.375rem",
+      padding: "2px",
+      boxShadow: state.isFocused ? "0 0 0 1px #10B981" : "none",
+      "&:hover": {
+        borderColor: "#10B981",
+      },
+      fontSize: "0.875rem",
+      minHeight: "38px",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      fontSize: "0.875rem",
+      backgroundColor: state.isSelected
+        ? "#10B981"
+        : state.isFocused
+        ? "#F0FDF4"
+        : "white",
+      color: state.isSelected ? "white" : "#374151",
+      "&:hover": {
+        backgroundColor: state.isSelected ? "#10B981" : "#F0FDF4",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#9CA3AF",
+      fontSize: "0.875rem",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      fontSize: "0.875rem",
+      color: "#374151",
+    }),
+  };
+
   const handleBulkCodesChange = (codes) => {
     setBulkCodes(codes);
   };
@@ -71,8 +130,9 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       redemptionUrl: "",
       discountDetails: {
         type: "",
-        value: "",
+        value: 0,
       },
+      priority: 0,
       redeemablePointsCount: 0,
       validityPeriod: {
         startDate: "",
@@ -111,6 +171,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
         "description.en",
         editData.description?.en || editData.description || ""
       );
+       setValue("priority", editData.priority || 0);
       setValue("posterImage", editData.posterImage || "");
       setValue("numberOfCodes", editData.code?.length || "");
       setImagePreview(editData.posterImage);
@@ -129,7 +190,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
       if (editData.discountDetails) {
         setValue("discountDetails.type", editData.discountDetails.type);
-        setValue("discountDetails.value", editData.discountDetails.value);
+        setValue("discountDetails.value", editData.discountDetails.value || 0);
       }
 
       if (editData.validityPeriod) {
@@ -339,10 +400,12 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
       numberOfCodes: data.numberOfCodes,
       description: data.description,
       posterImage: imageUrl,
+      
+      priority: data.priority?data.priority:0,
       couponCategoryId: data.couponCategoryId,
       discountDetails: {
         type: data.discountDetails.type,
-        value: data.discountDetails.value,
+        value: data.discountDetails.value || 0,
       },
       redeemablePointsCount: data.redeemablePointsCount,
       validityPeriod: {
@@ -350,7 +413,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
         endDate: data.validityPeriod.endDate,
       },
       eligibilityCriteria: {
-        userTypes: data.eligibilityCriteria.userTypes.map((item) => item.value),
+        // userTypes: data.eligibilityCriteria.userTypes.map((item) => item.value),
         tiers: data.eligibilityCriteria.tiers.map((item) => item.value),
         minPointsBalance: data.eligibilityCriteria.minPointsBalance,
       },
@@ -391,6 +454,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
         {
           onSuccess: (data) => {
             addToast({ type: "success", message: data?.data });
+            setSelectedOfferType(null);
+            setImagePreview(null);
+            setOriginalFile(null);
+            setIsCropping(false);
+            setBulkCodes([]);
             reset();
             onClose();
           },
@@ -425,6 +493,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
             type: "success",
             message: data?.data,
           });
+          setSelectedOfferType(null);
+          setImagePreview(null);
+          setOriginalFile(null);
+          setIsCropping(false);
+          setBulkCodes([]);
           reset();
           onClose();
         },
@@ -451,13 +524,14 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
   const handleBack = () => {
     setSelectedOfferType(null);
-    reset();
-    onClose();
-    setImagePreview("");
+    setImagePreview(null);
     setOriginalFile(null);
     setIsCropping(false);
+    setBulkCodes([]);
+    setActiveLanguage("en");
+    reset();
+    onClose();
   };
-
   const addCondition = () => {
     const currentConditions = watch("conditions") || [];
     setValue("conditions", [
@@ -574,7 +648,106 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
             </div>
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Basic Offer Details</h3>
+
               <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>Merchant</label>
+                  <Controller
+                    name="merchantId"
+                    control={control}
+                    rules={{ required: "Merchant is required" }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={
+                          merchantOptions.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        }
+                        onChange={(selectedOption) =>
+                          field.onChange(selectedOption?.value || "")
+                        }
+                        options={merchantOptions}
+                        placeholder="Search and select merchant..."
+                        isSearchable={true}
+                        isClearable={true}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        styles={selectStyles}
+                        filterOption={(option, searchText) => {
+                          if (!searchText) return true;
+                          const searchLower = searchText.toLowerCase();
+                          return (
+                            option.label.toLowerCase().includes(searchLower) ||
+                            option.data.title?.ar
+                              ?.toLowerCase()
+                              .includes(searchLower) ||
+                            false
+                          );
+                        }}
+                        noOptionsMessage={({ inputValue }) =>
+                          inputValue
+                            ? `No merchants found for "${inputValue}"`
+                            : "No merchants available"
+                        }
+                      />
+                    )}
+                  />
+                  {errors.merchantId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.merchantId.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className={labelClass}>Coupon Category</label>
+                  <Controller
+                    name="couponCategoryId"
+                    control={control}
+                    rules={{ required: "Coupon Category is required" }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={
+                          couponCategoryOptions.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        }
+                        onChange={(selectedOption) =>
+                          field.onChange(selectedOption?.value || "")
+                        }
+                        options={couponCategoryOptions}
+                        placeholder="Search and select category..."
+                        isSearchable={true}
+                        isClearable={true}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        styles={selectStyles}
+                        filterOption={(option, searchText) => {
+                          if (!searchText) return true;
+                          const searchLower = searchText.toLowerCase();
+                          return (
+                            option.label.toLowerCase().includes(searchLower) ||
+                            option.data.title?.ar
+                              ?.toLowerCase()
+                              .includes(searchLower) ||
+                            false
+                          );
+                        }}
+                        noOptionsMessage={({ inputValue }) =>
+                          inputValue
+                            ? `No categories found for "${inputValue}"`
+                            : "No categories available"
+                        }
+                      />
+                    )}
+                  />
+                  {errors.couponCategoryId && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.couponCategoryId.message}
+                    </p>
+                  )}
+                </div>
                 {selectedOfferType === "PRE_GENERATED" && (
                   <div>
                     <label className={labelClass}>Offer Code</label>
@@ -644,48 +817,6 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                   {errors.title?.[activeLanguage] && (
                     <p className="text-red-500 text-xs mt-1">
                       {errors.title[activeLanguage].message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className={labelClass}>Merchant</label>
-                  <select
-                    {...register("merchantId", {
-                      required: "Merchant is required",
-                    })}
-                    className={inputClass}
-                  >
-                    <option value="">Select Merchant</option>
-                    {merchants?.data?.map((merchant) => (
-                      <option key={merchant._id} value={merchant._id}>
-                        {merchant.title?.en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.merchantId && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.merchantId.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className={labelClass}>Coupon Category</label>
-                  <select
-                    {...register("couponCategoryId", {
-                      required: "Coupon Category is required",
-                    })}
-                    className={inputClass}
-                  >
-                    <option value="">Select Coupon Category</option>
-                    {couponCategories?.data?.map((category) => (
-                      <option key={category?._id} value={category?._id}>
-                        {category.title?.en}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.couponCategoryId && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.couponCategoryId.message}
                     </p>
                   )}
                 </div>
@@ -772,7 +903,13 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
 
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Discount Configuration</h3>
-              <div className="grid grid-cols-3 gap-4">
+              <div
+                className={`grid gap-4 ${
+                  watch("discountDetails.type") === "BUY-1-GET-1"
+                    ? "grid-cols-1"
+                    : "grid-cols-3"
+                }`}
+              >
                 <div>
                   <label className={labelClass}>Discount Type</label>
                   <select
@@ -784,6 +921,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                     <option value="">Select Type</option>
                     <option value="PERCENTAGE">Percentage</option>
                     <option value="FIXED">Fixed Amount</option>
+                    <option value="BUY-1-GET-1">Buy 1 Get 1</option>
                   </select>
                   {errors.discountDetails?.type && (
                     <p className="text-red-500 text-xs mt-1">
@@ -791,45 +929,62 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                     </p>
                   )}
                 </div>
-                <div>
-                  <label className={labelClass}>Discount Value</label>
-                  <input
-                    type="number"
-                    {...register("discountDetails.value", {
-                      required: "Discount value is required",
-                      min: {
-                        value: 0,
-                        message: "Discount value must be positive",
-                      },
-                    })}
-                    className={inputClass}
-                    placeholder="Discount amount"
-                  />
-                  {errors.discountDetails?.value && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.discountDetails.value.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className={labelClass}>Redeemable Points</label>
-                  <input
-                    type="number"
-                    {...register("redeemablePointsCount", {
-                      min: { value: 0, message: "Points must be non-negative" },
-                    })}
-                    className={inputClass}
-                    placeholder="Points required"
-                  />
-                  {errors.redeemablePointsCount && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.redeemablePointsCount.message}
-                    </p>
-                  )}
-                </div>
+                {watch("discountDetails.type") !== "BUY-1-GET-1" && (
+                  <>
+                    <div>
+                      <label className={labelClass}>Discount Value</label>
+                      <input
+                        type="number"
+                        {...register("discountDetails.value")}
+                        className={inputClass}
+                        placeholder="Discount amount"
+                        defaultValue={0}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Redeemable Points</label>
+                      <input
+                        type="number"
+                        {...register("redeemablePointsCount", {
+                          min: {
+                            value: 0,
+                            message: "Points must be non-negative",
+                          },
+                        })}
+                        className={inputClass}
+                        placeholder="Points required"
+                      />
+                      {errors.redeemablePointsCount && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.redeemablePointsCount.message}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-
+            <div className={cardClass}>
+              {editData&&
+              <div>
+                <label className={labelClass}>Priority</label>
+                <input
+                  type="number"
+                  {...register("priority", {
+                    required: "Priority is required",
+                  })}
+                  className={inputClass}
+                  placeholder="Enter priority)"
+                  defaultValue={0}
+                />
+                {errors.priority && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.priority.message}
+                  </p>
+                )}
+              </div>
+              }
+            </div>
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Offer Validity</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -877,7 +1032,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
             <div className={cardClass}>
               <h3 className={sectionHeadingClass}>Eligibility Criteria</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <label className={labelClass}>User Types</label>
                   <Controller
                     name="eligibilityCriteria.userTypes"
@@ -904,7 +1059,7 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                       />
                     )}
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className={labelClass}>Tiers</label>
                   <Controller

@@ -1,12 +1,14 @@
 import axios from "axios";
+const sdkUrl = "http://141.105.172.45:7733/api/api/v1";
+// const sdkUrl = "http://localhost:3000/api/v1";
 
 // Create SDK API client
 const sdkApiClient = axios.create({
-   baseURL: "http://141.105.172.45:7733/api/api/v1",
+   baseURL: sdkUrl,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
+  // timeout: 10000,
 });
 
 // SDK API service for customer-facing operations
@@ -206,7 +208,7 @@ const sdkApi = {
       return response.data;
     } catch (error) {
       console.error("Error redeeming points:", error);
-      throw error;
+      throw error.response?.data || error.message;
     }
   },
 };

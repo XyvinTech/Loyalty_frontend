@@ -1,4 +1,6 @@
 import moment from "moment/moment";
+moment.locale("en");
+import { useNavigate, useSearchParams } from "react-router-dom";
 const OfferCard = ({ data, tier }) => {
   const {
     title,
@@ -9,10 +11,17 @@ const OfferCard = ({ data, tier }) => {
     eligibilityCriteria,
     validityPeriod,
   } = data;
-
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  params.set("couponId", data._id);
+  const couponUrl = `/user/coupon?${params.toString()}`;
   return (
     <div
-      className="rounded-[22px] bg-white transition-all  duration-200 hover:shadow-lg cursor-pointer overflow-hidden"
+      onClick={() => {
+        navigate(couponUrl);
+      }}
+      className="rounded-[22px] bg-white transition-all  duration-200 hover:shadow-lg cursor-pointer overflow-hidden poppins-text"
       style={{
         border: `1px solid ${tier}`,
       }}
@@ -26,14 +35,11 @@ const OfferCard = ({ data, tier }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
         <div className="absolute top-3 right-3">
-          <div
-            className="px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg backdrop-blur-sm"
-            style={{ backgroundColor: `${tier}E6` }}
-          >
-            {discountDetails?.type === "PERCENTAGE"
-              ? `${discountDetails?.value}% OFF`
-              : `₹${discountDetails?.value} OFF`}
-          </div>
+          {discountDetails?.type === "PERCENTAGE" && (
+            <div className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-xl bg-yellow-600  ">
+              {`${discountDetails?.value}% OFF`}
+            </div>
+          )}
         </div>
         <div className="absolute bottom-3 left-3">
           {/* <div className="w-12 h-13 rounded-lg overflow-hidden border-2 border-white shadow-lg bg-white">
@@ -67,7 +73,10 @@ const OfferCard = ({ data, tier }) => {
                 : "For specific users"}
             </div>
             <div className="text-[10px] font-medium text-gray-800">
-              Valid till {moment(validityPeriod?.endDate).format("DD-MM-YYYY")}
+              Valid till{" "}
+              {moment(validityPeriod?.endDate)
+                .locale("en")
+                .format("DD-MM-YYYY")}
             </div>
           </div>
         </div>

@@ -2,8 +2,9 @@ import {
   ArrowLeftIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+
+import { useEffect, useState, useCallback } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import sdkApi from "../../api/sdk";
 import OfferView from "../../components/User-Facing/OfferView";
@@ -12,31 +13,54 @@ const UserOffers = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [offerData, setOfferData] = useState([]);
   const [page, setPage] = useState(1);
+  const location = useLocation();
+  const brandId = location?.state?.brand;
+  const categoryId = location?.state?.category;
+  console.log('====================================');
+  console.log("brandId", brandId, "categoryId", categoryId);
+  console.log('====================================');
   const [rows] = useState(100);
   const [searchParams] = useSearchParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTimeout, setSearchTimeout] = useState(null);
+
   const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
 
-  const fetchOfferData = async () => {
+  useEffect(() => {
+    if (categoryId) {
+      setActiveCategory(categoryId);
+    }
+  }, [categoryId]);
+
+  const fetchOfferData = async (resetData = false) => {
     try {
       setLoading(true);
+      const currentPage = resetData ? 1 : page;
+      
       const offers = await sdkApi.getMerchantOffers(customerID, apiKey, {
         categoryId: activeCategory,
-        page,
+        page: currentPage,
         limit: rows,
+        search: searchQuery.trim(), 
+        ...(brandId && { brandId }),
       });
 
       const newOffers = offers.data || [];
 
-      setOfferData((prev) => [...prev, ...newOffers]);
-      if (newOffers.length < rows) {
-        // No more data
+      if (resetData) {
+        setOfferData(newOffers);
+        setPage(2);
       } else {
-        setPage((prev) => prev + 1);
+        setOfferData((prev) => [...prev, ...newOffers]);
+        if (newOffers.length < rows) {
+          // No more data
+        } else {
+          setPage((prev) => prev + 1);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch offers:", error);
@@ -71,12 +95,41 @@ const UserOffers = () => {
     setInitialLoading(true);
   }, [activeCategory]);
 
+  // Reset data when search query changes
+  useEffect(() => {
+    setOfferData([]);
+    setPage(1);
+    setInitialLoading(true);
+  }, [searchQuery]);
+
   // Fetch offers when dependencies change
   useEffect(() => {
     if (customerID && apiKey) {
-      fetchOfferData();
+      fetchOfferData(true);
     }
-  }, [customerID, apiKey, activeCategory]);
+  }, [customerID, apiKey, activeCategory, searchQuery]);
+
+  // Debounced search handler
+  const handleSearchChange = useCallback((value) => {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    const timeout = setTimeout(() => {
+      setSearchQuery(value);
+    }, 500); // 500ms delay
+    
+    setSearchTimeout(timeout);
+  }, [searchTimeout]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, [searchTimeout]);
 
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-8">
@@ -87,15 +140,20 @@ const UserOffers = () => {
   const NoOffersFound = () => (
     <div className="flex flex-col items-center justify-center py-12 px-4">
       <div className="text-6xl text-gray-300 mb-4">🔍</div>
-      <h3 className="text-lg font-medium text-gray-600 mb-2">No offers found</h3>
+      <h3 className="text-lg font-medium text-gray-600 mb-2">
+        No offers found
+      </h3>
       <p className="text-sm text-gray-500 text-center">
-        Try selecting a different category or check back later for new offers.
+        {searchQuery 
+          ? `No offers found for "${searchQuery}". Try a different search term.`
+          : "Try selecting a different category or check back later for new offers."
+        }
       </p>
     </div>
   );
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen">
+    <div className="max-w-md mx-auto bg-white min-h-screen poppins-text">
       <div className="flex justify-between items-center p-4 ">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate(-1)}>
@@ -108,7 +166,7 @@ const UserOffers = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="px-4 mb-4 mt-3">
         <div
           className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
@@ -129,14 +187,15 @@ const UserOffers = () => {
           ))}
         </div>
       </div>
-      
+
       <div className="px-4 py-3">
         <div className="relative">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search offers or merchants..."
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFE5C9] focus:border-transparent"
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
       </div>

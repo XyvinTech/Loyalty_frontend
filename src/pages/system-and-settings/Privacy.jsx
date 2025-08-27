@@ -6,20 +6,38 @@ import { useAudits } from "../../hooks/useAudit";
 import StyledButton from "../../ui/StyledButton";
 import ViewLog from "../../components/system-and-settings/ViewLog";
 import { EyeDropperIcon, EyeIcon } from "@heroicons/react/24/outline";
+import subAdminApi from "../../api/sub-admin";
 
 const Privacy = () => {
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [Id, setId] = useState(null);
+  const[adminOptions, setAdminOptions] = useState([]);
   const [viewOpen, setViewOpen] = useState(false);
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
-    adminName: "",
+    adminId: "",
     status: "",
   });
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await subAdminApi.getSubAdmin();
+      // Set admin options from the response
+      if (response.data && Array.isArray(response.data)) {
+        setAdminOptions(response.data);
+      } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+        setAdminOptions(response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch customer data:", error);
+    }
+  };
 
+  fetchData();
+}, []);
   const { useGetAdminLogs } = useAudits();
   const {
     data: logs,
@@ -56,7 +74,7 @@ const Privacy = () => {
     setFilters({
       startDate: "",
       endDate: "",
-      adminName: "",
+      adminId: "",
       status: "",
     });
     setCurrentPage(1);
@@ -181,20 +199,25 @@ const Privacy = () => {
             />
           </div>
 
-          <div className="flex flex-col">
-            <label htmlFor="adminName" className="text-xs text-gray-600 mb-1">
-              Admin Name
-            </label>
-            <input
-              id="adminName"
-              type="text"
-              name="adminName"
-              value={filters.adminName}
-              onChange={handleFilterChange}
-              className={inputClass}
-              placeholder="Search by name"
-            />
-          </div>
+        <div className="flex flex-col">
+  <label htmlFor="adminId" className="text-xs text-gray-600 mb-1">
+    Admin Name
+  </label>
+  <select
+    id="adminId"
+    name="adminId"
+    value={filters.adminId}
+    onChange={handleFilterChange}
+    className={inputClass}
+  >
+    <option value="">All Admins</option>
+    {adminOptions.map((admin) => (
+      <option key={admin._id} value={admin._id}>
+        {admin.name || admin.userName || admin.email}
+      </option>
+    ))}
+  </select>
+</div>
 
           <div className="flex flex-col">
             <label htmlFor="status" className="text-xs text-gray-600 mb-1">

@@ -17,6 +17,7 @@ import useUiStore from "../../store/ui.js";
 const TriggerEvents = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -32,6 +33,7 @@ const TriggerEvents = () => {
   } = useGetTriggerEvents({
     page: currentPage,
     limit: itemsPerPage,
+    search: searchQuery,
   });
   const { data: triggerEventData } = useGetTriggerEventById(editData?.id);
   const deleteMutation = useDeleteTriggerEvent();
@@ -136,6 +138,11 @@ const TriggerEvents = () => {
           <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
           />
 
           <StyledButton

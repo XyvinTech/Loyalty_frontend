@@ -1,239 +1,329 @@
-import { useState, useEffect, use, useMemo } from "react";
-import khedmah from "../../assets/Frame 92.png";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useState, useEffect } from "react";
 import sdkApi from "../../api/sdk";
-import { getTierTheme, getNextTierInfo } from "./themes/tierThemes";
+import moment from "moment";
+import { getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
+import { ArrowRightIcon, CheckIcon } from "@heroicons/react/24/outline";
+import walking from "../../assets/Vector.png";
+import bronzeimage from "../../assets/bronse loyality.webp";
+import goldImage from "../../assets/Gold1 loyality.webp";
+import silverImage from "../../assets/SIL loyality.webp";
+import bronzebg from "../../assets/bronzetier.webp";
+import silverbg from "../../assets/silvertier.webp";
+import goldbg from "../../assets/goldtier.webp";
+import { useLocation } from "react-router-dom";
+import AppButton from "../../ui/AppButton";
+import { useNavigationWithParams } from "../../utils/navigationUtils";
 
-const UserCard = () => {
+const UserCard = ({ streak, show }) => {
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({
     name: "",
     membership: "Bronze",
     points: 0,
     nextTierPoints: 5000,
-    avatar: null,
     requiredPoint: 0,
     nextTierName: null,
+    nextTierProgress: null,
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-const progress = useMemo(() => {
-  const total = user.points + user.requiredPoint;
-  const value = total > 0 ? (user.points / total) * 100 : 100;
-  return value;
-}, [user.points, user.requiredPoint]);
 
-
-
-  // Use the customer auth hook
   const { customerID, apiKey, isAuthenticated, updateCustomerData } =
     useCustomerAuth();
-
+  const { navigateWithParams } = useNavigationWithParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const urlName = queryParams.get("name");
   useEffect(() => {
     const fetchCustomerData = async () => {
-      if (!isAuthenticated || !customerID || !apiKey) {
-        setError("Customer ID and API Key are required");
-        setLoading(false);
-        return;
+      if (!isAuthenticated || !customerID || !apiKey) return;
+
+      setLoading(true);
+      const response = await sdkApi.getCustomerDetails(customerID, apiKey);
+      if (response.status === 200 && response.data) {
+        const customerData = response.data;
+        const tierName = customerData.customer_tier?.en || "Bronze";
+        const currentPoints = customerData.point_balance || 0;
+        const nextTierInfo = getNextTierInfo(tierName, currentPoints);
+
+        setUser({
+          name: customerData.name || "Customer",
+          membership: tierName,
+          points: currentPoints,
+          nextTierPoints: nextTierInfo.nextTier ? nextTierInfo.pointsToNext : 0,
+          requiredPoint: Number(customerData.next_tier?.required_point || 0),
+          nextTierName: customerData.next_tier?.en || null,
+          nextTierProgress: customerData.next_tier?.next_tier_progress || null,
+        });
+
+        updateCustomerData(customerData);
       }
-
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await sdkApi.getCustomerDetails(customerID, apiKey);
-
-        if (response.status === 200 && response.data) {
-          const customerData = response.data;
-
-          // Get tier name (default to Bronze if not available)
-          const tierName = customerData.customer_tier?.en || "Bronze";
-          const currentPoints = customerData.point_balance || 0;
-
-          // Get next tier info using the theme system
-          const nextTierInfo = getNextTierInfo(tierName, currentPoints);
-          const requiredPoint = Number(
-            customerData.next_tier?.required_point || 0
-          );
-          const userData = {
-            name: customerData.name || "Customer",
-            membership: tierName,
-            points: currentPoints,
-            nextTierPoints: nextTierInfo.nextTier
-              ? nextTierInfo.pointsToNext
-              : 0,
-            avatar: null,
-            requiredPoint,
-            nextTierName: customerData.next_tier?.en || null,
-          };
-
-          setUser(userData);
-
-          // Update the stored customer data
-          updateCustomerData(customerData);
-        } else {
-          setError("Failed to fetch customer data");
-        }
-      } catch (err) {
-        console.error("Error fetching customer data:", err);
-        setError("Error loading customer information");
-      } finally {
-        setLoading(false);
-      }
+      setLoading(false);
     };
 
     fetchCustomerData();
   }, [customerID, apiKey, isAuthenticated, updateCustomerData]);
 
-  // Get the current tier theme
-  const theme = getTierTheme(user.membership);
-  const nextTierInfo = getNextTierInfo(user.membership, user.points);
-  const formatPoints = (num) => num.toLocaleString("de-DE");
+  const getTierTheme = (tier) => {
+    switch (tier.toLowerCase()) {
+      case "bronze":
+        return {
+          welcomeColor: "#FFDDBD",
+          nameGradient: "linear-gradient(90deg, #F7CAA6, #FFFFFF, #A16133)",
+          membershipGradient:
+            "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
+          transactionColor: "#784019",
+          img: bronzebg,
+          bg: "#f8c44c",
+          variant: "bronze",
+          image: bronzeimage,
+        };
+      case "silver":
+        return {
+          welcomeColor: "#434343",
+          nameGradient: "linear-gradient(90deg, #D8D8D8, #FFFFFF)",
+          membershipGradient: "linear-gradient(270deg, #090909, #6F6F6F)",
+          transactionColor: "#0E0E0E",
+          image: silverImage,
+          img: silverbg,
+          variant: "silver",
+          bg: "#bcbcbc",
+        };
+      case "gold":
+        return {
+          welcomeColor: "#FFDDBD",
+          nameGradient: "linear-gradient(90deg,#FBC000, #FFFFFF,#FFDD00)",
+          membershipGradient:
+            "linear-gradient(270deg, #FFF08B, #FED500,#FFE289,#FDCD01,#FFC100)",
+          transactionColor: "#784019",
+          image: goldImage,
+          img: goldbg,
+          variant: "gold",
+        };
+      default:
+        return {
+          welcomeColor: "#9A653D",
+          nameGradient: "linear-gradient(90deg, #9A653D, #CBAD8B)",
+        };
+    }
+  };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6">
-        <div className="text-center">
-          <p className="text-red-500 text-sm font-medium">
-            Customer ID and API Key are required
-          </p>
-          <p className="text-gray-500 text-xs mt-2">
-            Please access this page with valid customerID and apiKey parameters
-          </p>
-          <p className="text-gray-400 text-xs mt-2">
-            Example: ?customerID=YOUR_ID&apiKey=YOUR_KEY
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const theme = getTierTheme(user.membership);
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6">
-        <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded mb-2"></div>
-          <div className="h-6 bg-gray-200 rounded mb-4"></div>
-          <div className="h-8 bg-gray-200 rounded mb-2"></div>
-          <div className="h-2 bg-gray-200 rounded mb-2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-        </div>
-      </div>
-    );
-  }
+      <div className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto bg-gray-100 animate-pulse">
+        <div className="absolute inset-0 bg-gray-200" />
 
-  if (error) {
-    return (
-      <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6">
-        <div className="text-center">
-          <p className="text-red-500 text-sm">{error}</p>
-          <p className="text-gray-500 text-xs mt-2">
-            Please check your authentication or try again
-          </p>
+        <div className="relative z-10 h-full flex flex-col justify-between p-4">
+          <div>
+            <div className="h-4 w-20 bg-gray-300 rounded mb-2"></div>
+            <div className="h-5 w-32 bg-gray-300 rounded mb-2"></div>
+            <div className="h-6 w-20 bg-gray-300 rounded"></div>
+          </div>
+
+          <div>
+            <div className="h-2 w-full bg-gray-300 rounded mb-2"></div>
+            <div className="h-2 w-2/3 bg-gray-300 rounded"></div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className={`relative ${theme.colors.background.card} rounded-2xl max-w-md mx-auto overflow-hidden ${theme.styles.cardBorder} ${theme.colors.shadow}`}
-    >
-      {/* Background overlay with tier-specific gradient */}
-      <div
-        className={`absolute inset-0 ${theme.colors.background.overlay} opacity-30 rounded-2xl pointer-events-none`}
-      ></div>
+    <>
+      <div className="relative max-w-md w-full h-full  rounded-2xl overflow-hidden shadow-lg mx-auto">
+        <img
+          src={theme.image}
+          alt="Loyalty Background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-      <div className="relative z-10">
-        {/* Header section */}
-        <div className="flex justify-between items-start px-4 py-4">
-          <div>
-            <h2
-              className={`${theme.styles.welcomeText} text-sm font-semibold poppins-text mb-1`}
-            >
-              Welcome
-            </h2>
-            <h1
-              className="text-base font-semibold poppins-text"
-              style={{ color: theme.colors.text.primary }}
-            >
-              {user.name} !
-            </h1>
-          </div>
-          <img
-            src={khedmah}
-            alt="Khedmah Logo"
-            className="w-11 h-11 rounded-lg"
-          />
-        </div>
+        <div className="relative z-10 h-full flex flex-col justify-between">
+          <div className="text-start pl-27 px-4 flex justify-between items-start pt-0">
+            <div className="pt-5">
+              <h1
+                className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
+                style={{ backgroundImage: theme.nameGradient }}
+              >
+                {urlName}
+              </h1>
 
-        {/* Tier badge and points section */}
-        <div className="relative flex items-center px-4 mb-2">
-          <img
-            src={theme.badge}
-            alt={`${user.membership} Badge`}
-            className={`absolute left-[-12px] top-1/3 -translate-y-1/2 w-29 h-29 z-0 ${theme.styles.badgeGlow}`}
-            style={{
-              pointerEvents: "none",
-              filter:
-                user.membership === "Silver"
-                  ? "hue-rotate(180deg) saturate(0.5) brightness(1.2)"
-                  : user.membership === "Gold"
-                  ? "hue-rotate(40deg) saturate(1.5) brightness(1.3)"
-                  : user.membership === "Platinum"
-                  ? "hue-rotate(200deg) saturate(0.3) brightness(1.4)"
-                  : "none",
-            }}
-          />
-          <div className="relative z-10 pl-20 flex flex-col">
-            <span
-              className="font-semibold text-xl leading-none poppins-text"
-              style={{ color: theme.colors.text.primary }}
-            >
-              {user.membership}
-            </span>
-            <div className="flex items-center mt-1 text-xs">
-              <span
-                className="poppins-text"
-                style={{ color: theme.colors.text.muted }}
+              <h2
+                className="uppercase text-base font-bold bg-clip-text text-transparent"
+                style={{ backgroundImage: theme.membershipGradient }}
               >
-                {formatPoints(user.points)}
-              </span>
-              <span
-                className="ml-1 poppins-text"
-                style={{ color: theme.colors.text.muted }}
-              >
-                Points
-              </span>
-              <ChevronRightIcon
-                className="w-4 h-4 ml-1"
-                style={{ color: theme.colors.text.muted }}
-              />
+                {user.membership}
+              </h2>
             </div>
           </div>
-        </div>
-
-        {/* Progress bar section */}
-        <div className="px-4 pb-4">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-            <div
-              className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
-              style={{
-                width: `${progress}%`,
-              }}
-            ></div>
-          </div>
-          <span className="text-[#8E8E8E] text-[12px] poppins-text">
-            {user?.requiredPoint === 0 ? (
-              "Maximum Level Reached!"
-            ) : (
-              <>
-                {user.requiredPoint} points to {user.nextTierName}
-              </>
+          <div className="flex flex-col items-end px-4 pb-4 pt-15 space-y-2">
+            <h2
+              className=" text-[10px]  bg-clip-text text-transparent"
+              style={{ color: theme.transactionColor }}
+            >
+              Point Balance:{" "}
+              <span
+                className="px-2 py-1 rounded-full"
+                style={{ background: theme.nameGradient }}
+              >
+                {user.points}
+              </span>
+            </h2>
+            {show && (
+              <button
+                className="text-sm font-semibold flex items-center bg-clip-text text-transparent"
+                style={{ color: theme.transactionColor }}
+                onClick={() => navigateWithParams("/user/history")}
+              >
+                See Transactions
+                <span className="ml-1">{">"}</span>
+              </button>
             )}
-          </span>
+          </div>
         </div>
+      </div>{" "}
+      <div className="px-0 pb-0 pt-0 ">
+        {streak ? (
+          <div className="px-0 pt-6">
+            {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
+              <>
+                <div className="relative w-full flex items-center justify-between mt-5 ">
+                  <div className="flex flex-col items-center min-w-[40px]">
+                    <img
+                      src={walking}
+                      alt="Walker"
+                      className="w-[18px] h-[32px]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col items-center min-w-[64px] relative">
+                    <span className="absolute -top-6 text-xs font-semibold text-[#0C3262] whitespace-nowrap">
+                      You are here !
+                    </span>
+                    <img
+                      src={theme.img}
+                      alt={user.membership}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-sm font-bold text-[#0C3262]">
+                      {user.membership}
+                    </span>
+                  </div>
+                  <div className="flex-1 flex items-center justify-between mx-0 relative mt-6">
+                    <div className="absolute top-2 left-0 w-full h-[4px] bg-gray-200 rounded-full" />
+
+                    <div className="absolute top-2 left-0 flex w-full h-[4px] rounded-full overflow-hidden">
+                      {user.nextTierProgress.streak.period_details.map(
+                        (period, index) => (
+                          <div
+                            key={index}
+                            className="h-full transition-all duration-500 relative"
+                            style={{
+                              width: "100%",
+                              background: theme.transactionColor,
+                            }}
+                          />
+                        )
+                      )}
+                    </div>
+                    {user.nextTierProgress.streak.period_details.map(
+                      (period, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center text-center relative z-10"
+                          style={{
+                            width: `${
+                              100 /
+                              user.nextTierProgress.streak.required_periods
+                            }%`,
+                          }}
+                        >
+                          <div
+                            className={`flex items-center justify-center w-5 h-5 rounded-full mb-1 border-2 ${
+                              period.completed
+                                ? "bg-[#FFDD00] border-[#FFDD00]" // completed
+                                : "bg-white border-gray-400" // not completed
+                            }`}
+                          >
+                            {period.completed ? (
+                              <CheckIcon className="w-3 h-3 text-black" />
+                            ) : (
+                              <span className="text-[10px] text-gray-500">
+                                ✕
+                              </span>
+                            )}
+                          </div>
+
+                          <span className="text-[12px] text-[#0C3262] font-medium">
+                            {moment(
+                              period.date_range.split(" - ")[0],
+                              "D/M/YYYY"
+                            )
+                              .locale("en")
+                              .format("MMMM")}
+                          </span>
+                          <span className="text-[11px] text-[#0C3262]">
+                            {period.points_earned} / {period.points_required}
+                          </span>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  <div className="flex flex-col items-center min-w-[64px]">
+                    <img
+                      src={getTierTheme(user.nextTierName).img}
+                      alt={user.nextTierName}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <span className="text-sm font-bold text-[#0C3262]">
+                      {user.nextTierName}
+                    </span>
+                  </div>
+                </div>
+                {show && (
+                  <div className="mt-6 flex justify-center items-center pb-18">
+                    <AppButton
+                      name={
+                        <>
+                          How to get to silver or gold ?
+                          <ArrowRightIcon className="w-4 h-4" />
+                        </>
+                      }
+                      onClick={() => navigateWithParams("/user/how-to")}
+                      variant={theme.variant}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="mt-6 flex justify-center items-center pb-0">
+                <AppButton
+                  name={<>Yeh!! Enjoy the {user.membership} tier Benefits</>}
+                  variant={theme.variant}
+                  onClick={() => navigateWithParams("/user/how-to")}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="px-4 pb-4">
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+              <div
+                className="bg-[#E39C75] h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <span className="text-[#8E8E8E] text-[12px] poppins-text">
+              {user?.requiredPoint === 0
+                ? "Maximum Level Reached!"
+                : `${user.requiredPoint} points to ${user.nextTierName}`}
+            </span>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

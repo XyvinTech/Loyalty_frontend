@@ -2,10 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import subAdminApi from "../api/sub-admin";
 export function useSubAdmin() {
   const queryClient = useQueryClient();
-  const useGetSubAdmin = () => {
+  const useGetSubAdmin = (params) => {
     return useQuery({
-      queryKey: ["subAdmins"],
-      queryFn: () => subAdminApi.getSubAdmin(),
+      queryKey: ["subAdmins", params],
+      queryFn: () => subAdminApi.getSubAdmin(params),
       staleTime: 5 * 60 * 1000, // 5 minutes
     });
   };

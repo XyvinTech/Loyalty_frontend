@@ -19,6 +19,7 @@ import AddSubAdmin from "../../components/system-and-settings/AddSubAdmin";
 const Users = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(10);
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
@@ -34,7 +35,11 @@ const Users = () => {
     error,
     refetch,
     dataUpdatedAt,
-  } = useGetSubAdmin();
+  } = useGetSubAdmin({
+    limit: itemsPerPage,
+    page: currentPage,
+    search,
+  });
   const deleteMutation = useDeleteSubAdmin();
   const { addToast } = useUiStore();
   const paginatedData = useMemo(() => {
@@ -129,17 +134,9 @@ const Users = () => {
         </div>
       </div>{" "}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <StyledSearchInput placeholder="Search" className="w-full sm:w-auto" />
+        <StyledSearchInput placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:w-auto" />
 
         <div className="flex gap-3 ml-auto">
-          <StyledButton
-            name={
-              <>
-                <ArrowDownTrayIcon className="w-4 h-4" /> Export{" "}
-              </>
-            }
-            variant="download"
-          />
           <StyledButton
             name={
               <>
@@ -186,7 +183,7 @@ const Users = () => {
                 Email
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Role
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -211,16 +208,8 @@ const Users = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {item.email}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        item?.status
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {item?.status ? "Active" : "Inactive"}
-                    </span>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {item?.role?.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex items-center gap-2">

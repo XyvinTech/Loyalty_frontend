@@ -4,32 +4,41 @@ import {
   HomeIcon as HomeSolidIcon,
   ClockIcon as ClockSolidIcon,
   TagIcon as TagSolidIcon,
+  Squares2X2Icon,
+  Squares2X2Icon as Squares2X2SolidIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
 import PropTypes from "prop-types";
 
 const UserLayout = ({ children, currentPage = "home" }) => {
   const [activePage, setActivePage] = useState(currentPage);
+  const [tierColor, setTierColor] = useState("#DF9872"); // default Bronze
+  const [loading, setLoading] = useState(true); // loading state
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [tierColor, setTierColor] = useState("#DF9872"); // default to Bronze
-
-  const { isAuthenticated, customerID, apiKey, customerData } =
+  const { isAuthenticated, customerID, apiKey, name, customerData } =
     useCustomerAuth();
+
+  // Simulate 3s loading
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (customerData) {
       const tier = customerData?.customer_tier?.en;
       switch (tier) {
         case "Bronze":
-          setTierColor("#DF9872"); // bronze color
+          setTierColor("#DF9872");
           break;
         case "Silver":
-          setTierColor("#C0C0C0"); // silver color
+          setTierColor("#C0C0C0");
           break;
         case "Gold":
-          setTierColor("#FFD700"); // gold color
+          setTierColor("#FFD700");
           break;
         default:
           setTierColor("#DF9872");
@@ -37,7 +46,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     }
   }, [customerData]);
 
-  // Update active page based on current route
+  // Update active page
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("dashboard")) setActivePage("home");
@@ -62,35 +71,36 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       href: "/user/history",
     },
     {
+      id: "categories",
+      label: "Categories",
+      icon: Squares2X2Icon,
+      activeIcon: Squares2X2SolidIcon,
+      href: "/user/categories",
+    },
+    {
       id: "offers",
       label: "Offers",
       icon: TagIcon,
       activeIcon: TagSolidIcon,
       href: "/user/offers",
     },
-    {
-      id: "support",
-      label: "Support",
-      icon: ChatBubbleLeftRightIcon,
-      activeIcon: ChatBubbleLeftRightIcon,
-      href: "/user/support",
-    },
   ];
 
   const handleNavigation = (item) => {
     if (!isAuthenticated) {
-      // If not authenticated, show error
       console.warn("Navigation attempted without authentication");
       return;
     }
 
     setActivePage(item.id);
 
-    // Navigate with optional URL parameters for better bookmarking/sharing
     const searchParams = new URLSearchParams();
     if (customerID && apiKey) {
       searchParams.set("customerID", customerID);
       searchParams.set("apiKey", apiKey);
+    }
+    if (name) {
+      searchParams.set("name", name);
     }
 
     const url = searchParams.toString()
@@ -100,30 +110,17 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     navigate(url);
   };
 
-  // Show authentication error if not authenticated
-  if (!isAuthenticated) {
+  // Show loading for 3s
+  if (loading || !isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl max-w-md mx-auto overflow-hidden p-6 text-center">
-          <div className="text-red-500 text-lg font-semibold mb-2">
-            Authentication Required
-          </div>
-          <p className="text-gray-600 text-sm mb-4">
-            Please access this page with valid customer credentials.
-          </p>
-          <div className="bg-gray-50 rounded-lg p-3 text-xs text-gray-500">
-            <p className="font-medium mb-1">Required URL format:</p>
-            <p className="font-mono text-xs break-all">
-              ?customerID=YOUR_ID&apiKey=YOUR_KEY
-            </p>
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gray-50 pb-20 poppins-text">
       <main className="min-h-screen">{children}</main>
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
         <div className="flex items-center justify-around max-w-md mx-auto">

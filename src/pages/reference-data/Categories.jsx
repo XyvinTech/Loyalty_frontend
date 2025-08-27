@@ -20,6 +20,7 @@ const Categories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [data, setData] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const { useGetCategory, useGetCategoryById, useDeleteCategory } =
@@ -35,6 +36,7 @@ const Categories = () => {
   } = useGetCategory({
     limit: itemsPerPage,
     page: currentPage,
+    search: searchQuery,
   });
   const deleteMutation = useDeleteCategory();
   const { addToast } = useUiStore();
@@ -139,15 +141,13 @@ const Categories = () => {
           <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
           />
-          <StyledButton
-            name={
-              <>
-                <ArrowDownTrayIcon className="w-4 h-4" /> Export{" "}
-              </>
-            }
-            variant="download"
-          />
+
           <StyledButton
             name={
               <>

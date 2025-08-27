@@ -54,13 +54,13 @@ const PointsCriteriaView = ({ open, onClose, id }) => {
               <p className="text-gray-600 text-sm mt-1">
                 <span className="font-medium">Valid:</span>{" "}
                 {selectedCriteria?.data?.startDate
-                  ? moment(selectedCriteria.data.startDate).format(
+                  ? moment(selectedCriteria.data.startDate).locale("en").format(
                       "MMM D, YYYY"
                     )
                   : "N/A"}{" "}
                 -{" "}
                 {selectedCriteria?.data?.endDate
-                  ? moment(selectedCriteria.data.endDate).format("MMM D, YYYY")
+                  ? moment(selectedCriteria.data.endDate).locale("en").format("MMM D, YYYY")
                   : "N/A"}
               </p>
             </div>

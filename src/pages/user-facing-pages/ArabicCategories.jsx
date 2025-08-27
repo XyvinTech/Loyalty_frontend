@@ -85,13 +85,13 @@ const ArabicCategories = () => {
     >
       <div>
         <div className="flex justify-between items-center p-4">
-          <div className="flex items-center gap-2">
-            <button onClick={() => navigate(-1)}>
-              <ArrowLeftIcon className="w-6 h-6" />
-            </button>
+          <div className="flex justify-between gap-2 w-full">
             <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
               الفئات
             </h1>
+            <button onClick={() => navigate(-1)}>
+              <ArrowLeftIcon className="w-6 h-6" />
+            </button>
           </div>
         </div>
 

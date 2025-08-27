@@ -142,15 +142,18 @@ const ArabicOffers = () => {
   );
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen alexandria-text" dir="rtl">
+    <div
+      className="max-w-md mx-auto bg-white min-h-screen alexandria-text"
+      dir="rtl"
+    >
       <div className="flex justify-between items-center p-4">
-        <div className="flex items-center gap-2">
-          <button onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="w-6 h-6" />
-          </button>
+        <div className="flex justify-between w-full gap-2">
           <h1 className="text-2xl font-semibold text-[#404040] alexandria-text">
             العروض
           </h1>
+          <button onClick={() => navigate(-1)}>
+            <ArrowLeftIcon className="w-6 h-6" />
+          </button>
         </div>
       </div>
 

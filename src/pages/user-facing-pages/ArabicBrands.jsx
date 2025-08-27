@@ -84,15 +84,15 @@ const ArabicBrands = () => {
       dir="rtl"
     >
       <div className="flex justify-between items-center p-4">
-        <div className="flex items-center gap-2">
-          <button onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="w-6 h-6" />
-          </button>
+        <div className="flex justify-between gap-2 w-full">
           <div>
             <h1 className="text-2xl font-semibold text-[#404040] alexandria-text">
               العلامات التجارية
             </h1>
           </div>
+          <button onClick={() => navigate(-1)}>
+            <ArrowLeftIcon className="w-6 h-6" />
+          </button>
         </div>
       </div>
 

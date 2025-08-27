@@ -73,13 +73,15 @@ const CouponDetails = () => {
           <ul className="text-xs list-disc pl-5 space-y-2">
             <li>
               <strong>Valid from:</strong>{" "}
-              {moment(offerData?.validityPeriod?.startDate).locale("en").format(
-                "DD-MM-YYYY"
-              )}{" "}
+              {moment(offerData?.validityPeriod?.startDate)
+                .locale("en")
+                .format("DD-MM-YYYY")}{" "}
               to{" "}
-              {moment(offerData?.validityPeriod?.endDate).locale("en").format("DD-MM-YYYY")}
+              {moment(offerData?.validityPeriod?.endDate)
+                .locale("en")
+                .format("DD-MM-YYYY")}
             </li>
-           
+
             {offerData?.merchantId?.description?.en && (
               <li className="break-words whitespace-pre-line text-xs leading-relaxed">
                 <strong>Merchant Info:</strong>{" "}
@@ -107,11 +109,17 @@ const CouponDetails = () => {
             Terms and Conditions
           </p>
         </div>
-
-        <AppMainButton
-          name="Redeem Coupon"
-          onClick={() => setShowRedeemCard(true)}
-        />
+        {offerData?.is_eligible === true ? (
+          <AppMainButton
+            name="Redeem Coupon"
+            onClick={() => setShowRedeemCard(true)}
+          />
+        ) : (
+          <AppMainButton
+            name="Upgrade to redeem this offer"
+            disabled={true}
+          />
+        )}
       </div>
 
       {showRedeemCard && (

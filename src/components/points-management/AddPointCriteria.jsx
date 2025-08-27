@@ -493,6 +493,7 @@ const AddPointCriteria = ({ isOpen, onClose, editData }) => {
                       type="number"
                       {...register("conditions.maxTransactions.weekly")}
                       placeholder="Weekly max"
+                      disabled
                       className={inputClass}
                     />
                     <p className="text-xs text-gray-500 mt-1">
@@ -506,6 +507,7 @@ const AddPointCriteria = ({ isOpen, onClose, editData }) => {
                       {...register("conditions.maxTransactions.monthly")}
                       placeholder="Monthly max"
                       className={inputClass}
+                      disabled
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Enter 0 for Unlimited

@@ -90,7 +90,7 @@ const PointsCriteria = () => {
           </div>
           <div className="flex items-center gap-4">
             <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
-            <StyledSearchInput placeholder={"Search by name"} />
+            {/* <StyledSearchInput placeholder={"Search by name"} /> */}
             <StyledButton
               onClick={() => setOpen(true)}
               name={

@@ -156,7 +156,6 @@ const ArabicOffers = () => {
           </button>
         </div>
       </div>
-
       <div className="px-4 mb-4 mt-3">
         <div
           className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"

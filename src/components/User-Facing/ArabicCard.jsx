@@ -213,12 +213,12 @@ const ArabicCard = ({ streak, show }) => {
               className=" text-[10px]  bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}
             >
-              Point Balance:{" "}
+              رصيد النقاط المتوفر{" "}
               <span
                 className="px-2 py-1 rounded-full"
                 style={{ background: theme.nameGradient }}
               >
-                {user.points}
+                : {user.points}
               </span>
             </h2>
             {show && (
@@ -227,7 +227,7 @@ const ArabicCard = ({ streak, show }) => {
                 style={{ color: theme.transactionColor }}
                 onClick={() => navigateWithParams("/user/history/ar")}
               >
-                See Transactions
+                عرض سجل المعاملات
                 <span className="ml-1">{">"}</span>
               </button>
             )}
@@ -337,7 +337,7 @@ const ArabicCard = ({ streak, show }) => {
                     <AppButton
                       name={
                         <>
-                          How to get to silver or gold ?
+                          كيف ترتقي إلى عضوية الفضي أو الذهبي؟
                           <ArrowRightIcon className="w-4 h-4" />
                         </>
                       }

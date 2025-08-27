@@ -109,10 +109,17 @@ const ArabicCouponDetail = () => {
           </p>
         </div>
 
-        <AppMainButton
-          name="استرداد القسيمة"
-          onClick={() => setShowRedeemCard(true)}
-        />
+        {offerData?.is_eligible === true ? (
+          <AppMainButton
+            name="استرداد القسيمة"
+            onClick={() => setShowRedeemCard(true)}
+          />
+        ) : (
+          <AppMainButton
+            name="قم بالترقية للاستفادة من هذا العرض"
+            disabled={true}
+          />
+        )}
       </div>
 
       {showRedeemCard && (

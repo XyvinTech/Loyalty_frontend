@@ -213,12 +213,12 @@ const ArabicCard = ({ streak, show }) => {
               className=" text-[10px]  bg-clip-text text-transparent"
               style={{ color: theme.transactionColor }}
             >
-              رصيد النقاط المتوفر{" "}
+              رصيد النقاط المتوفر{" :"}
               <span
-                className="px-2 py-1 rounded-full"
+                className="px-2 py-1 rounded-full mr-1"
                 style={{ background: theme.nameGradient }}
               >
-                : {user.points}
+                {user.points}
               </span>
             </h2>
             {show && (

@@ -247,7 +247,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     >
       <div className="flex items-center justify-between px-6 py-5.5">
         <NavLink to="/dashboard" className="text-xl font-semibold text-white">
-          Khedmah Loyalty
+          CBS Loyalty
         </NavLink>
         <button
           ref={trigger}

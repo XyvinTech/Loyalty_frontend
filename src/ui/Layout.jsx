@@ -32,7 +32,7 @@ const Layout = ({ children }) => {
         </main>
         <footer className="fixed bottom-0 w-full bg-white text-gray-600 text-center py-4 shadow-md">
           <p className="text-sm">
-            © {new Date().getFullYear()} Khedmah Loyalty. All rights reserved. |{" "}
+            © {new Date().getFullYear()} CBS Loyalty. All rights reserved. |{" "}
             <a
               href="https://continuityoman.com/"
               target="_blank"

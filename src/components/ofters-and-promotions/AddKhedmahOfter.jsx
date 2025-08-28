@@ -392,7 +392,7 @@ const AddKhedmahOffer = ({ isOpen, onClose, editData }) => {
       <div className="bg-white rounded-lg w-full max-w-4xl p-4 max-h-[80vh] overflow-y-auto mt-17">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-medium text-gray-800">
-            {editData ? "Edit Offer" : "Add New Khedmah Offer"}
+            {editData ? "Edit Offer" : "Add New CBS Offer"}
           </h2>
           <button
             onClick={handleBack}

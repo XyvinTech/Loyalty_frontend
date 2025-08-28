@@ -76,7 +76,7 @@ const KhedmahOffer = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
           <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
-            Khedmah Offers
+            CBS Offers
           </h1>
           <p className="text-xs text-gray-500 mt-1">
             Last Updated: {new Date(dataUpdatedAt).toLocaleString()}

@@ -177,7 +177,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       permissions: ["CREATE_OFFERS", "EDIT_OFFERS"],
       subItems: [
         {
-          label: "Khedmah Offers",
+          label: "CBS Offers",
           path: "/khedma-offers",
           icon: TicketIcon,
           permissions: ["CREATE_OFFERS"],

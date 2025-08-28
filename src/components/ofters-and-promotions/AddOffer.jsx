@@ -275,8 +275,8 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
           })) || [];
 
         const paymentMethodOptions = [
-          { value: "Khedmah-Pay", label: "Khedmah-Pay" },
-          { value: "Khedmah-Wallet", label: "Khedmah-Wallet" },
+          { value: "Khedmah-Pay", label: "CBS-Pay" },
+          { value: "Khedmah-Wallet", label: "CBS-Wallet" },
         ];
 
         const formattedConditions = editData.conditions.map((condition) => {
@@ -360,8 +360,8 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
     })) || [];
 
   const paymentMethodOptions = [
-    { value: "Khedmah-Pay", label: "Khedmah-Pay" },
-    { value: "Khedmah-Wallet", label: "Khedmah-Wallet" },
+    { value: "Khedmah-Pay", label: "CBS-Pay" },
+    { value: "Khedmah-Wallet", label: "CBS-Wallet" },
   ];
 
   const watchTermsAndConditions = watch("termsAndConditions");

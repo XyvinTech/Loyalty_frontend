@@ -256,10 +256,8 @@ const Terms = () => {
               contact:
             </p>
             <p className="mt-2 text-xs sm:text-sm">
-              📧 Email:{" "}
-              <span className="text-blue-600">support@khedmah.om</span>
-              <br />
-              📞 Call Center: 1236
+            
+              📞 Call Center: 24727272
             </p>
           </div>
 

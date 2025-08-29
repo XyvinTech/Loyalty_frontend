@@ -260,7 +260,6 @@ const Terms = () => {
               📞 Call Center: 24727272
             </p>
           </div>
-
           <p className="text-xs sm:text-sm">
             By continuing to use the Khedmah or Khedmah Delivery apps and
             participating in the Loyalty Program, you confirm that you have read

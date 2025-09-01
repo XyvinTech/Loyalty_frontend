@@ -257,12 +257,13 @@ const UserCard = ({ streak, show }) => {
 
                           <span className="text-[12px] text-[#0C3262] font-medium">
                             {moment(
-                              period.date_range.split(" - ")[0],
+                              period.date_range.split(" - ")[0], 
                               "D/M/YYYY"
                             )
                               .locale("en")
-                              .format("MMMM")}
+                              .format("MMM")}
                           </span>
+
                           <span className="text-[11px] text-[#0C3262]">
                             {period.points_earned} / {period.points_required}
                           </span>

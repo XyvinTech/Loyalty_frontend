@@ -46,7 +46,6 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     }
   }, [customerData]);
 
-  // Update active page
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("dashboard")) setActivePage("home");

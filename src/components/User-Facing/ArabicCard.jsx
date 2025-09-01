@@ -350,7 +350,7 @@ const ArabicCard = ({ streak, show }) => {
             ) : (
               <div className="mt-6 flex justify-center items-center pb-0">
                 <AppButton
-                  name={<>Yeh!! Enjoy the {user.membership} tier Benefits</>}
+                  name={<>نعم!! استمتع بمزايا الفئة الذهبية!</>}
                   onClick={() => navigateWithParams("/user/how-to/ar")}
                   variant={theme.variant}
                 />

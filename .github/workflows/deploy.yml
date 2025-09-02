@@ -29,6 +29,10 @@ jobs:
       - name: Rename dist to loyalty-frontend
         run: mv ./dist ./loyalty-frontend
 
+      - name: Save staging IP locally
+        run: echo "${{ secrets.SERVER_HOST }}" > /home/loyalty/staging_host_ip.txt
+
+
       - name: Clean Temporary Directory on Server
         uses: appleboy/ssh-action@v0.1.6
         with:

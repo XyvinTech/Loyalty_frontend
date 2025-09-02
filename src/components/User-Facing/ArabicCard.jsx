@@ -314,7 +314,7 @@ const ArabicCard = ({ streak, show }) => {
                               .locale("ar")
                               .format("MMMM")}
                           </span>
-                          <span className="text-[11px] text-[#0C3262]">
+                          <span className="text-[8px] text-[#0C3262]">
                             {period.points_earned} / {period.points_required}
                           </span>
                         </div>

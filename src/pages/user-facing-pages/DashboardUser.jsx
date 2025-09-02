@@ -103,7 +103,7 @@ const DashboardUser = () => {
             backgroundSize: "cover",
           }}
         ></div>
-        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-3">
+        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-2">
           <UserCard streak show />
         </div>
       </div>

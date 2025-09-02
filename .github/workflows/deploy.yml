@@ -30,7 +30,7 @@ jobs:
         run: mv ./dist ./loyalty-frontend
 
       - name: Clean Temporary Directory on Server
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_HOST_PROD }}
           username: ${{ secrets.SERVER_USER_PROD }}

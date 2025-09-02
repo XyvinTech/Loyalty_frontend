@@ -54,7 +54,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST_PROD }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
-            script: |
+            script:|
               echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
               echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
               echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf ~/deploy-temp

@@ -29,6 +29,9 @@ jobs:
       - name: Rename dist to loyalty-frontend
         run: mv ./dist ./loyalty-frontend
 
+      - name: Show staging host
+        run: echo "Staging host from secrets:${{ secrets.SERVER_HOST }}"
+
       - name: Clean Temporary Directory on Server
         uses: appleboy/ssh-action@v0.1.6
         with:

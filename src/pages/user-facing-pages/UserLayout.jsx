@@ -118,6 +118,16 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       </div>
     );
   }
+  // Show Not Found if customerData is null
+  if (!customerData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <h1 className="text-2xl font-semibold text-gray-800">
+          404 – Customer Not Found
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 poppins-text">

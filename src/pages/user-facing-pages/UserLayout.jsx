@@ -84,7 +84,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       href: "/user/offers",
     },
   ];
-
+console.log("customerData",customerData)
   const handleNavigation = (item) => {
     if (!isAuthenticated) {
       console.warn("Navigation attempted without authentication");
@@ -117,7 +117,15 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       </div>
     );
   }
-
+if (!customerData) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <h1 className="text-2xl font-semibold text-gray-800">
+        404 – Customer Not Found
+      </h1>
+    </div>
+  );
+}
   return (
     <div className="min-h-screen bg-gray-50 pb-20 poppins-text">
       <main className="min-h-screen">{children}</main>

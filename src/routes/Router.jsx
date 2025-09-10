@@ -50,6 +50,7 @@ import ArabicCategories from "../pages/user-facing-pages/ArabicCategories";
 import ArabicOffers from "../pages/user-facing-pages/ArabicOffers";
 import ArabicCouponDetail from "../pages/user-facing-pages/ArabicCouponDetail";
 import HowtoGet from "../pages/user-facing-pages/HowtoGet";
+import HowtoGetArabic from "../pages/user-facing-pages/HowToGetArabic";
 const RootLayout = () => (
   <AuthProvider>
     <Outlet />
@@ -138,7 +139,7 @@ const router = createBrowserRouter([
           { path: "/user/categories/ar", element: <ArabicCategories /> },
           { path: "/user/support", element: <UserSupport /> },
           { path: "/user/terms-and-conditions/ar", element: <Terms /> },
-          { path: "/user/how-to/ar", element: <HowtoGet /> },
+          { path: "/user/how-to/ar", element: <HowtoGetArabic /> },
 
         ],
       },

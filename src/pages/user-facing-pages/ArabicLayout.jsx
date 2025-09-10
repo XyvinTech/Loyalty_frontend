@@ -18,7 +18,7 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customerID, apiKey, customerData,name } =
+  const { isAuthenticated, customerID, apiKey, customerData, name } =
     useCustomerAuth();
 
   // Simulate loading delay (2 sec)
@@ -99,7 +99,7 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
       searchParams.set("customerID", customerID);
       searchParams.set("apiKey", apiKey);
     }
-  if (name) {
+    if (name) {
       searchParams.set("name", name);
     }
     const url = searchParams.toString()
@@ -109,11 +109,19 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
     navigate(url);
   };
 
-  // Show spinner while loading or if not authenticated
   if (loading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
+      </div>
+    );
+  }
+  if (!customerData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <h1 className="text-2xl font-semibold text-gray-800">
+          ٤٠٤ – لم يتم العثور على العميل
+        </h1>
       </div>
     );
   }

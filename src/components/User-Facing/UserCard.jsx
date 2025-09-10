@@ -140,10 +140,10 @@ const UserCard = ({ streak, show }) => {
         />
 
         <div className="relative z-10 h-full flex flex-col justify-between">
-          <div className="text-start pl-27 px-4 flex justify-between items-start pt-0">
+          <div className="text-start pl-10 px-4 flex justify-between items-start pt-0">
             <div className="pt-5">
               <h1
-                className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
+                className="text-xl font-bold poppins-text uppercase bg-clip-text text-transparent"
                 style={{ backgroundImage: theme.nameGradient }}
               >
                 {urlName}
@@ -257,13 +257,14 @@ const UserCard = ({ streak, show }) => {
 
                           <span className="text-[12px] text-[#0C3262] font-medium">
                             {moment(
-                              period.date_range.split(" - ")[0],
+                              period.date_range.split(" - ")[0], 
                               "D/M/YYYY"
                             )
                               .locale("en")
-                              .format("MMMM")}
+                              .format("MMM")}
                           </span>
-                          <span className="text-[11px] text-[#0C3262]">
+
+                          <span className="text-[8px] text-[#0C3262]">
                             {period.points_earned} / {period.points_required}
                           </span>
                         </div>

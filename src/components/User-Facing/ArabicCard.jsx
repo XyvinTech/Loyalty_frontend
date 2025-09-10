@@ -191,10 +191,10 @@ const ArabicCard = ({ streak, show }) => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="relative z-10">
-          <div className="text-left pl-27 px-0 flex justify-start items-start pt-4">
+          <div className="text-left pl-10 px-0 flex justify-start items-start pt-4">
             <div className="pt-5">
               <h1
-                className="text-lg font-bold alexandria-text uppercase bg-clip-text text-transparent text-left"
+                className="text-xl font-bold alexandria-text uppercase bg-clip-text text-transparent text-left"
                 style={{ backgroundImage: theme.nameGradient }}
               >
                 {urlName}
@@ -314,7 +314,7 @@ const ArabicCard = ({ streak, show }) => {
                               .locale("ar")
                               .format("MMMM")}
                           </span>
-                          <span className="text-[11px] text-[#0C3262]">
+                          <span className="text-[8px] text-[#0C3262]">
                             {period.points_earned} / {period.points_required}
                           </span>
                         </div>
@@ -350,7 +350,7 @@ const ArabicCard = ({ streak, show }) => {
             ) : (
               <div className="mt-6 flex justify-center items-center pb-0">
                 <AppButton
-                  name={<>نعم!! استمتع بمزايا الفئة الذهبية!</>}
+                  name="!نعم!! استمتع بمزايا الفئة الذهبية"
                   onClick={() => navigateWithParams("/user/how-to/ar")}
                   variant={theme.variant}
                 />

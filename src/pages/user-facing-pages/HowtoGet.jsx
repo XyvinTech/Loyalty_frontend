@@ -259,7 +259,7 @@ const HowtoGet = () => {
                     className="text-sm font-medium"
                     style={{ color: "#784019" }}
                   >
-                    Minimum 150 points earned each month for 3 consecutive
+                    Minimum 300 points earned each month for 3 consecutive
                     months
                   </p>
                 </div>
@@ -276,7 +276,7 @@ const HowtoGet = () => {
                       Points Multiplier
                     </div>
                     <div className="font-bold" style={{ color: "#FBC000" }}>
-                      1.25x points earned
+                      2x points earned
                     </div>
                   </div>
                   <div
@@ -289,7 +289,7 @@ const HowtoGet = () => {
                     >
                       Points Expiry
                     </div>
-                    <div style={{ color: "#784019" }}>90 days</div>
+                    <div style={{ color: "#784019" }}>180 days</div>
                   </div>
                   <div
                     className="rounded-lg p-3"

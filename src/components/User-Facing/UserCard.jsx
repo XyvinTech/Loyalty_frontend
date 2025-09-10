@@ -159,7 +159,7 @@ const UserCard = ({ streak, show }) => {
           </div>
           <div className="flex flex-col items-end px-4 pb-4 pt-15 space-y-2">
             <h2
-              className=" text-[10px]  bg-clip-text text-transparent"
+              className=" text-[12px]  bg-clip-text text-transparent font-medium"
               style={{ color: theme.transactionColor }}
             >
               Point Balance:{" "}

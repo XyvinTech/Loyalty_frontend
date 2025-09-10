@@ -262,7 +262,7 @@ const HowtoGetArabic = () => {
                     className="text-sm font-medium"
                     style={{ color: "#784019" }}
                   >
-                    حد أدنى 150 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
+                    حد أدنى 300 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
                   </p>
                 </div>
 
@@ -278,7 +278,7 @@ const HowtoGetArabic = () => {
                       مضاعف النقاط
                     </div>
                     <div className="font-bold" style={{ color: "#FBC000" }}>
-                      ×1.25 النقاط المكتسبة
+                      ×2 النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -291,7 +291,7 @@ const HowtoGetArabic = () => {
                     >
                       صلاحية النقاط
                     </div>
-                    <div style={{ color: "#784019" }}>90 يوم</div>
+                    <div style={{ color: "#784019" }}>180 يوم</div>
                   </div>
                   <div
                     className="rounded-lg p-3"

@@ -1,4 +1,3 @@
-
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 const Terms = () => {
@@ -105,6 +104,9 @@ const Terms = () => {
                 terms.
               </li>
             </ul>
+            <p className="text-xs sm:text-sm">
+              3.5. Points will be earned only for Card Payments
+            </p>
           </div>
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
@@ -255,10 +257,7 @@ const Terms = () => {
               For queries or support related to the Loyalty Program, please
               contact:
             </p>
-            <p className="mt-2 text-xs sm:text-sm">
-            
-              📞 Call Center: 24727272
-            </p>
+            <p className="mt-2 text-xs sm:text-sm">📞 Call Center: 24727272</p>
           </div>
           <p className="text-xs sm:text-sm">
             By continuing to use the Khedmah or Khedmah Delivery apps and

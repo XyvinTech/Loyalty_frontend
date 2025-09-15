@@ -23,7 +23,7 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
 
   // Simulate loading delay (2 sec)
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -125,7 +125,6 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50 pb-20 alexandria-text">
       <main className="min-h-screen">{children}</main>

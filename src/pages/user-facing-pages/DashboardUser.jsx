@@ -29,7 +29,7 @@ const DashboardUser = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowDashboard(true);
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, []);

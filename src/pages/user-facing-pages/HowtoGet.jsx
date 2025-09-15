@@ -41,16 +41,16 @@ const HowtoGet = () => {
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
               style={{
-                backgroundColor: "#f8c44c",
-                borderColor: "#A16133",
+                backgroundColor: "#DF9872",
+                borderColor: "#DF9872",
               }}
             >
               <div
                 className="absolute inset-0 opacity-20"
-                style={{
-                  background:
-                    "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
-                }}
+                // style={{
+                //   background:
+                //     "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
+                // }}
               ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
@@ -134,15 +134,15 @@ const HowtoGet = () => {
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
               style={{
-                backgroundColor: "#bcbcbc",
-                borderColor: "#6F6F6F",
+                backgroundColor: "#C0C0C0",
+                borderColor: "#C0C0C0",
               }}
             >
               <div
                 className="absolute inset-0 opacity-20"
-                style={{
-                  background: "linear-gradient(270deg, #090909, #6F6F6F)",
-                }}
+                // style={{
+                //   background: "linear-gradient(270deg, #090909, #6F6F6F)",
+                // }}
               ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
@@ -217,16 +217,16 @@ const HowtoGet = () => {
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
               style={{
-                backgroundColor: "#FBC000",
-                borderColor: "#FDCD01",
+                backgroundColor: "#FFD700",
+                borderColor: "#FFD700",
               }}
             >
               <div
                 className="absolute inset-0 opacity-30"
-                style={{
-                  background:
-                    "linear-gradient(270deg, #FFF08B, #FED500, #FFE289, #FDCD01, #FFC100)",
-                }}
+                // style={{
+                //   background:
+                //     "linear-gradient(270deg, #FFF08B, #FED500, #FFE289, #FDCD01, #FFC100)",
+                // }}
               ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
@@ -341,7 +341,7 @@ const HowtoGet = () => {
                   <span className="font-medium text-gray-700">
                     Min. Transaction Amount:
                   </span>
-                  <span className="text-gray-600">OMR 3.000</span>
+                  <span className="text-gray-600">&gt; OMR 3.000</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="font-medium text-gray-700">
@@ -383,6 +383,12 @@ const HowtoGet = () => {
                   <span className="text-green-600 font-bold">
                     2% of transaction value
                   </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-blue-200">
+                  <span className="font-medium text-gray-700">
+                    Min. Transaction Amount:
+                  </span>
+                  <span className="text-gray-600">&gt; OMR 1.000</span>
                 </div>
               </div>
               <div className="mt-4 p-3 bg-white rounded-lg">
@@ -535,6 +541,14 @@ const HowtoGet = () => {
               </p>
             </div>
           </div>
+        </div>
+        <div className="flex justify-end mt-4">
+          <p
+            className="text-xs text-gray-500 cursor-pointer hover:underline"
+            onClick={() => navigate("/user/terms-and-conditions")}
+          >
+            Terms and Conditions
+          </p>
         </div>
       </div>
     </div>

@@ -27,10 +27,11 @@ const ArabicDashboard = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowDashboard(true);
-    }, 2000);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, []);
+
   useEffect(() => {
     if (!showDashboard) return;
     const fetchCustomerData = async () => {
@@ -115,7 +116,10 @@ const ArabicDashboard = () => {
           <h2 className="text-sm font-medium">العلامات التجارية</h2>
         </div>
 
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
+        <div
+          className="flex space-x-3 overflow-x-auto scrollbar-hide"
+          dir="rtl"
+        >
           {brands.length === 0
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="min-w-[70px] mb-3">
@@ -158,7 +162,10 @@ const ArabicDashboard = () => {
           </h2>
         </div>
 
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
+        <div
+          className="flex space-x-3 overflow-x-auto scrollbar-hide"
+          dir="rtl"
+        >
           {offerData.length === 0
             ? Array.from({ length: 4 }).map((_, i) => (
                 <SkeletonBox
@@ -186,7 +193,10 @@ const ArabicDashboard = () => {
           />
         </div>
 
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4">
+        <div
+          className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4"
+          dir="rtl"
+        >
           {categories.length === 0
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div

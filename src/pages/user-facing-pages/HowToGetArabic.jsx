@@ -344,7 +344,7 @@ const HowtoGetArabic = () => {
                     الحد الأدنى للمعاملة:
                   </span>
                   <span className="text-gray-600">
-                    قيمة معاملة لا تقل عن 3.000 ريال عماني
+                    قيمة معاملة لا تقل عن &gt; 3.000 ريال عماني
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2 flex-row-reverse">
@@ -386,6 +386,14 @@ const HowtoGetArabic = () => {
                   </span>
                   <span className="text-green-600 font-bold">
                     2% من قيمة المعاملة
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-blue-200 flex-row-reverse">
+                  <span className="font-medium text-gray-700">
+                    الحد الأدنى للمعاملة:
+                  </span>
+                  <span className="text-gray-600">
+                    قيمة معاملة لا تقل عن &gt; 1.000 ريال عماني
                   </span>
                 </div>
               </div>

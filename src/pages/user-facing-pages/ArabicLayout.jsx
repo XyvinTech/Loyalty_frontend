@@ -23,7 +23,7 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
 
   // Simulate loading delay (2 sec)
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
 

@@ -341,7 +341,7 @@ const HowtoGet = () => {
                   <span className="font-medium text-gray-700">
                     Min. Transaction Amount:
                   </span>
-                  <span className="text-gray-600">OMR 3.000</span>
+                  <span className="text-gray-600">&gt; OMR 3.000</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="font-medium text-gray-700">
@@ -383,6 +383,12 @@ const HowtoGet = () => {
                   <span className="text-green-600 font-bold">
                     2% of transaction value
                   </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-blue-200">
+                  <span className="font-medium text-gray-700">
+                    Min. Transaction Amount:
+                  </span>
+                  <span className="text-gray-600">&gt; OMR 1.000</span>
                 </div>
               </div>
               <div className="mt-4 p-3 bg-white rounded-lg">

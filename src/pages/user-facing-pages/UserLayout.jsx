@@ -23,7 +23,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
 
   // Simulate 3s loading
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
+    const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 

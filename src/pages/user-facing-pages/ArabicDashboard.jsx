@@ -107,7 +107,7 @@ const ArabicDashboard = () => {
           customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-75"
         }`}
       >
-        <div className="flex items-center justify-between mt-6 alexandria-text mb-4">
+        <div className="flex items-center justify-between mt-8 alexandria-text mb-4">
           <AppButton
             name={"عرض جميع العلامات التجارية"}
             variant={variant}

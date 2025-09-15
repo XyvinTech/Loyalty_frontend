@@ -45,16 +45,16 @@ const HowtoGetArabic = () => {
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
               style={{
-                backgroundColor: "#f8c44c",
-                borderColor: "#A16133",
+                backgroundColor: "#DF9872",
+                borderColor: "#DF9872",
               }}
             >
               <div
                 className="absolute inset-0 opacity-20"
-                style={{
-                  background:
-                    "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
-                }}
+                // style={{
+                //   background:
+                //     "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
+                // }}
               ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
@@ -138,8 +138,8 @@ const HowtoGetArabic = () => {
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
               style={{
-                backgroundColor: "#bcbcbc",
-                borderColor: "#6F6F6F",
+                backgroundColor: "#C0C0C0",
+                borderColor: "#C0C0C0",
               }}
             >
               <div
@@ -220,8 +220,8 @@ const HowtoGetArabic = () => {
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
               style={{
-                backgroundColor: "#FBC000",
-                borderColor: "#FDCD01",
+                backgroundColor: "#FFD700",
+                borderColor: "#FFD700",
               }}
             >
               <div
@@ -539,6 +539,14 @@ const HowtoGetArabic = () => {
               </p>
             </div>
           </div>
+        </div>
+        <div className="flex justify-end mt-4">
+          <p
+            className="text-xs text-gray-500 cursor-pointer hover:underline"
+            onClick={() => navigate("/user/terms-and-conditions")}
+          >
+            Terms and Conditions
+          </p>
         </div>
       </div>
     </div>

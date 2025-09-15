@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 import { useNavigate } from "react-router-dom";
 
@@ -12,12 +12,12 @@ const HowtoGetArabic = () => {
     >
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4 flex-row-reverse">
+          <div className="flex items-center gap-2 mb-4 flex-row-reverse justify-end">
             <button
               onClick={() => navigate(-1)}
               className="p-1 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <ArrowRightIcon className="w-6 h-6 rotate-180" />
+              <ArrowRightIcon className="w-6 h-6" />
             </button>
           </div>
           <div className="text-center">
@@ -551,7 +551,7 @@ const HowtoGetArabic = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions")}
+            onClick={() => navigate("/user/terms-and-conditions/ar")}
           >
             Terms and Conditions
           </p>

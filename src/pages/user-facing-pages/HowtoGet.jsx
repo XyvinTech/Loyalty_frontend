@@ -536,7 +536,7 @@ const HowtoGet = () => {
                 <span className="text-sm">4</span>
               </div>
               <p>
-                Maintain minimum OMR 3.000 transactions for bill payments to
+                Maintain greater than OMR 3.000 transactions for bill payments to
                 earn 35 points
               </p>
             </div>

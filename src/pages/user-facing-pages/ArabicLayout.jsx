@@ -14,19 +14,17 @@ import PropTypes from "prop-types";
 const ArabicLayout = ({ children, currentPage = "home" }) => {
   const [activePage, setActivePage] = useState(currentPage);
   const [tierColor, setTierColor] = useState("#DF9872"); // Bronze default
-  const [loading, setLoading] = useState(true); // initial loading state
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customerID, apiKey, customerData, name } =
+  const { isAuthenticated, customerID, apiKey, customerData, name, apiStatus } =
     useCustomerAuth();
-
-  // Simulate loading delay (2 sec)
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
+    if (customerData !== null && customerData !== undefined) {
+      setLoading(false);
+    }
+  }, [customerData]);
   useEffect(() => {
     if (customerData) {
       const tier = customerData?.customer_tier?.en;
@@ -87,11 +85,6 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
   ];
 
   const handleNavigation = (item) => {
-    if (!isAuthenticated) {
-      console.warn("محاولة التنقل بدون تسجيل الدخول");
-      return;
-    }
-
     setActivePage(item.id);
 
     const searchParams = new URLSearchParams();
@@ -109,15 +102,15 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
     navigate(url);
   };
 
-  // Show spinner while loading or if not authenticated
-  if (loading || !isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
       </div>
     );
   }
-  if (!customerData) {
+
+  if (apiStatus === 404) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <h1 className="text-2xl font-semibold text-gray-800">
@@ -126,6 +119,14 @@ const ArabicLayout = ({ children, currentPage = "home" }) => {
       </div>
     );
   }
+  if (loading || customerData === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-gray-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20 alexandria-text">
       <main className="min-h-screen">{children}</main>

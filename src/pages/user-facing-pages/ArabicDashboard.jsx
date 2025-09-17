@@ -23,17 +23,8 @@ const ArabicDashboard = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-  const [showDashboard, setShowDashboard] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowDashboard(true);
-    }, 200);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
-    if (!showDashboard) return;
     const fetchCustomerData = async () => {
       try {
         const tier = customerData?.customer_tier?.en;
@@ -73,14 +64,8 @@ const ArabicDashboard = () => {
     };
 
     fetchCustomerData();
-  }, [customerID, apiKey, customerData, showDashboard]);
-  if (!showDashboard) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
-      </div>
-    );
-  }
+  }, [customerID, apiKey, customerData]);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="flex items-center justify-center px-6 py-4">

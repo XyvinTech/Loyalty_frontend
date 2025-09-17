@@ -553,7 +553,7 @@ const HowtoGetArabic = () => {
             className="text-xs text-gray-500 cursor-pointer hover:underline"
             onClick={() => navigate("/user/terms-and-conditions/ar")}
           >
-            Terms and Conditions
+            الشروط والأحكام
           </p>
         </div>
       </div>

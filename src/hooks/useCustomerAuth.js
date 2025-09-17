@@ -12,18 +12,19 @@ export const useCustomerAuth = () => {
     customerData: null,
   });
 
+  const [apiStatus, setApiStatus] = useState(null); // <-- track API status (200, 404, etc.)
+
   const updateCustomerData = useCallback((data) => {
+    setApiStatus(200); // success
     setCustomerAuth((prevAuth) => {
-      const updatedAuth = {
-        ...prevAuth,
-        customerData: data,
-      };
+      const updatedAuth = { ...prevAuth, customerData: data };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedAuth));
       return updatedAuth;
     });
   }, []);
 
   const clearAuth = useCallback(() => {
+    setApiStatus(null);
     const clearedAuth = {
       customerID: null,
       apiKey: null,
@@ -35,17 +36,21 @@ export const useCustomerAuth = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  const setAuth = useCallback((customerID, apiKey, name = null, customerData = null) => {
-    const authData = {
-      customerID,
-      apiKey,
-      name,
-      isAuthenticated: true,
-      customerData,
-    };
-    setCustomerAuth(authData);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
-  }, []);
+  const setAuth = useCallback(
+    (customerID, apiKey, name = null, customerData = null) => {
+      setApiStatus(null);
+      const authData = {
+        customerID,
+        apiKey,
+        name,
+        isAuthenticated: true,
+        customerData,
+      };
+      setCustomerAuth(authData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+    },
+    []
+  );
 
   const refreshCustomerData = useCallback(async () => {
     const { customerID, apiKey } = customerAuth;
@@ -53,10 +58,13 @@ export const useCustomerAuth = () => {
 
     try {
       const response = await sdkApi.getCustomerDetails(customerID, apiKey);
+      setApiStatus(response.status); // track status
       if (response.status === 200 && response.data) {
         updateCustomerData(response.data);
       }
     } catch (error) {
+      const status = error.response?.status || null;
+      setApiStatus(status); // track error status (e.g., 404)
       console.error("Failed to refresh customer data:", error);
     }
   }, [customerAuth, updateCustomerData]);
@@ -68,10 +76,13 @@ export const useCustomerAuth = () => {
       if (isAuthenticated && customerID && apiKey && !customerData) {
         try {
           const response = await sdkApi.getCustomerDetails(customerID, apiKey);
+          setApiStatus(response.status);
           if (response.status === 200 && response.data) {
             updateCustomerData(response.data);
           }
         } catch (error) {
+          const status = error.response?.status || null;
+          setApiStatus(status); // track error status
           console.error("Error fetching customer data:", error);
         }
       }
@@ -127,6 +138,7 @@ export const useCustomerAuth = () => {
 
   return {
     ...customerAuth,
+    apiStatus, // <-- expose API status
     updateCustomerData,
     clearAuth,
     setAuth,

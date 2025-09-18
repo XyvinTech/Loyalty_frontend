@@ -233,11 +233,11 @@ const ArabicCard = ({ streak, show }) => {
               <>
                 {/* RTL Streak */}
                 <div className="relative w-full flex flex-row-reverse items-center justify-between mt-5 ">
-                  <div className="flex flex-col items-center min-w-[40px]">
+                  <div className="flex flex-col items-center min-w-[30px]">
                     <img
                       src={walking}
                       alt="Walker"
-                      className="w-[18px] h-[32px]"
+                      className="w-[16px] h-[30px] scale-x-[-1]"
                     />
                   </div>
                   <div className="flex flex-col items-center min-w-[64px] relative">

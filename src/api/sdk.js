@@ -1,5 +1,5 @@
 import axios from "axios";
-const sdkUrl = "http://141.105.172.45:7733/api/api/v1";
+const sdkUrl = "http://141.105.172.45:3737/api/v1";
 // const sdkUrl = "http://localhost:3000/api/v1";
 
 // Create SDK API client

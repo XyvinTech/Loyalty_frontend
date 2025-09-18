@@ -233,7 +233,13 @@ const ArabicCard = ({ streak, show }) => {
               <>
                 {/* RTL Streak */}
                 <div className="relative w-full flex flex-row-reverse items-center justify-between mt-5 ">
-                  {/* Current Tier */}
+                  <div className="flex flex-col items-center min-w-[30px]">
+                    <img
+                      src={walking}
+                      alt="Walker"
+                      className="w-[16px] h-[30px] scale-x-[-1]"
+                    />
+                  </div>
                   <div className="flex flex-col items-center min-w-[64px] relative">
                     <span className="absolute -top-6 text-xs font-semibold text-[#0C3262] whitespace-nowrap">
                       أنت هنا
@@ -267,8 +273,10 @@ const ArabicCard = ({ streak, show }) => {
                       )}
                     </div>
 
-                    {user.nextTierProgress.streak.period_details.map(
-                      (period, index) => (
+                    {user.nextTierProgress.streak.period_details
+                      .slice()
+                      .reverse()
+                      .map((period, index) => (
                         <div
                           key={index}
                           className="flex flex-col items-center text-center relative z-10"
@@ -307,8 +315,7 @@ const ArabicCard = ({ streak, show }) => {
                             {period.points_earned} / {period.points_required}
                           </span>
                         </div>
-                      )
-                    )}
+                      ))}
                   </div>
 
                   {/* Next Tier */}

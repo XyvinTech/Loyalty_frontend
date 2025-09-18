@@ -189,11 +189,11 @@ const UserCard = ({ streak, show }) => {
             {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
               <>
                 <div className="relative w-full flex items-center justify-between mt-5 ">
-                  <div className="flex flex-col items-center min-w-[40px]">
+                  <div className="flex flex-col items-center min-w-[30px]">
                     <img
                       src={walking}
                       alt="Walker"
-                      className="w-[18px] h-[32px]"
+                      className="w-[16px] h-[30px]"
                     />
                   </div>
 
@@ -257,7 +257,7 @@ const UserCard = ({ streak, show }) => {
 
                           <span className="text-[12px] text-[#0C3262] font-medium">
                             {moment(
-                              period.date_range.split(" - ")[0], 
+                              period.date_range.split(" - ")[0],
                               "D/M/YYYY"
                             )
                               .locale("en")

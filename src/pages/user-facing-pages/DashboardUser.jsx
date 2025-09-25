@@ -8,7 +8,6 @@ import silver from "../../assets/silver.png";
 import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
-import { useNavigate } from "react-router-dom";
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
@@ -16,7 +15,6 @@ const SkeletonBox = ({ className }) => (
 
 const DashboardUser = () => {
   const { navigateWithParams } = useNavigationWithParams();
-  const navigate = useNavigate();
   const [variant, setVariant] = useState("primary");
   const [offerData, setOfferData] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -24,19 +22,8 @@ const DashboardUser = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-  const [showDashboard, setShowDashboard] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowDashboard(true);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!showDashboard) return;
-
     const fetchCustomerData = async () => {
       try {
         const tier = customerData?.customer_tier?.en;
@@ -76,15 +63,7 @@ const DashboardUser = () => {
     };
 
     fetchCustomerData();
-  }, [customerID, apiKey, customerData, showDashboard]);
-
-  if (!showDashboard) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
-      </div>
-    );
-  }
+  }, [customerID, apiKey, customerData]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -103,7 +82,7 @@ const DashboardUser = () => {
             backgroundSize: "cover",
           }}
         ></div>
-        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-4">
+        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-2">
           <UserCard streak show />
         </div>
       </div>

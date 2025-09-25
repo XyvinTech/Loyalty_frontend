@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
@@ -41,17 +41,17 @@ const ArabicCouponDetail = () => {
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen pb-6 alexandria-text">
       <div className="relative bg-[#23243A]  pb-0">
-        <button
-          className="absolute top-4 left-4 bg-white w-8 h-8 bg-opacity-50 rounded-full p-0 flex items-center justify-center cursor-pointer"
-          onClick={() => navigate("/user/offers/ar")}
-        >
-          <ArrowLeftIcon className="w-3 h-3 text-black" />
-        </button>
         <img
           src={offerData?.posterImage}
           alt="صورة العرض"
           className="w-full h-md object-cover"
-        />
+        />{" "}
+        <button
+          className="absolute top-4 right-4 bg-white w-8 h-8 bg-opacity-50 rounded-full p-0 flex items-center justify-center cursor-pointer"
+          onClick={() => navigate("/user/offers/ar")}
+        >
+          <ArrowRightIcon className="w-3 h-3 text-black" />
+        </button>
       </div>
 
       <div className="px-5 pt-5 text-[#2C2C2C] alexandria-text" dir="rtl">

@@ -1,5 +1,6 @@
 import {
   ArrowLeftIcon,
+  ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState, useCallback } from "react";
@@ -148,12 +149,12 @@ const ArabicOffers = () => {
     >
       <div className="flex justify-between items-center p-4">
         <div className="flex justify-between w-full gap-2">
+          <button onClick={() => navigate(-1)}>
+            <ArrowRightIcon className="w-6 h-6" />
+          </button>{" "}
           <h1 className="text-2xl font-semibold text-[#404040] alexandria-text">
             العروض
           </h1>
-          <button onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="w-6 h-6" />
-          </button>
         </div>
       </div>
       <div className="px-4 mb-4 mt-3">

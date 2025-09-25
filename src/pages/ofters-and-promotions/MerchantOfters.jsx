@@ -182,63 +182,72 @@ const MerchantOffers = () => {
             {offers?.length > 0 ? (
               offers?.map((offer) =>
                 activeView === "grid" ? (
-               <div
-  key={offer._id}
-  className="
+                  <div
+                    key={offer._id}
+                    className="
     bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden flex flex-col min-h-[330px] transition
     hover:shadow-lg hover:border-green-200
   "
->
-  <div className="relative h-40 w-full bg-gray-50 flex items-center justify-center">
-    <img
-      src={offer.posterImage || offer.serviceCategory?.icon}
-      alt={offer.title?.en + " Image"}
-      className="h-28 w-28 object-cover rounded-xl border bg-white"
-    />
-    <div className="absolute top-2 right-2">
-      <span className="bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm border-green-200 border">
-        Priority: {offer.priority ?? "N/A"}
-      </span>
-    </div>
-  </div>
-  <div className="flex flex-col flex-1 px-4 py-3">
-    <h3 className="font-bold text-base text-gray-900 mb-1 line-clamp-2">{offer.title?.en}</h3>
-    <p className="text-xs text-gray-500 mb-2">
-      {offer?.merchantId?.title?.en || offer.serviceCategory?.title || "Khedmah Service"}
-    </p>
-    <div className="flex flex-wrap gap-2 mb-2">
-      <span className="bg-blue-50 text-blue-700 font-semibold text-xs px-2 py-1 rounded shadow">
-        {offer.discountDetails?.type === "PERCENTAGE" && `${offer.discountDetails?.value}% OFF`}
-        {offer.discountDetails?.type === "FIXED" && `${offer.discountDetails?.value} OMR OFF`}
-        {offer.discountDetails?.type === "BUY-1-GET-1" && "Buy 1 Get 1 Free"}
-      </span>
-      <span className="bg-gray-50 text-gray-700 font-medium text-xs px-2 py-1 rounded shadow">
-        Points: {offer.redeemablePointsCount}
-      </span>
-      <span className="bg-gray-50 text-gray-700 font-medium text-xs px-2 py-1 rounded shadow">
-        Valid: {moment(offer.validityPeriod?.endDate).locale("en").format("DD MMM YYYY")}
-      </span>
-    </div>
-    <div className="flex-grow" />
-    <div className="flex justify-end gap-1 mt-4">
-      <button
-        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-green-50 text-gray-600 hover:text-green-700 transition"
-        onClick={() => handleEdit(offer?._id)}
-        title="Edit Offer"
-      >
-        <PencilIcon className="w-4 h-4" />
-      </button>
-      <button
-        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-50 text-red-600 hover:text-red-700 transition"
-        onClick={() => handleDeleteOpen(offer?._id)}
-        title="Delete Offer"
-      >
-        <TrashIcon className="w-4 h-4" />
-      </button>
-    </div>
-  </div>
-</div>
-
+                  >
+                    <div className="relative h-40 w-full bg-gray-50 flex items-center justify-center">
+                      <img
+                        src={offer.posterImage || offer.serviceCategory?.icon}
+                        alt={offer.title?.en + " Image"}
+                        className="h-28 w-28 object-cover rounded-xl border bg-white"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <span className="bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm border-green-200 border">
+                          Priority: {offer.priority ?? "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col flex-1 px-4 py-3">
+                      <h3 className="font-bold text-base text-gray-900 mb-1 line-clamp-2">
+                        {offer.title?.en}
+                      </h3>
+                      <p className="text-xs text-gray-500 mb-2">
+                        {offer?.merchantId?.title?.en ||
+                          offer.serviceCategory?.title ||
+                          "Khedmah Service"}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        <span className="bg-blue-50 text-blue-700 font-semibold text-xs px-2 py-1 rounded shadow">
+                          {offer.discountDetails?.type === "PERCENTAGE" &&
+                            `${offer.discountDetails?.value}% OFF`}
+                          {offer.discountDetails?.type === "FIXED" &&
+                            `${offer.discountDetails?.value} OMR OFF`}
+                          {offer.discountDetails?.type === "BUY-1-GET-1" &&
+                            "Buy 1 Get 1 Free"}
+                        </span>
+                        <span className="bg-gray-50 text-gray-700 font-medium text-xs px-2 py-1 rounded shadow">
+                          Points: {offer.redeemablePointsCount}
+                        </span>
+                        <span className="bg-gray-50 text-gray-700 font-medium text-xs px-2 py-1 rounded shadow">
+                          Valid:{" "}
+                          {moment(offer.validityPeriod?.endDate)
+                            .locale("en")
+                            .format("DD MMM YYYY")}
+                        </span>
+                      </div>
+                      <div className="flex-grow" />
+                      <div className="flex justify-end gap-1 mt-4">
+                        <button
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-green-50 text-gray-600 hover:text-green-700 transition"
+                          onClick={() => handleEdit(offer?._id)}
+                          title="Edit Offer"
+                        >
+                          <PencilIcon className="w-4 h-4" />
+                        </button>
+                        <button
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-50 text-red-600 hover:text-red-700 transition"
+                          onClick={() => handleDeleteOpen(offer?._id)}
+                          title="Delete Offer"
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div
                     key={offer._id}

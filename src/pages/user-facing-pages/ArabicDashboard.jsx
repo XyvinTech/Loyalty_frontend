@@ -23,16 +23,8 @@ const ArabicDashboard = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-  const [showDashboard, setShowDashboard] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowDashboard(true);
-    }, 2000);
 
-    return () => clearTimeout(timer);
-  }, []);
   useEffect(() => {
-    if (!showDashboard) return;
     const fetchCustomerData = async () => {
       try {
         const tier = customerData?.customer_tier?.en;
@@ -72,14 +64,8 @@ const ArabicDashboard = () => {
     };
 
     fetchCustomerData();
-  }, [customerID, apiKey, customerData, showDashboard]);
-  if (!showDashboard) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
-      </div>
-    );
-  }
+  }, [customerID, apiKey, customerData]);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="flex items-center justify-center px-6 py-4">
@@ -97,7 +83,7 @@ const ArabicDashboard = () => {
             backgroundSize: "cover",
           }}
         ></div>
-        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-3">
+        <div className="absolute left-1/2 top-12 -translate-x-1/2 w-full px-2">
           <ArabicCard streak show />
         </div>
       </div>
@@ -106,7 +92,7 @@ const ArabicDashboard = () => {
           customerData?.customer_tier?.en === "Gold" ? "pt-50" : "pt-75"
         }`}
       >
-        <div className="flex items-center justify-between mt-6 alexandria-text mb-4">
+        <div className="flex items-center justify-between mt-8 alexandria-text mb-4">
           <AppButton
             name={"عرض جميع العلامات التجارية"}
             variant={variant}
@@ -115,7 +101,10 @@ const ArabicDashboard = () => {
           <h2 className="text-sm font-medium">العلامات التجارية</h2>
         </div>
 
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
+        <div
+          className="flex space-x-3 overflow-x-auto scrollbar-hide"
+          dir="rtl"
+        >
           {brands.length === 0
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="min-w-[70px] mb-3">
@@ -158,7 +147,10 @@ const ArabicDashboard = () => {
           </h2>
         </div>
 
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
+        <div
+          className="flex space-x-3 overflow-x-auto scrollbar-hide"
+          dir="rtl"
+        >
           {offerData.length === 0
             ? Array.from({ length: 4 }).map((_, i) => (
                 <SkeletonBox
@@ -186,7 +178,10 @@ const ArabicDashboard = () => {
           />
         </div>
 
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4">
+        <div
+          className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4"
+          dir="rtl"
+        >
           {categories.length === 0
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div

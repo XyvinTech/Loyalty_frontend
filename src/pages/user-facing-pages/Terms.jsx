@@ -1,4 +1,3 @@
-
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 const Terms = () => {
@@ -10,38 +9,31 @@ const Terms = () => {
           <h1 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
             Khedmah Loyalty Program – Terms and Conditions
           </h1>
-          {/* <p className="text-xs text-gray-500">Last Updated: [Insert Date]</p> */}
+          <p className="text-xs text-gray-500">Last Updated: 10/09/2025</p>
         </div>
 
         <div className="space-y-6 text-gray-700 leading-relaxed text-sm sm:text-base">
           <p className="text-xs sm:text-sm">
             These Terms and Conditions ("T&amp;Cs") govern the use and
             participation in the Khedmah Customer Rewards and Loyalty Program
-            ("Program") managed by Oman Investment and Finance Co. SAOG
-            (Khedmah). By enrolling in or using the Program through the Khedmah
-            and/or Khedmah Delivery mobile applications (collectively referred
-            to as the “Apps”), you (“User” or “You”) agree to be bound by these
-            Terms and Conditions.
+            ("Program") managed by Dhofar International Development &amp;
+            Investment Co. S.A.O.G (Khedmah). By enrolling in or using the
+            Program through the Khedmah and/or Khedmah Delivery mobile
+            applications (collectively referred to as the “Apps”), you (“User”
+            or “You”) agree to be bound by these Terms and Conditions.
           </p>
 
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               1. Eligibility and Enrollment
             </h2>
-            <p className="text-xs sm:text-sm">1.1. The Program is open to:</p>
-            <ul className="list-disc pl-6 text-xs sm:text-sm mb-2">
-              <li>Omani nationals and residents;</li>
-              <li>
-                Users who have valid accounts on the Khedmah and/or Khedmah
-                Delivery apps.
-              </li>
-            </ul>
             <p className="text-xs sm:text-sm">
-              1.2. Corporate or business accounts may be excluded from the
-              Program unless otherwise approved by Khedmah.
+              1.1. To be eligible for the Loyalty Program, participants must
+              hold a valid account on the Khedmah and/or Khedmah Delivery
+              app(s).
             </p>
             <p className="text-xs sm:text-sm">
-              1.3. By participating in the Program, the User confirms that they
+              1.2. By participating in the Program, the User confirms that they
               have read, understood and agreed to these Terms and Conditions.
             </p>
           </div>
@@ -52,23 +44,30 @@ const Terms = () => {
             </h2>
             <p className="text-xs sm:text-sm">
               2.1. Users earn Reward Points ("Points") when completing eligible
-              transactions through the Khedmah and/or Khedmah Delivery mobile
-              apps.
+              transactions through Khedmah and/or Khedmah Delivery mobile apps.
             </p>
-            <p className="text-xs sm:text-sm">2.2. Earned Points are:</p>
+            <p className="text-xs sm:text-sm">
+              2.2. Points Accumulation and Redemption
+            </p>
             <ul className="list-disc pl-6 text-xs sm:text-sm mb-2">
               <li>
                 Centrally accumulated in a single loyalty account associated
-                with the User’s mobile number or unique customer ID;
+                with the User’s mobile number or unique customer ID.
               </li>
               <li>
                 Redeemable for rewards, discounts or other benefits as made
                 available in the redemption catalogue on either app.
               </li>
+              <li>
+                Customers having multiple profiles in Khedmah Application
+                registered with a common mobile number will have loyalty points
+                accumulated against the mobile number rather than the user ID.
+              </li>
             </ul>
             <p className="text-xs sm:text-sm">
-              2.3. The Program is non-transferable, and Points cannot be
-              exchanged for cash.
+              2.3. The Loyalty Program is non-transferable, and points have no
+              cash value and cannot be redeemed or exchanged for cash under any
+              circumstances.
             </p>
           </div>
 
@@ -77,35 +76,44 @@ const Terms = () => {
               3. Earning Points
             </h2>
             <p className="text-xs sm:text-sm">
-              3.1. Points may be earned for activities such as:
+              3.1. Points may be earned from qualifying activities including but
+              not limited to:
             </p>
             <ul className="list-disc pl-6 text-xs sm:text-sm mb-2">
-              <li>Utility bill payments;</li>
-              <li>Top-ups and recharges;</li>
-              <li>Delivery orders;</li>
-              <li>Partner merchant promotions or campaigns.</li>
+              <li>
+                Qualifying services as defined in the service-wise earning
+                table.
+              </li>
+              <li>Delivery orders.</li>
+              <li>Participation in partner merchant promotions or campaigns.</li>
+              <li>
+                Payments for donation services are not eligible for loyalty
+                points.
+              </li>
             </ul>
             <p className="text-xs sm:text-sm">
-              3.2. Khedmah reserves the right to define eligible transactions,
+              3.2. Points will be awarded only for successful card payments.
+            </p>
+            <p className="text-xs sm:text-sm">
+              3.3. Khedmah reserves the right to define eligible transactions,
               exclude categories and revise the earning rate at any time without
               prior notice.
             </p>
             <p className="text-xs sm:text-sm">
-              3.3. Points are generally credited in real-time or within a
+              3.4. Points are generally credited in real-time or within a
               maximum of 72 hours after a qualifying transaction is completed
               successfully.
             </p>
-            <p className="text-xs sm:text-sm">
-              3.4. Points will not be awarded for:
-            </p>
+            <p className="text-xs sm:text-sm">3.5. Points will not be awarded for:</p>
             <ul className="list-disc pl-6 text-xs sm:text-sm">
-              <li>Cancelled or refunded transactions;</li>
+              <li>Cancelled or refunded transactions.</li>
               <li>
                 Transactions made through unauthorized means or in breach of app
                 terms.
               </li>
             </ul>
           </div>
+
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               4. Redeeming Points
@@ -115,39 +123,42 @@ const Terms = () => {
               Delivery apps against:
             </p>
             <ul className="list-disc pl-6 text-xs sm:text-sm mb-2">
-              <li>Discounts on services;</li>
-              <li>Third-party partner vouchers or products;</li>
+              <li>Discounts on eligible services.</li>
+              <li>Vouchers or products from third-party partners.</li>
               <li>Other offers listed in the rewards catalogue.</li>
             </ul>
             <p className="text-xs sm:text-sm">
-              4.2. Khedmah reserves the right to change the catalogue, point
-              requirements and redemption processes without notice.
+              4.2. Khedmah reserves the right to modify the catalogue, point
+              value, eligibility criteria and redemption processes without prior
+              notice.
             </p>
             <p className="text-xs sm:text-sm">
-              4.3. Once Points are redeemed, the transaction is final and cannot
-              be reversed.
+              4.3. All redemptions are final. Once points have been redeemed,
+              the transaction cannot be reversed, cancelled, or refunded.
             </p>
           </div>
+
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               5. Expiry and Forfeiture
             </h2>
             <p className="text-xs sm:text-sm">
-              5.1. Points are valid for a period of XX months from the date of
-              earning, unless otherwise specified.
+              5.1. Points are valid according to the specified table (to be
+              linked to burning or tier expiry table) in the application from
+              the date of earnings, unless otherwise specified.
             </p>
             <p className="text-xs sm:text-sm">
               5.2. Expired Points will be automatically forfeited and cannot be
               reinstated.
             </p>
-            <p className="text-xs sm:text-sm">
-              5.3. Points may be forfeited if:
-            </p>
+            <p className="text-xs sm:text-sm">5.3. Points may be forfeited if:</p>
             <ul className="list-disc pl-6 text-xs sm:text-sm">
-              <li>The user account is deactivated or terminated;</li>
-              <li>Fraudulent or suspicious activity is detected;</li>
+              <li>The user account is deactivated or terminated.</li>
+              <li>Fraudulent or suspicious activity is detected.</li>
               <li>
                 The User is found in violation of these Terms and Conditions.
+                Khedmah reserves the right to suspend or close loyalty for
+                suspected misuse, without obligation to compensate.
               </li>
             </ul>
           </div>
@@ -171,6 +182,7 @@ const Terms = () => {
               </li>
             </ul>
           </div>
+
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               7. Program Changes and Termination
@@ -178,7 +190,7 @@ const Terms = () => {
             <ul className="list-disc pl-6 text-xs sm:text-sm mb-2">
               <li>
                 Modify, suspend or terminate the Program (in whole or part) at
-                any time;
+                any time.
               </li>
               <li>
                 Update these Terms and Conditions with or without prior notice.
@@ -190,6 +202,7 @@ const Terms = () => {
               are forfeited.
             </p>
           </div>
+
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               8. Data Protection and Privacy
@@ -212,26 +225,28 @@ const Terms = () => {
               </li>
             </ul>
           </div>
+
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               9. Limitation of Liability
             </h2>
-            <ul className="list-disc pl-6 text-xs sm:text-sm">
+            <ul className="list-disc pl-6 text-xs sm:text-sm mb-2">
               <li>
-                Khedmah will not be liable for any loss or damage arising from
-                delay, non-crediting or incorrect crediting of Points;
+                Khedmah shall not be liable for any loss or damage arising from
+                delay, non-crediting or incorrect crediting of Points.
               </li>
               <li>
-                Any failure in redemption or usage due to technical or system
-                errors;
+                Any failure in redemption or usage caused by technical or system
+                errors.
               </li>
               <li>Rewards or offers provided by third-party partners.</li>
             </ul>
             <p className="text-xs sm:text-sm">
-              Users acknowledge that the Program is offered "as-is" and at the
-              sole discretion of Khedmah.
+              Users acknowledge and agree that the Program is offered "as-is"
+              and at the sole discretion of Khedmah.
             </p>
           </div>
+
           <div>
             <h2 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
               10. Governing Law and Jurisdiction
@@ -256,11 +271,9 @@ const Terms = () => {
               contact:
             </p>
             <p className="mt-2 text-xs sm:text-sm">
-              📧 Email:{" "}
-              <span className="text-blue-600">support@khedmah.om</span>
-              <br />
-              📞 Call Center: 1236
+              📧 Email: callcentre@oifcoman.com
             </p>
+            <p className="text-xs sm:text-sm">📞 Call Center: +968 24727272</p>
           </div>
 
           <p className="text-xs sm:text-sm">

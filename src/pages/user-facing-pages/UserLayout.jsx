@@ -13,19 +13,18 @@ import PropTypes from "prop-types";
 
 const UserLayout = ({ children, currentPage = "home" }) => {
   const [activePage, setActivePage] = useState(currentPage);
-  const [tierColor, setTierColor] = useState("#DF9872"); // default Bronze
-  const [loading, setLoading] = useState(true); // loading state
+  const [tierColor, setTierColor] = useState("#DF9872");
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, customerID, apiKey, name, customerData } =
+  const { isAuthenticated, customerID, apiKey, name, customerData, apiStatus } =
     useCustomerAuth();
-
-  // Simulate 3s loading
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (customerData !== null && customerData !== undefined) {
+      setLoading(false);
+    }
+  }, [customerData]);
 
   useEffect(() => {
     if (customerData) {
@@ -46,7 +45,6 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     }
   }, [customerData]);
 
-  // Update active page
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("dashboard")) setActivePage("home");
@@ -87,10 +85,7 @@ const UserLayout = ({ children, currentPage = "home" }) => {
   ];
 
   const handleNavigation = (item) => {
-    if (!isAuthenticated) {
-      console.warn("Navigation attempted without authentication");
-      return;
-    }
+    if (!isAuthenticated) return;
 
     setActivePage(item.id);
 
@@ -99,19 +94,15 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       searchParams.set("customerID", customerID);
       searchParams.set("apiKey", apiKey);
     }
-    if (name) {
-      searchParams.set("name", name);
-    }
+    if (name) searchParams.set("name", name);
 
     const url = searchParams.toString()
       ? `${item.href}?${searchParams.toString()}`
       : item.href;
-
     navigate(url);
   };
 
-  // Show loading for 3s
-  if (loading || !isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-black-500"></div>
@@ -119,6 +110,22 @@ const UserLayout = ({ children, currentPage = "home" }) => {
     );
   }
 
+  if (apiStatus === 404) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <h1 className="text-2xl font-semibold text-gray-800">
+          404 – Customer Not Found
+        </h1>
+      </div>
+    );
+  }
+  if (loading || customerData === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-gray-500"></div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gray-50 pb-20 poppins-text">
       <main className="min-h-screen">{children}</main>
@@ -127,7 +134,6 @@ const UserLayout = ({ children, currentPage = "home" }) => {
           {navigationItems.map((item) => {
             const isActive = activePage === item.id;
             const IconComponent = isActive ? item.activeIcon : item.icon;
-
             return (
               <button
                 key={item.id}

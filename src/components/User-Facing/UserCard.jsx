@@ -140,10 +140,10 @@ const UserCard = ({ streak, show }) => {
         />
 
         <div className="relative z-10 h-full flex flex-col justify-between">
-          <div className="text-start pl-27 px-4 flex justify-between items-start pt-0">
+          <div className="text-start pl-10 px-4 flex justify-between items-start pt-0">
             <div className="pt-5">
               <h1
-                className="text-lg font-bold poppins-text uppercase bg-clip-text text-transparent"
+                className="text-xl font-bold poppins-text uppercase bg-clip-text text-transparent"
                 style={{ backgroundImage: theme.nameGradient }}
               >
                 {urlName}
@@ -159,7 +159,7 @@ const UserCard = ({ streak, show }) => {
           </div>
           <div className="flex flex-col items-end px-4 pb-4 pt-15 space-y-2">
             <h2
-              className=" text-[10px]  bg-clip-text text-transparent"
+              className=" text-[12px]  bg-clip-text text-transparent font-medium"
               style={{ color: theme.transactionColor }}
             >
               Point Balance:{" "}
@@ -189,11 +189,11 @@ const UserCard = ({ streak, show }) => {
             {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
               <>
                 <div className="relative w-full flex items-center justify-between mt-5 ">
-                  <div className="flex flex-col items-center min-w-[40px]">
+                  <div className="flex flex-col items-center min-w-[30px]">
                     <img
                       src={walking}
                       alt="Walker"
-                      className="w-[18px] h-[32px]"
+                      className="w-[16px] h-[30px]"
                     />
                   </div>
 
@@ -261,9 +261,10 @@ const UserCard = ({ streak, show }) => {
                               "D/M/YYYY"
                             )
                               .locale("en")
-                              .format("MMMM")}
+                              .format("MMM")}
                           </span>
-                          <span className="text-[11px] text-[#0C3262]">
+
+                          <span className="text-[8px] text-[#0C3262]">
                             {period.points_earned} / {period.points_required}
                           </span>
                         </div>

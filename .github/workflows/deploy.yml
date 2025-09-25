@@ -25,10 +25,7 @@ jobs:
         run: |
           npm ci
           npm run build
-
-      - name: Copy Build Files via SSH
-        uses: appleboy/scp-action@v0.1.4
-        with:
+         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
@@ -42,6 +39,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+
             echo "Deploying to web root..."
             sudo rm -rf /var/www/html/loyalty-frontend
             sudo mkdir -p /var/www/html/loyalty-frontend
@@ -56,3 +54,10 @@ jobs:
             sudo systemctl restart nginx
 
             echo "Deployment completed!"
+
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf ~/deploy-temp
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/cache/nginx/*
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S systemctl restart nginx
+

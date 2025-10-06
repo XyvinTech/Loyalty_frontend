@@ -1,4 +1,5 @@
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
+
 const TermsArabic = () => {
   return (
     <div className="min-h-screen bg-white px-6 py-4 sm:px-8 sm:py-6 font-sans" dir="rtl">

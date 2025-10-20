@@ -1,4 +1,4 @@
-name: Deploy React App to  prod-Server
+name: Deploy React App to  prod-server
 
 on:
   push:

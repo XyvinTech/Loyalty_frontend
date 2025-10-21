@@ -36,7 +36,6 @@ jobs:
           host: ${{ secrets.SERVER_HOST_PROD }}
           username: ${{ secrets.SERVER_USER_PROD }}
           password: ${{ secrets.SERVER_PASSWORD_PROD }}
-          run-with-docker: false
           script: |
             rm -rf ~/deploy-temp
             mkdir ~/deploy-temp

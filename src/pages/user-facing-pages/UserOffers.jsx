@@ -16,9 +16,6 @@ const UserOffers = () => {
   const location = useLocation();
   const brandId = location?.state?.brand;
   const categoryId = location?.state?.category;
-  console.log('====================================');
-  console.log("brandId", brandId, "categoryId", categoryId);
-  console.log('====================================');
   const [rows] = useState(100);
   const [searchParams] = useSearchParams();
   const [categories, setCategories] = useState([]);

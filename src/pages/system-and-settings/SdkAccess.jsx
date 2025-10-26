@@ -29,7 +29,6 @@ const SdkAccess = () => {
   }, [appTypes]);
   const handleCreateAccess = () => {
     if (selectedAppType) {
-      console.log("create access for app type", selectedAppType);
       createMutation.mutate({
         app_id: selectedAppType,
       });

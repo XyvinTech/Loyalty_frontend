@@ -30,7 +30,6 @@ import { useAuth } from "../hooks/useAuth";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const { useGetCurrentUser } = useAuth();
   const { data: user } = useGetCurrentUser();
-  console.log("user", user?.data?.role?.permissions);
 
   const location = useLocation();
   const { pathname } = location;

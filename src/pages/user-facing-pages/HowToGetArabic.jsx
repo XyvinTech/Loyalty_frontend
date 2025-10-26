@@ -2,7 +2,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 import { useNavigate } from "react-router-dom";
 
-const HowtoGetArabic = () => {
+const HowtoGetArabic = ({link}) => {
   const navigate = useNavigate();
 
   return (
@@ -551,7 +551,7 @@ const HowtoGetArabic = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions/ar")}
+             onClick={() => navigate(link ? "/terms-and-conditions/ar" : "/user/terms-and-conditions/ar")}
           >
             الشروط والأحكام
           </p>

@@ -2,7 +2,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const HowtoGet = () => {
+const HowtoGet = ({ link }) => {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-white px-4 py-6 sm:px-6 sm:py-8 font-sans">
@@ -536,8 +536,8 @@ const HowtoGet = () => {
                 <span className="text-sm">4</span>
               </div>
               <p>
-                Maintain greater than OMR 3.000 transactions for bill payments to
-                earn 35 points
+                Maintain greater than OMR 3.000 transactions for bill payments
+                to earn 35 points
               </p>
             </div>
           </div>
@@ -545,7 +545,11 @@ const HowtoGet = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions")}
+            onClick={() =>
+              navigate(
+                link ? "/terms-and-conditions" : "/user/terms-and-conditions"
+              )
+            }
           >
             Terms and Conditions
           </p>

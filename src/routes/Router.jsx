@@ -114,7 +114,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/how-to-get",
+        path: "/how-to-earn-points",
         element: <HowtoGet link />,
       },
       {
@@ -122,13 +122,14 @@ const router = createBrowserRouter([
         element: <Terms />,
       },
       {
-        path: "/how-to-get/ar",
+        path: "/ar/how-to-earn-points",
         element: <HowtoGetArabic link />,
       },
       {
-        path: "/terms-and-conditions/ar",
+        path: "/ar/terms-and-conditions",
         element: <TermsArabic />,
       },
+
       {
         path: "/user",
         element: <UserFacingLayout />,

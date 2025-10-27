@@ -27,6 +27,9 @@ const ArabicCouponDetail = () => {
         setLoading(false);
       }
     };
+    if(customerID && apiKey){
+      fetchOfferData();
+    }
     fetchOfferData();
   }, [customerID, apiKey]);
 

@@ -1,10 +1,10 @@
 import axios from "axios";
-const sdkUrl = "http://141.105.172.45:7733/api/api/v1";
+const sdkUrl = import.meta.env.VITE_APP_URL;
 // const sdkUrl = "http://localhost:3000/api/v1";
 
 // Create SDK API client
 const sdkApiClient = axios.create({
-   baseURL: sdkUrl,
+  baseURL: sdkUrl,
   headers: {
     "Content-Type": "application/json",
   },

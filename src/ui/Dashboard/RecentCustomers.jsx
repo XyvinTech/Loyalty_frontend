@@ -22,7 +22,7 @@ const RecentCustomers = ({ customers }) => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">
-                  {customer.name}
+                  {customer.customer_id}
                 </p>
                 <p className="text-xs text-gray-500">{customer.email}</p>
               </div>

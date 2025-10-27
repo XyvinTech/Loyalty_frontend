@@ -12,6 +12,7 @@ import RecentCustomers from "../ui/Dashboard/RecentCustomers";
 import RecentActivity from "../ui/Dashboard/RecentActivity";
 import PointsActivity from "../ui/Dashboard/PointsActivity";
 import CustomerGrowth from "../ui/Dashboard/CustomerGrowth";
+import PageLoader from "../ui/PageLoader";
 import { useEffect, useState } from "react";
 import { dashboardApi } from "../api/dashboard";
 import useUiStore from "../store/ui";
@@ -260,6 +261,11 @@ const Dashboard = () => {
   const formattedCustomers = formatCustomerData(
     dashboardData?.recent?.customers
   );
+
+  // Show loader during initial data fetch
+  if (loading && !dashboardData) {
+    return <PageLoader />;
+  }
 
   return (
     <>

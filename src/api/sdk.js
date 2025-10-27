@@ -1,5 +1,5 @@
 import axios from "axios";
-const sdkUrl = import.meta.env.VITE_APP_URL;
+const sdkUrl = `${import.meta.env.VITE_APP_URL}/api/api/v1`;
 // const sdkUrl = "http://localhost:3000/api/v1";
 
 // Create SDK API client

@@ -6,7 +6,6 @@ const rootUrl = `${baseURL}auth`;
 const authApi = {
   // Login user
   login: async (credentials) => {
-    console.log(credentials);
     const response = await apiClient.post(`${rootUrl}/login`, credentials);
     return response.data;
   },

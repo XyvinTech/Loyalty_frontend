@@ -50,6 +50,8 @@ import ArabicCategories from "../pages/user-facing-pages/ArabicCategories";
 import ArabicOffers from "../pages/user-facing-pages/ArabicOffers";
 import ArabicCouponDetail from "../pages/user-facing-pages/ArabicCouponDetail";
 import HowtoGet from "../pages/user-facing-pages/HowtoGet";
+import HowtoGetArabic from "../pages/user-facing-pages/HowToGetArabic";
+import TermsArabic from "../pages/user-facing-pages/TermsArabic";
 const RootLayout = () => (
   <AuthProvider>
     <Outlet />
@@ -68,7 +70,7 @@ const UserFacingLayout = () => (
     <Outlet />
   </UserLayout>
 );
-const ArabicFacingLayout= () => (
+const ArabicFacingLayout = () => (
   <ArabicLayout>
     <ScrollToTop />
     <Outlet />
@@ -112,6 +114,23 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/how-to-earn-points",
+        element: <HowtoGet link />,
+      },
+      {
+        path: "/terms-and-conditions",
+        element: <Terms />,
+      },
+      {
+        path: "/ar/how-to-earn-points",
+        element: <HowtoGetArabic link />,
+      },
+      {
+        path: "/ar/terms-and-conditions",
+        element: <TermsArabic />,
+      },
+
+      {
         path: "/user",
         element: <UserFacingLayout />,
         children: [
@@ -126,7 +145,7 @@ const router = createBrowserRouter([
           { path: "/user/how-to", element: <HowtoGet /> },
         ],
       },
-            {
+      {
         path: "/user",
         element: <ArabicFacingLayout />,
         children: [
@@ -137,12 +156,10 @@ const router = createBrowserRouter([
           { path: "/user/brands/ar", element: <ArabicBrands /> },
           { path: "/user/categories/ar", element: <ArabicCategories /> },
           { path: "/user/support", element: <UserSupport /> },
-          { path: "/user/terms-and-conditions/ar", element: <Terms /> },
-          { path: "/user/how-to/ar", element: <HowtoGet /> },
-
+          { path: "/user/terms-and-conditions/ar", element: <TermsArabic /> },
+          { path: "/user/how-to/ar", element: <HowtoGetArabic /> },
         ],
       },
-      
     ],
   },
 ]);

@@ -181,9 +181,6 @@ const FilterModal = ({ filters, onClose, onApply }) => {
 
 // Customer Detail Modal Component
 const CustomerDetailModal = ({ customer, onClose, isLoading }) => {
-  console.log("====================================");
-  console.log("customer", customer);
-  console.log("====================================");
   if (!customer) return null;
 
   return (

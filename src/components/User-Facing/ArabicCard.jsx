@@ -1,9 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import {
-  ArrowRightIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/24/outline"; // flipped icon
+import { ArrowRightIcon, CheckIcon } from "@heroicons/react/24/outline"; // flipped icon
 import sdkApi from "../../api/sdk";
 import walking from "../../assets/Vector.png";
 import { getNextTierInfo } from "./themes/tierThemes";
@@ -16,10 +12,11 @@ import silverImage from "../../assets/SIL loyality.webp";
 import bronzebg from "../../assets/bronzetier.webp";
 import silverbg from "../../assets/silvertier.webp";
 import goldbg from "../../assets/goldtier.webp";
-moment.locale("ar");
 import { useLocation } from "react-router-dom";
 import AppButton from "../../ui/AppButton";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+
+moment.locale("ar");
 moment.updateLocale("ar", {
   months: [
     "يناير",
@@ -36,6 +33,7 @@ moment.updateLocale("ar", {
     "ديسمبر",
   ],
 });
+
 const ArabicCard = ({ streak, show }) => {
   const [user, setUser] = useState({
     name: "",
@@ -49,9 +47,11 @@ const ArabicCard = ({ streak, show }) => {
     nextTierName: null,
     nextTierProgress: null,
   });
+
   const { navigateWithParams } = useNavigationWithParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const progress = useMemo(() => {
     const total = user.points + user.requiredPoint;
     return total > 0 ? (user.points / total) * 100 : 100;
@@ -62,6 +62,7 @@ const ArabicCard = ({ streak, show }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const urlName = queryParams.get("name");
+
   const getTierTheme = (tier) => {
     switch (tier.toLowerCase()) {
       case "bronze":
@@ -128,6 +129,7 @@ const ArabicCard = ({ streak, show }) => {
           const requiredPoint = Number(
             customerData.next_tier?.required_point || 0
           );
+
           setUser({
             name: customerData.name || "Customer",
             membership: tierName,
@@ -141,7 +143,7 @@ const ArabicCard = ({ streak, show }) => {
             nextTierEn: customerData.next_tier?.en || null,
             nextTierName: customerData.next_tier?.ar || null,
             nextTierProgress:
-              customerData.next_tier?.next_tier_progress || null, // ✅ Fixed: corrected the path
+              customerData.next_tier?.next_tier_progress || null,
           });
           updateCustomerData(customerData);
         } else {
@@ -165,25 +167,13 @@ const ArabicCard = ({ streak, show }) => {
     return (
       <div className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto bg-gray-100 animate-pulse">
         <div className="absolute inset-0 bg-gray-200" />
-
-        <div className="relative z-10 h-full flex flex-col justify-between p-4">
-          <div>
-            <div className="h-4 w-20 bg-gray-300 rounded mb-2"></div>
-            <div className="h-5 w-32 bg-gray-300 rounded mb-2"></div>
-            <div className="h-6 w-20 bg-gray-300 rounded"></div>
-          </div>
-
-          <div>
-            <div className="h-2 w-full bg-gray-300 rounded mb-2"></div>
-            <div className="h-2 w-2/3 bg-gray-300 rounded"></div>
-          </div>
-        </div>
       </div>
     );
   }
 
   return (
     <>
+      {/* Card */}
       <div className="relative max-w-md w-full h-full min-h-[170px] rounded-2xl overflow-hidden shadow-lg mx-auto">
         <img
           src={theme.image}
@@ -233,21 +223,23 @@ const ArabicCard = ({ streak, show }) => {
             )}
           </div>
         </div>
-      </div>{" "}
+      </div>
+
+      {/* Streak / Progress */}
       <div className="px-0 pb-0 pt-0 ">
         {streak ? (
           <div className="px-0 pt-6">
             {user?.nextTierProgress?.streak?.period_details?.length > 0 ? (
               <>
-                <div className="relative w-full flex items-center justify-between mt-5 ">
-                  <div className="flex flex-col items-center min-w-[40px]">
+                {/* RTL Streak */}
+                <div className="relative w-full flex flex-row-reverse items-center justify-between mt-5 ">
+                  <div className="flex flex-col items-center min-w-[30px]">
                     <img
                       src={walking}
                       alt="Walker"
-                      className="w-[18px] h-[32px]"
+                      className="w-[16px] h-[30px] scale-x-[-1]"
                     />
                   </div>
-
                   <div className="flex flex-col items-center min-w-[64px] relative">
                     <span className="absolute -top-6 text-xs font-semibold text-[#0C3262] whitespace-nowrap">
                       أنت هنا
@@ -261,10 +253,12 @@ const ArabicCard = ({ streak, show }) => {
                       {user.membership}
                     </span>
                   </div>
-                  <div className="flex-1 flex items-center justify-between mx-0 relative mt-6">
-                    <div className="absolute top-2 left-0 w-full h-[4px] bg-gray-200 rounded-full" />
 
-                    <div className="absolute top-2 left-0 flex w-full h-[4px] rounded-full overflow-hidden">
+                  {/* Progress Bar */}
+                  <div className="flex-1 flex items-center justify-between mx-0 relative mt-6">
+                    <div className="absolute top-2 right-0 w-full h-[4px] bg-gray-200 rounded-full" />
+
+                    <div className="absolute top-2 right-0 flex w-full h-[4px] rounded-full overflow-hidden">
                       {user.nextTierProgress.streak.period_details.map(
                         (period, index) => (
                           <div
@@ -278,8 +272,11 @@ const ArabicCard = ({ streak, show }) => {
                         )
                       )}
                     </div>
-                    {user.nextTierProgress.streak.period_details.map(
-                      (period, index) => (
+
+                    {user.nextTierProgress.streak.period_details
+                      .slice()
+                      .reverse()
+                      .map((period, index) => (
                         <div
                           key={index}
                           className="flex flex-col items-center text-center relative z-10"
@@ -293,8 +290,8 @@ const ArabicCard = ({ streak, show }) => {
                           <div
                             className={`flex items-center justify-center w-5 h-5 rounded-full mb-1 border-2 ${
                               period.completed
-                                ? "bg-[#FFDD00] border-[#FFDD00]" // completed
-                                : "bg-white border-gray-400" // not completed
+                                ? "bg-[#FFDD00] border-[#FFDD00]"
+                                : "bg-white border-gray-400"
                             }`}
                           >
                             {period.completed ? (
@@ -318,9 +315,10 @@ const ArabicCard = ({ streak, show }) => {
                             {period.points_earned} / {period.points_required}
                           </span>
                         </div>
-                      )
-                    )}
+                      ))}
                   </div>
+
+                  {/* Next Tier */}
                   <div className="flex flex-col items-center min-w-[64px]">
                     <img
                       src={getTierTheme(user.nextTierEn).img}
@@ -332,6 +330,8 @@ const ArabicCard = ({ streak, show }) => {
                     </span>
                   </div>
                 </div>
+
+                {/* Button */}
                 {show && (
                   <div className="mt-6 flex justify-center items-center pb-18">
                     <AppButton

@@ -13,7 +13,7 @@ export const useCustomerAuth = () => {
   });
 
   const [apiStatus, setApiStatus] = useState(null);
-  const hasFetchedRef = useRef(false); // ✅ prevent multiple calls
+  const hasFetchedRef = useRef(false); 
 
   const updateCustomerData = useCallback((data) => {
     setApiStatus(200);
@@ -35,7 +35,7 @@ export const useCustomerAuth = () => {
     };
     setCustomerAuth(clearedAuth);
     localStorage.removeItem(STORAGE_KEY);
-    hasFetchedRef.current = false; // reset fetch flag
+    hasFetchedRef.current = false; 
   }, []);
 
   const setAuth = useCallback((customerID, apiKey, name = null, customerData = null) => {
@@ -49,7 +49,7 @@ export const useCustomerAuth = () => {
     };
     setCustomerAuth(authData);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
-    hasFetchedRef.current = false; // reset flag so next load can fetch
+    hasFetchedRef.current = false; 
   }, []);
 
   const refreshCustomerData = useCallback(async () => {
@@ -68,20 +68,18 @@ export const useCustomerAuth = () => {
       console.error("Failed to refresh customer data:", error);
     }
   }, [customerAuth, updateCustomerData]);
-
-  // ✅ Only fetch once per login/session
   useEffect(() => {
     const fetchCustomerData = async () => {
       const { isAuthenticated, customerID, apiKey, customerData } = customerAuth;
       if (!isAuthenticated || !customerID || !apiKey || hasFetchedRef.current) return;
-      if (customerData) return; // already have data
+      if (customerData) return; 
 
       try {
         const response = await sdkApi.getCustomerDetails(customerID, apiKey);
         setApiStatus(response.status);
         if (response.status === 200 && response.data) {
           updateCustomerData(response.data);
-          hasFetchedRef.current = true; // ✅ mark as fetched
+          hasFetchedRef.current = true; 
         }
       } catch (error) {
         const status = error.response?.status || null;

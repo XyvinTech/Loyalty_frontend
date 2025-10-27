@@ -28,7 +28,9 @@ const CouponDetails = () => {
         setLoading(false);
       }
     };
-    fetchOfferData();
+    if (customerID && apiKey) {
+      fetchOfferData();
+    }
   }, [customerID, apiKey]);
 
   if (loading) {
@@ -115,10 +117,7 @@ const CouponDetails = () => {
             onClick={() => setShowRedeemCard(true)}
           />
         ) : (
-          <AppMainButton
-            name="Upgrade to redeem this offer"
-            disabled={true}
-          />
+          <AppMainButton name="Upgrade to redeem this offer" disabled={true} />
         )}
       </div>
 

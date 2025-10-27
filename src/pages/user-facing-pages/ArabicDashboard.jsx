@@ -62,8 +62,9 @@ const ArabicDashboard = () => {
         console.error("Failed to fetch customer data:", error);
       }
     };
-
-    fetchCustomerData();
+    if (customerData) {
+      fetchCustomerData();
+    }
   }, [customerID, apiKey, customerData]);
 
   return (

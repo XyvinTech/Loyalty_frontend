@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { ArrowRightIcon, CheckIcon } from "@heroicons/react/24/outline"; // flipped icon
-import sdkApi from "../../api/sdk";
+import { ArrowRightIcon, CheckIcon } from "@heroicons/react/24/outline";
 import walking from "../../assets/Vector.png";
 import { getNextTierInfo } from "./themes/tierThemes";
 import { useCustomerAuth } from "../../hooks/useCustomerAuth";
@@ -35,36 +34,16 @@ moment.updateLocale("ar", {
 });
 
 const ArabicCard = ({ streak, show }) => {
-  const [user, setUser] = useState({
-    name: "",
-    membership: "Bronze",
-    points: 0,
-    nextTierPoints: 5000,
-    avatar: null,
-    tier: "Bronze",
-    requiredPoint: 0,
-    nextTierEn: null,
-    nextTierName: null,
-    nextTierProgress: null,
-  });
-
+  const [user, setUser] = useState(null);
   const { navigateWithParams } = useNavigationWithParams();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const progress = useMemo(() => {
-    const total = user.points + user.requiredPoint;
-    return total > 0 ? (user.points / total) * 100 : 100;
-  }, [user.points, user.requiredPoint]);
-
-  const { customerID, apiKey, isAuthenticated, updateCustomerData } =
-    useCustomerAuth();
+  const { customerData, isAuthenticated } = useCustomerAuth();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const urlName = queryParams.get("name");
 
+  // 🟤 Define color themes by tier
   const getTierTheme = (tier) => {
-    switch (tier.toLowerCase()) {
+    switch (tier?.toLowerCase()) {
       case "bronze":
         return {
           welcomeColor: "#FFDDBD",
@@ -107,63 +86,37 @@ const ArabicCard = ({ streak, show }) => {
     }
   };
 
+  // ✅ Use customerData from hook (no extra API call)
   useEffect(() => {
-    const fetchCustomerData = async () => {
-      if (!isAuthenticated || !customerID || !apiKey) {
-        setError("Customer ID and API Key are required");
-        setLoading(false);
-        return;
-      }
+    if (!isAuthenticated || !customerData) return;
 
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await sdkApi.getCustomerDetails(customerID, apiKey);
+    const tier = customerData.customer_tier?.en || "Bronze";
+    const tierName = customerData.customer_tier?.ar || "Bronze";
+    const currentPoints = customerData.point_balance || 0;
+    const nextTierInfo = getNextTierInfo(tierName, currentPoints);
+    const requiredPoint = Number(customerData.next_tier?.required_point || 0);
 
-        if (response.status === 200 && response.data) {
-          const customerData = response.data;
-          const tier = customerData.customer_tier?.en || "Bronze";
-          const tierName = customerData.customer_tier?.ar || "Bronze";
-          const currentPoints = customerData.point_balance || 0;
-          const nextTierInfo = getNextTierInfo(tierName, currentPoints);
-          const requiredPoint = Number(
-            customerData.next_tier?.required_point || 0
-          );
+    setUser({
+      name: customerData.name || "Customer",
+      membership: tierName,
+      tier: tier,
+      points: currentPoints,
+      nextTierPoints: nextTierInfo.nextTier ? nextTierInfo.pointsToNext : 0,
+      avatar: null,
+      requiredPoint,
+      nextTierEn: customerData.next_tier?.en || null,
+      nextTierName: customerData.next_tier?.ar || null,
+      nextTierProgress: customerData.next_tier?.next_tier_progress || null,
+    });
+  }, [customerData, isAuthenticated]);
 
-          setUser({
-            name: customerData.name || "Customer",
-            membership: tierName,
-            tier: tier,
-            points: currentPoints,
-            nextTierPoints: nextTierInfo.nextTier
-              ? nextTierInfo.pointsToNext
-              : 0,
-            avatar: null,
-            requiredPoint,
-            nextTierEn: customerData.next_tier?.en || null,
-            nextTierName: customerData.next_tier?.ar || null,
-            nextTierProgress:
-              customerData.next_tier?.next_tier_progress || null,
-          });
-          updateCustomerData(customerData);
-        } else {
-          setError("Failed to fetch customer data");
-        }
-      } catch (err) {
-        console.error("Error fetching customer data:", err);
-        setError("Error loading customer information");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const progress = useMemo(() => {
+    if (!user) return 0;
+    const total = user.points + user.requiredPoint;
+    return total > 0 ? (user.points / total) * 100 : 100;
+  }, [user]);
 
-    fetchCustomerData();
-  }, [customerID, apiKey, isAuthenticated, updateCustomerData]);
-
-  const theme = getTierTheme(user.tier);
-  const formatPoints = (num) => num.toLocaleString("en-US");
-
-  if (loading) {
+  if (!user) {
     return (
       <div className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto bg-gray-100 animate-pulse">
         <div className="absolute inset-0 bg-gray-200" />
@@ -171,6 +124,7 @@ const ArabicCard = ({ streak, show }) => {
     );
   }
 
+  const theme = getTierTheme(user.tier);
   return (
     <>
       {/* Card */}

@@ -22,7 +22,6 @@ const DashboardUser = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {
@@ -62,7 +61,9 @@ const DashboardUser = () => {
       }
     };
 
-    fetchCustomerData();
+    if (customerData) {
+      fetchCustomerData();
+    }
   }, [customerID, apiKey, customerData]);
 
   return (

@@ -17,54 +17,37 @@ import { useNavigationWithParams } from "../../utils/navigationUtils";
 
 const UserCard = ({ streak, show }) => {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({
-    name: "",
-    membership: "Bronze",
-    points: 0,
-    nextTierPoints: 5000,
-    requiredPoint: 0,
-    nextTierName: null,
-    nextTierProgress: null,
-  });
+  const [user, setUser] = useState(null);
 
-  const { customerID, apiKey, isAuthenticated, updateCustomerData } =
-    useCustomerAuth();
+  const { customerData, isAuthenticated } = useCustomerAuth();
   const { navigateWithParams } = useNavigationWithParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const urlName = queryParams.get("name");
+
+  // ✅ Use the data already fetched by useCustomerAuth
   useEffect(() => {
-    const fetchCustomerData = async () => {
-      if (!isAuthenticated || !customerID || !apiKey) return;
+    if (!isAuthenticated || !customerData) return;
 
-      setLoading(true);
-      const response = await sdkApi.getCustomerDetails(customerID, apiKey);
-      if (response.status === 200 && response.data) {
-        const customerData = response.data;
-        const tierName = customerData.customer_tier?.en || "Bronze";
-        const currentPoints = customerData.point_balance || 0;
-        const nextTierInfo = getNextTierInfo(tierName, currentPoints);
+    const tierName = customerData.customer_tier?.en || "Bronze";
+    const currentPoints = customerData.point_balance || 0;
+    const nextTierInfo = getNextTierInfo(tierName, currentPoints);
 
-        setUser({
-          name: customerData.name || "Customer",
-          membership: tierName,
-          points: currentPoints,
-          nextTierPoints: nextTierInfo.nextTier ? nextTierInfo.pointsToNext : 0,
-          requiredPoint: Number(customerData.next_tier?.required_point || 0),
-          nextTierName: customerData.next_tier?.en || null,
-          nextTierProgress: customerData.next_tier?.next_tier_progress || null,
-        });
+    setUser({
+      name: customerData.name || "Customer",
+      membership: tierName,
+      points: currentPoints,
+      nextTierPoints: nextTierInfo.nextTier ? nextTierInfo.pointsToNext : 0,
+      requiredPoint: Number(customerData.next_tier?.required_point || 0),
+      nextTierName: customerData.next_tier?.en || null,
+      nextTierProgress: customerData.next_tier?.next_tier_progress || null,
+    });
 
-        updateCustomerData(customerData);
-      }
-      setLoading(false);
-    };
-
-    fetchCustomerData();
-  }, [customerID, apiKey, isAuthenticated, updateCustomerData]);
+    setLoading(false);
+  }, [isAuthenticated, customerData]);
 
   const getTierTheme = (tier) => {
-    switch (tier.toLowerCase()) {
+    switch (tier?.toLowerCase()) {
       case "bronze":
         return {
           welcomeColor: "#FFDDBD",
@@ -107,20 +90,16 @@ const UserCard = ({ streak, show }) => {
     }
   };
 
-  const theme = getTierTheme(user.membership);
-
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="relative w-[350px] h-[200px] rounded-2xl overflow-hidden shadow-lg mx-auto bg-gray-100 animate-pulse">
         <div className="absolute inset-0 bg-gray-200" />
-
         <div className="relative z-10 h-full flex flex-col justify-between p-4">
           <div>
             <div className="h-4 w-20 bg-gray-300 rounded mb-2"></div>
             <div className="h-5 w-32 bg-gray-300 rounded mb-2"></div>
             <div className="h-6 w-20 bg-gray-300 rounded"></div>
           </div>
-
           <div>
             <div className="h-2 w-full bg-gray-300 rounded mb-2"></div>
             <div className="h-2 w-2/3 bg-gray-300 rounded"></div>
@@ -129,6 +108,8 @@ const UserCard = ({ streak, show }) => {
       </div>
     );
   }
+
+  const theme = getTierTheme(user.membership);
 
   return (
     <>

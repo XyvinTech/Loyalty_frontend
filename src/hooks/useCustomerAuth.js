@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import sdkApi from "../api/sdk";
 
 const STORAGE_KEY = "khedmah_customer_auth";
@@ -12,10 +12,11 @@ export const useCustomerAuth = () => {
     customerData: null,
   });
 
-  const [apiStatus, setApiStatus] = useState(null); // <-- track API status (200, 404, etc.)
+  const [apiStatus, setApiStatus] = useState(null);
+  const hasFetchedRef = useRef(false); // ✅ prevent multiple calls
 
   const updateCustomerData = useCallback((data) => {
-    setApiStatus(200); // success
+    setApiStatus(200);
     setCustomerAuth((prevAuth) => {
       const updatedAuth = { ...prevAuth, customerData: data };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedAuth));
@@ -34,23 +35,22 @@ export const useCustomerAuth = () => {
     };
     setCustomerAuth(clearedAuth);
     localStorage.removeItem(STORAGE_KEY);
+    hasFetchedRef.current = false; // reset fetch flag
   }, []);
 
-  const setAuth = useCallback(
-    (customerID, apiKey, name = null, customerData = null) => {
-      setApiStatus(null);
-      const authData = {
-        customerID,
-        apiKey,
-        name,
-        isAuthenticated: true,
-        customerData,
-      };
-      setCustomerAuth(authData);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
-    },
-    []
-  );
+  const setAuth = useCallback((customerID, apiKey, name = null, customerData = null) => {
+    setApiStatus(null);
+    const authData = {
+      customerID,
+      apiKey,
+      name,
+      isAuthenticated: true,
+      customerData,
+    };
+    setCustomerAuth(authData);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+    hasFetchedRef.current = false; // reset flag so next load can fetch
+  }, []);
 
   const refreshCustomerData = useCallback(async () => {
     const { customerID, apiKey } = customerAuth;
@@ -58,39 +58,42 @@ export const useCustomerAuth = () => {
 
     try {
       const response = await sdkApi.getCustomerDetails(customerID, apiKey);
-      setApiStatus(response.status); // track status
+      setApiStatus(response.status);
       if (response.status === 200 && response.data) {
         updateCustomerData(response.data);
       }
     } catch (error) {
       const status = error.response?.status || null;
-      setApiStatus(status); // track error status (e.g., 404)
+      setApiStatus(status);
       console.error("Failed to refresh customer data:", error);
     }
   }, [customerAuth, updateCustomerData]);
 
+  // ✅ Only fetch once per login/session
   useEffect(() => {
     const fetchCustomerData = async () => {
-      const { customerID, apiKey, customerData, isAuthenticated } = customerAuth;
+      const { isAuthenticated, customerID, apiKey, customerData } = customerAuth;
+      if (!isAuthenticated || !customerID || !apiKey || hasFetchedRef.current) return;
+      if (customerData) return; // already have data
 
-      if (isAuthenticated && customerID && apiKey && !customerData) {
-        try {
-          const response = await sdkApi.getCustomerDetails(customerID, apiKey);
-          setApiStatus(response.status);
-          if (response.status === 200 && response.data) {
-            updateCustomerData(response.data);
-          }
-        } catch (error) {
-          const status = error.response?.status || null;
-          setApiStatus(status); // track error status
-          console.error("Error fetching customer data:", error);
+      try {
+        const response = await sdkApi.getCustomerDetails(customerID, apiKey);
+        setApiStatus(response.status);
+        if (response.status === 200 && response.data) {
+          updateCustomerData(response.data);
+          hasFetchedRef.current = true; // ✅ mark as fetched
         }
+      } catch (error) {
+        const status = error.response?.status || null;
+        setApiStatus(status);
+        console.error("Error fetching customer data:", error);
       }
     };
 
     fetchCustomerData();
-  }, [customerAuth, updateCustomerData]);
+  }, [customerAuth.isAuthenticated, customerAuth.customerID, customerAuth.apiKey, updateCustomerData]);
 
+  // ✅ Initialize from URL or localStorage
   useEffect(() => {
     const initializeAuth = () => {
       const queryParams = new URLSearchParams(window.location.search);
@@ -108,6 +111,7 @@ export const useCustomerAuth = () => {
         };
         setCustomerAuth(authData);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+        hasFetchedRef.current = false;
         return;
       }
 
@@ -138,7 +142,7 @@ export const useCustomerAuth = () => {
 
   return {
     ...customerAuth,
-    apiStatus, // <-- expose API status
+    apiStatus,
     updateCustomerData,
     clearAuth,
     setAuth,

@@ -326,9 +326,9 @@ const HowtoGet = ({ link }) => {
             {/* Electricity, Water, Telecom Postpaid, ROP, SPF */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Electricity Bill Payment, Water Bill Payment, Telecom Post Paid
-                Bill Payment, Electricity Prepaid Recharge, ROP Payments, Social
-                Protection Fund Payments
+                Electricity Bill Payment or Recharge, Water Bill Payment,
+                Telecom Post Paid Bill Payment, Electricity Prepaid Recharge,
+                ROP Payments, Social Protection Fund Payments
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-blue-200">
@@ -373,7 +373,8 @@ const HowtoGet = ({ link }) => {
             {/* Telecom Recharge, Purchase of Vouchers & Insurance */}
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Telecom Recharge, Purchase of Vouchers & Insurance
+                Telecom Recharge, Purchase of Entertainment Vouchers & Insurance
+                Services
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-green-200">

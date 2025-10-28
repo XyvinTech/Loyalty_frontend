@@ -12,7 +12,6 @@ const UserBrands = () => {
   const { navigateWithParams } = useNavigationWithParams();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [rows] = useState(100);
   const [search, setSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -23,7 +22,6 @@ const UserBrands = () => {
     refetch,
   } = useGetBrands({
     page,
-    limit: rows,
     ...(searchQuery && { search: searchQuery }),
   });
   const handleSearchSubmit = (e) => {

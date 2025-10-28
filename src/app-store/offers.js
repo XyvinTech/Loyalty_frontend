@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import sdkApi from "../api/sdk";
-
+const STORAGE_KEY = "khedmah_customer_auth";
 export const useGetOffers = (filter = {}) => {
-  const { customerID, apiKey } = useCustomerAuth();
+  const storedAuth = localStorage.getItem(STORAGE_KEY);
+  const { customerID, apiKey } = storedAuth ? JSON.parse(storedAuth) : {};
 
   return useQuery({
     queryKey: [
@@ -34,5 +34,7 @@ export const useGetOffers = (filter = {}) => {
     },
     enabled: !!customerID && !!apiKey,
     keepPreviousData: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };

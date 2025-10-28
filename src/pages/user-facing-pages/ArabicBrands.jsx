@@ -11,7 +11,6 @@ import { useGetBrands } from "../../app-store/brands";
 const ArabicBrands = () => {
   const { navigateWithParams } = useNavigationWithParams();
   const [page, setPage] = useState(1);
-  const [rows] = useState(100);
   const [search, setSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ const ArabicBrands = () => {
     refetch,
   } = useGetBrands({
     page,
-    limit: rows,
     ...(searchQuery && { search: searchQuery }),
   });
 

@@ -12,7 +12,6 @@ import { useGetCategories } from "../../app-store/categories";
 const ArabicCategories = () => {
   const { navigateWithParams } = useNavigationWithParams();
   const [page, setPage] = useState(1);
-  const [rows] = useState(100);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const {
@@ -22,7 +21,6 @@ const ArabicCategories = () => {
     refetch,
   } = useGetCategories({
     page,
-    limit: rows,
     ...(searchTerm && { search: searchTerm }),
   });
 

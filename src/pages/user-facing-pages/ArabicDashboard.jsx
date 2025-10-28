@@ -22,16 +22,10 @@ const ArabicDashboard = () => {
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-  const { data: brands = [], isLoading: brandsLoading } = useGetBrands({
-    limit: 20,
-  });
+  const { data: brands = [], isLoading: brandsLoading } = useGetBrands({});
   const { data: categories = [], isLoading: categoriesLoading } =
-    useGetCategories({
-      limit: 20,
-    });
-  const { data: offerData = [], isLoading: offerLoading } = useGetOffers({
-    limit: 20,
-  });
+    useGetCategories({});
+  const { data: offerData = [], isLoading: offerLoading } = useGetOffers({});
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {

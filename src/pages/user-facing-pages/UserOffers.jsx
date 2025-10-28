@@ -13,7 +13,6 @@ const UserOffers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [page, setPage] = useState(1);
-  const rows = 100;
 
   const location = useLocation();
   const brandId = location?.state?.brand;
@@ -22,7 +21,7 @@ const UserOffers = () => {
   const navigate = useNavigate();
 
   const { data: categories = [], isLoading: categoriesLoading } =
-    useGetCategories({ limit: 100 });
+    useGetCategories({});
   const allCategories = [{ _id: "", title: { en: "All" } }, ...categories];
 
   useEffect(() => {
@@ -37,7 +36,6 @@ const UserOffers = () => {
       categoryId: activeCategory,
     }),
     page,
-    limit: rows,
     ...(searchQuery && { search: searchQuery }),
     ...(brandId && { brandId }),
   });

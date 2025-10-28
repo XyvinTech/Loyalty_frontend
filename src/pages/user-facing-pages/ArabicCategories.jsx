@@ -5,61 +5,34 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import sdkApi from "../../api/sdk";
 import ArabicProductCard from "../../components/User-Facing/ArabicProductCard";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+import { useGetCategories } from "../../app-store/categories";
 
 const ArabicCategories = () => {
-  const [categories, setCategories] = useState([]);
   const { navigateWithParams } = useNavigationWithParams();
   const [page, setPage] = useState(1);
   const [rows] = useState(100);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-
-  const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
+  const {
+    data: categories = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCategories({
+    page,
+    limit: rows,
+    ...(searchTerm && { search: searchTerm }),
+  });
 
-  const fetchData = async (reset = false) => {
-    try {
-      setLoading(true);
-      const categoryData = await sdkApi.getCategories(customerID, apiKey, {
-        page: reset ? 1 : page,
-        limit: rows,
-        search: searchTerm,
-      });
-
-      const newCategories = categoryData.data || [];
-      if (reset) {
-        setCategories(newCategories);
-      } else {
-        setCategories((prev) => [...prev, ...newCategories]);
-      }
-
-      if (newCategories.length >= rows && !reset) {
-        setPage((prev) => prev + 1);
-      }
-    } catch (error) {
-      console.error("فشل في جلب بيانات العميل:", error);
-    } finally {
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (customerID && apiKey) {
-      fetchData(true); // تحميل أولي أو إعادة تعيين مع البحث
-    }
-  }, [customerID, apiKey, searchTerm]);
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
+    setSearchTerm(e.target.value);
     setPage(1);
+    refetch();
   };
+
 
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-8">
@@ -110,7 +83,7 @@ const ArabicCategories = () => {
         </div>
 
         <div className="min-h-[400px]">
-          {initialLoading ? (
+          {isLoading  ? (
             <LoadingSpinner />
           ) : (
             <div className="grid grid-cols-2 gap-3 px-4 py-4">
@@ -132,7 +105,7 @@ const ArabicCategories = () => {
             </div>
           )}
 
-          {loading && !initialLoading && (
+          {isFetching && !isLoading && (
             <div className="px-4 pb-4">
               <LoadingSpinner />
             </div>

@@ -1,114 +1,49 @@
 import {
-  ArrowLeftIcon,
   ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import sdkApi from "../../api/sdk";
 import ArabicOfferView from "../../components/User-Facing/ArabicOfferView";
+import { useGetCategories } from "../../app-store/categories";
+import { useGetOffers } from "../../app-store/offers";
 
 const ArabicOffers = () => {
   const [activeCategory, setActiveCategory] = useState("");
-  const [offerData, setOfferData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTimeout, setSearchTimeout] = useState(null);
   const [page, setPage] = useState(1);
+  const [rows] = useState(100);
   const location = useLocation();
   const brandId = location?.state?.brand;
   const categoryId = location?.state?.category;
-  const [rows] = useState(100);
   const [searchParams] = useSearchParams();
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState(null);
-
-  const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
 
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useGetCategories({ limit: 100 });
+  const allCategories = [{ _id: "", title: { en: "All" } }, ...categories];
+
   useEffect(() => {
-    if (categoryId) {
-      setActiveCategory(categoryId);
-    }
+    if (categoryId) setActiveCategory(categoryId);
   }, [categoryId]);
-
-  const fetchOfferData = async (resetData = false) => {
-    try {
-      setLoading(true);
-      const currentPage = resetData ? 1 : page;
-
-      const offers = await sdkApi.getMerchantOffers(customerID, apiKey, {
-        categoryId: activeCategory,
-        page: currentPage,
-        limit: rows,
-        search: searchQuery.trim(),
-        ...(brandId && { brandId }),
-      });
-
-      const newOffers = offers.data || [];
-
-      if (resetData) {
-        setOfferData(newOffers);
-        setPage(2);
-      } else {
-        setOfferData((prev) => [...prev, ...newOffers]);
-        if (newOffers.length >= rows) {
-          setPage((prev) => prev + 1);
-        }
-      }
-    } catch (error) {
-      console.error("فشل في جلب العروض:", error);
-    } finally {
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const categoriesData = await sdkApi.getCategories(customerID, apiKey, {
-        limit: 100,
-      });
-      const allCategory = { _id: "", title: { ar: "الكل" } };
-      setCategories([allCategory, ...categoriesData.data]);
-    } catch (error) {
-      console.error("فشل في جلب الفئات:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (customerID && apiKey) {
-      fetchCategories();
-    }
-  }, [customerID, apiKey]);
-
-  useEffect(() => {
-    setOfferData([]);
-    setPage(1);
-    setInitialLoading(true);
-  }, [activeCategory]);
-
-  useEffect(() => {
-    setOfferData([]);
-    setPage(1);
-    setInitialLoading(true);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (customerID && apiKey) {
-      fetchOfferData(true);
-    }
-  }, [customerID, apiKey, activeCategory, searchQuery]);
-
+  const {
+    data: offers = [],
+    isLoading,
+    isFetching,
+  } = useGetOffers({
+    ...(activeCategory && {
+      categoryId: activeCategory,
+    }),
+    page,
+    limit: rows,
+    ...(searchQuery && { search: searchQuery }),
+    ...(brandId && { brandId }),
+  });
   const handleSearchChange = useCallback(
     (value) => {
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
-      const timeout = setTimeout(() => {
-        setSearchQuery(value);
-      }, 500);
+      if (searchTimeout) clearTimeout(searchTimeout);
+      const timeout = setTimeout(() => setSearchQuery(value), 500);
       setSearchTimeout(timeout);
     },
     [searchTimeout]
@@ -116,12 +51,9 @@ const ArabicOffers = () => {
 
   useEffect(() => {
     return () => {
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
+      if (searchTimeout) clearTimeout(searchTimeout);
     };
   }, [searchTimeout]);
-
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-8">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#404040]"></div>
@@ -158,24 +90,28 @@ const ArabicOffers = () => {
         </div>
       </div>
       <div className="px-4 mb-4 mt-3">
-        <div
-          className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {categories?.map((category) => (
-            <button
-              key={category?._id}
-              onClick={() => setActiveCategory(category?._id)}
-              className={`px-4 py-2 rounded-[10px] whitespace-nowrap text-sm font-medium transition-all duration-200 alexandria-text ${
-                activeCategory === category?._id
-                  ? "bg-[#404040] text-white"
-                  : "border border-[#404040] hover:bg-gray-200 text-[#404040]"
-              }`}
-            >
-              {category?.title?.ar}
-            </button>
-          ))}
-        </div>
+        {categoriesLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div
+            className="flex gap-3 overflow-x-auto scrollbar-hide pb-2"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {allCategories?.map((category) => (
+              <button
+                key={category?._id}
+                onClick={() => setActiveCategory(category?._id)}
+                className={`px-4 py-2 rounded-[10px] whitespace-nowrap text-sm font-medium transition-all duration-200 alexandria-text ${
+                  activeCategory === category?._id
+                    ? "bg-[#404040] text-white"
+                    : "border border-[#404040] hover:bg-gray-200 text-[#404040]"
+                }`}
+              >
+                {category?.title?.ar}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="px-4 py-3">
@@ -191,14 +127,14 @@ const ArabicOffers = () => {
       </div>
 
       <div className="min-h-[400px]">
-        {initialLoading ? (
+        {isLoading ? (
           <LoadingSpinner />
         ) : (
           <div className="grid grid-cols-1 gap-3 px-0 py-4">
-            {offerData?.length === 0 ? (
+            {offers?.length === 0 ? (
               <NoOffersFound />
             ) : (
-              offerData?.map((offer, index) => {
+              offers?.map((offer, index) => {
                 const params = new URLSearchParams(searchParams);
                 params.set("couponId", offer?._id);
                 const couponUrl = `/user/coupon/ar?${params.toString()}`;
@@ -209,7 +145,7 @@ const ArabicOffers = () => {
                       onClick={() => navigate(couponUrl)}
                       product={offer}
                     />
-                    {index !== offerData.length - 1 && (
+                    {index !== offers.length - 1 && (
                       <div
                         className="my-2"
                         style={{
@@ -223,7 +159,7 @@ const ArabicOffers = () => {
             )}
           </div>
         )}
-        {loading && !initialLoading && (
+        {isFetching && !isLoading && (
           <div className="px-4 pb-4">
             <LoadingSpinner />
           </div>

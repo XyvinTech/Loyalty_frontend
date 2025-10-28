@@ -7,8 +7,10 @@ import gold from "../../assets/gold.png";
 import AppButton from "../../ui/AppButton";
 import ArabicCard from "../../components/User-Facing/ArabicCard";
 import ArabicOfferCard from "../../components/User-Facing/ArabicOfferCard";
-import khedmah from "../../assets/WhatsApp Image 2025-08-25 at 17.24.42_5bf6082a.jpg";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+import { useGetBrands } from "../../app-store/brands";
+import { useGetCategories } from "../../app-store/categories";
+import { useGetOffers } from "../../app-store/offers";
 // 👉 Simple Skeleton
 const SkeletonBox = ({ className }) => (
   <div className={`animate-pulse bg-gray-200 rounded-md ${className}`}></div>
@@ -17,13 +19,19 @@ const SkeletonBox = ({ className }) => (
 const ArabicDashboard = () => {
   const { navigateWithParams } = useNavigationWithParams();
   const [variant, setVariant] = useState("primary");
-  const [offerData, setOfferData] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [tierColor, setTierColor] = useState("#FFE5C9");
   const { customerID, apiKey, customerData } = useCustomerAuth();
   const [backgroundImage, setBackgroundImage] = useState(bronze);
-
+  const { data: brands = [], isLoading: brandsLoading } = useGetBrands({
+    limit: 20,
+  });
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useGetCategories({
+      limit: 20,
+    });
+  const { data: offerData = [], isLoading: offerLoading } = useGetOffers({
+    limit: 20,
+  });
   useEffect(() => {
     const fetchCustomerData = async () => {
       try {
@@ -48,16 +56,6 @@ const ArabicDashboard = () => {
             setTierColor("#DF9872");
             setBackgroundImage(bronze);
         }
-
-        const [offers, brandData, categoriesData] = await Promise.all([
-          sdkApi.getMerchantOffers(customerID, apiKey, { limit: 20 }),
-          sdkApi.getBrands(customerID, apiKey, { limit: 20 }),
-          sdkApi.getCategories(customerID, apiKey, { limit: 20 }),
-        ]);
-
-        setOfferData(offers.data || []);
-        setBrands(brandData.data || []);
-        setCategories(categoriesData.data || []);
       } catch (error) {
         console.error("Failed to fetch customer data:", error);
       }
@@ -106,7 +104,7 @@ const ArabicDashboard = () => {
           className="flex space-x-3 overflow-x-auto scrollbar-hide"
           dir="rtl"
         >
-          {brands.length === 0
+          {brandsLoading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="min-w-[70px] mb-3">
                   <SkeletonBox className="w-[74px] h-[74px] rounded-[12px]" />
@@ -152,7 +150,7 @@ const ArabicDashboard = () => {
           className="flex space-x-3 overflow-x-auto scrollbar-hide"
           dir="rtl"
         >
-          {offerData.length === 0
+          {offerLoading
             ? Array.from({ length: 4 }).map((_, i) => (
                 <SkeletonBox
                   key={i}
@@ -183,7 +181,7 @@ const ArabicDashboard = () => {
           className="flex space-x-3 overflow-x-auto scrollbar-hide mb-4"
           dir="rtl"
         >
-          {categories.length === 0
+          {categoriesLoading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}

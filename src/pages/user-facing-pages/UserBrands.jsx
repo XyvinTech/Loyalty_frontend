@@ -2,62 +2,35 @@ import {
   ArrowLeftIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProductCard from "../../components/User-Facing/ProductCard";
 import { useNavigate } from "react-router-dom";
-import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import sdkApi from "../../api/sdk";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+import { useGetBrands } from "../../app-store/brands";
 
 const UserBrands = () => {
-  const [brands, setBrands] = useState([]);
   const { navigateWithParams } = useNavigationWithParams();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [rows] = useState(100);
   const [search, setSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
 
-  const { customerID, apiKey } = useCustomerAuth();
-  const navigate = useNavigate();
-
-  const fetchData = async (reset = false) => {
-    try {
-      setLoading(true);
-      const brandData = await sdkApi.getBrands(customerID, apiKey, {
-        page: reset ? 1 : page,
-        limit: rows,
-        search: searchQuery,
-      });
-
-      const newBrands = brandData.data || [];
-      if (reset) {
-        setBrands(newBrands);
-        setPage(2);
-      } else {
-        setBrands((prev) => [...prev, ...newBrands]);
-        if (newBrands.length >= rows) {
-          setPage((prev) => prev + 1);
-        }
-      }
-    } catch (error) {
-      console.error("Failed to fetch customer data:", error);
-    } finally {
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (customerID && apiKey) {
-      fetchData(true); // initial load
-    }
-  }, [customerID, apiKey, searchQuery]);
-
+  const {
+    data: brands = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetBrands({
+    page,
+    limit: rows,
+    ...(searchQuery && { search: searchQuery }),
+  });
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    setPage(1);
     setSearchQuery(search);
+    refetch(); 
   };
 
   const LoadingSpinner = () => (
@@ -80,23 +53,20 @@ const UserBrands = () => {
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen poppins-text">
-      <div className="flex justify-between items-center p-4 ">
+      <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="w-6 h-6 " />
+            <ArrowLeftIcon className="w-6 h-6" />
           </button>
-          <div>
-            <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
-              Brands
-            </h1>
-          </div>
+          <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
+            Brands
+          </h1>
         </div>
       </div>
-
       <div className="px-4 py-3">
         <form onSubmit={handleSearchSubmit}>
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2  w-4 h-4" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" />
             <input
               type="text"
               value={search}
@@ -107,28 +77,30 @@ const UserBrands = () => {
           </div>
         </form>
       </div>
-
       <div className="min-h-[400px]">
-        {initialLoading ? (
+        {isLoading ? (
           <LoadingSpinner />
         ) : (
           <div className="grid grid-cols-2 gap-3 px-4 py-4">
-            {brands?.length === 0 ? (
+            {brands.length === 0 ? (
               <NoBrandsFound />
             ) : (
-              brands?.map((brand, index) => (
+              brands.map((brand, index) => (
                 <ProductCard
                   key={index}
                   product={brand}
                   onClick={() =>
-                    navigateWithParams("/user/offers", { state: { brand: brand?._id } })
+                    navigateWithParams("/user/offers", {
+                      state: { brand: brand?._id },
+                    })
                   }
                 />
               ))
             )}
           </div>
         )}
-        {loading && !initialLoading && (
+
+        {isFetching && !isLoading && (
           <div className="px-4 pb-4">
             <LoadingSpinner />
           </div>

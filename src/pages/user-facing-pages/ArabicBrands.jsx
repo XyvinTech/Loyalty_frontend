@@ -1,66 +1,37 @@
 import {
-  ArrowLeftIcon,
   ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import sdkApi from "../../api/sdk";
 import ArabicProductCard from "../../components/User-Facing/ArabicProductCard";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+import { useGetBrands } from "../../app-store/brands";
 
 const ArabicBrands = () => {
-  const [brands, setBrands] = useState([]);
   const { navigateWithParams } = useNavigationWithParams();
   const [page, setPage] = useState(1);
   const [rows] = useState(100);
   const [search, setSearch] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-
-  const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
-
-  const fetchData = async (reset = false) => {
-    try {
-      setLoading(true);
-      const brandData = await sdkApi.getBrands(customerID, apiKey, {
-        page: reset ? 1 : page,
-        limit: rows,
-        search: searchQuery,
-      });
-
-      const newBrands = brandData.data || [];
-      if (reset) {
-        setBrands(newBrands);
-        setPage(2);
-      } else {
-        setBrands((prev) => [...prev, ...newBrands]);
-        if (newBrands.length >= rows) {
-          setPage((prev) => prev + 1);
-        }
-      }
-    } catch (error) {
-      console.error("فشل في جلب بيانات العلامات التجارية:", error);
-    } finally {
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (customerID && apiKey) {
-      fetchData(true); // تحميل أولي
-    }
-  }, [customerID, apiKey, searchQuery]);
+  const {
+    data: brands = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetBrands({
+    page,
+    limit: rows,
+    ...(searchQuery && { search: searchQuery }),
+  });
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    setPage(1);
     setSearchQuery(search);
+    refetch();
   };
-
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-8">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#404040]"></div>
@@ -113,7 +84,7 @@ const ArabicBrands = () => {
       </div>
 
       <div className="min-h-[400px]">
-        {initialLoading ? (
+        {isLoading ? (
           <LoadingSpinner />
         ) : (
           <div className="grid grid-cols-2 gap-3 px-4 py-4">
@@ -134,7 +105,7 @@ const ArabicBrands = () => {
             )}
           </div>
         )}
-        {loading && !initialLoading && (
+        {isFetching && !isLoading && (
           <div className="px-4 pb-4">
             <LoadingSpinner />
           </div>

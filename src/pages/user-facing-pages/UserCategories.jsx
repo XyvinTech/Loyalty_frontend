@@ -2,62 +2,35 @@ import {
   ArrowLeftIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProductCard from "../../components/User-Facing/ProductCard";
 import { useNavigate } from "react-router-dom";
-import { useCustomerAuth } from "../../hooks/useCustomerAuth";
-import sdkApi from "../../api/sdk";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
+import { useGetCategories } from "../../app-store/categories";
 
 const UserCategories = () => {
-  const [categories, setCategories] = useState([]);
-  const [page, setPage] = useState(1);
-  const [rows] = useState(100);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const rows = 100;
 
-  const { customerID, apiKey } = useCustomerAuth();
   const navigate = useNavigate();
-   const { navigateWithParams } = useNavigationWithParams();
+  const { navigateWithParams } = useNavigationWithParams();
 
-  const fetchData = async (reset = false) => {
-    try {
-      setLoading(true);
-      const categoryData = await sdkApi.getCategories(customerID, apiKey, {
-        page: reset ? 1 : page,
-        limit: rows,
-        search: searchTerm,
-      });
-
-      const newCategories = categoryData.data || [];
-      if (reset) {
-        setCategories(newCategories);
-      } else {
-        setCategories((prev) => [...prev, ...newCategories]);
-      }
-
-      if (newCategories.length >= rows && !reset) {
-        setPage((prev) => prev + 1);
-      }
-    } catch (error) {
-      console.error("Failed to fetch customer data:", error);
-    } finally {
-      setLoading(false);
-      setInitialLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (customerID && apiKey) {
-      fetchData(true); // initial load or reset with search
-    }
-  }, [customerID, apiKey, searchTerm]);
+  const {
+    data: categories = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetCategories({
+    page,
+    limit: rows,
+    ...(searchTerm && { search: searchTerm }),
+  });
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
+    setSearchTerm(e.target.value);
     setPage(1);
+    refetch();
   };
 
   const LoadingSpinner = () => (
@@ -91,7 +64,6 @@ const UserCategories = () => {
             </h1>
           </div>
         </div>
-
         <div className="px-4 py-3">
           <div className="relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" />
@@ -104,16 +76,15 @@ const UserCategories = () => {
             />
           </div>
         </div>
-
         <div className="min-h-[400px]">
-          {initialLoading ? (
+          {isLoading ? (
             <LoadingSpinner />
           ) : (
             <div className="grid grid-cols-2 gap-3 px-4 py-4">
-              {categories?.length === 0 ? (
+              {categories.length === 0 ? (
                 <NoCategoriesFound />
               ) : (
-                categories?.map((category, index) => (
+                categories.map((category, index) => (
                   <ProductCard
                     key={index}
                     product={category}
@@ -128,7 +99,7 @@ const UserCategories = () => {
             </div>
           )}
 
-          {loading && !initialLoading && (
+          {isFetching && !isLoading && (
             <div className="px-4 pb-4">
               <LoadingSpinner />
             </div>

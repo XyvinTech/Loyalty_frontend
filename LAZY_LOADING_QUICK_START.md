@@ -285,3 +285,4 @@ The enhanced `SafeImage` component alone should fix most iOS issues. Use infinit
 ---
 
 **Need help implementing?** Just let me know which pages you want optimized!
+

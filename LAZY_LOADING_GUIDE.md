@@ -498,3 +498,4 @@ Lazy loading is essential for iOS 26 webviews. We've implemented:
 🔄 **Infinite scroll** - Ready to implement on brands/categories pages
 
 Next steps: Enable route-based code splitting and implement infinite scroll for better iOS performance.
+

@@ -2,11 +2,12 @@ import {
   ArrowLeftIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "../../components/User-Facing/ProductCard";
 import { useNavigate } from "react-router-dom";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
 import { useGetBrands } from "../../app-store/brands";
+import { safeConsole } from "../../utils/errorHandler";
 
 const UserBrands = () => {
   const { navigateWithParams } = useNavigationWithParams();
@@ -20,15 +21,24 @@ const UserBrands = () => {
     isLoading,
     isFetching,
     refetch,
+    error,
   } = useGetBrands({
     page,
     ...(searchQuery && { search: searchQuery }),
   });
+
+  // Log any errors for debugging
+  useEffect(() => {
+    if (error) {
+      safeConsole.error("Error loading brands:", error);
+    }
+  }, [error]);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setPage(1);
     setSearchQuery(search);
-    refetch(); 
+    refetch();
   };
 
   const LoadingSpinner = () => (
@@ -48,6 +58,39 @@ const UserBrands = () => {
       </p>
     </div>
   );
+
+  // Show error state if query fails
+  if (error && !isLoading && !brands.length) {
+    return (
+      <div className="max-w-md mx-auto bg-white min-h-screen poppins-text">
+        <div className="flex justify-between items-center p-4">
+          <div className="flex items-center gap-2">
+            <button onClick={() => navigate(-1)}>
+              <ArrowLeftIcon className="w-6 h-6" />
+            </button>
+            <h1 className="text-2xl font-semibold text-[#404040] poppins-text">
+              Brands
+            </h1>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="text-6xl text-gray-300 mb-4">⚠️</div>
+          <h3 className="text-lg font-medium text-gray-600 mb-2">
+            Unable to load brands
+          </h3>
+          <p className="text-sm text-gray-500 text-center mb-4">
+            Please check your connection and try again
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen poppins-text">
@@ -85,7 +128,7 @@ const UserBrands = () => {
             ) : (
               brands.map((brand, index) => (
                 <ProductCard
-                  key={index}
+                  key={brand?._id || index}
                   product={brand}
                   onClick={() =>
                     navigateWithParams("/user/offers", {

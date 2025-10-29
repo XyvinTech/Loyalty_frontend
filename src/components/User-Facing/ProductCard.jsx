@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SafeImage from "./SafeImage";
 
 const ProductCard = ({ product, onClick }) => {
   const [expanded, setExpanded] = useState(false);
@@ -18,7 +19,7 @@ const ProductCard = ({ product, onClick }) => {
       <div className="flex justify-between items-center mb-2">
         <div className="w-full h-45 ">
           {" "}
-          <img
+          <SafeImage
             src={product?.merchantId?.image || product?.image}
             alt="Brand Logo"
             className="w-full h-full object-cover rounded-t-[8px] "

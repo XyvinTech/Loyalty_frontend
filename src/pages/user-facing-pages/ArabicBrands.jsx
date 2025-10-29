@@ -2,11 +2,12 @@ import {
   ArrowRightIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ArabicProductCard from "../../components/User-Facing/ArabicProductCard";
 import { useNavigationWithParams } from "../../utils/navigationUtils";
 import { useGetBrands } from "../../app-store/brands";
+import { safeConsole } from "../../utils/errorHandler";
 
 const ArabicBrands = () => {
   const { navigateWithParams } = useNavigationWithParams();
@@ -19,10 +20,18 @@ const ArabicBrands = () => {
     isLoading,
     isFetching,
     refetch,
+    error,
   } = useGetBrands({
     page,
     ...(searchQuery && { search: searchQuery }),
   });
+
+  // Log any errors for debugging
+  useEffect(() => {
+    if (error) {
+      safeConsole.error("Error loading brands:", error);
+    }
+  }, [error]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -47,6 +56,44 @@ const ArabicBrands = () => {
       </p>
     </div>
   );
+
+  // Show error state if query fails
+  if (error && !isLoading && !brands.length) {
+    return (
+      <div
+        className="max-w-md mx-auto bg-white min-h-screen alexandria-text"
+        dir="rtl"
+      >
+        <div className="flex justify-between items-center p-4">
+          <div className="flex justify-between gap-2 w-full">
+            <button onClick={() => navigate(-1)}>
+              <ArrowRightIcon className="w-6 h-6" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-semibold text-[#404040] alexandria-text">
+                العلامات التجارية
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="text-6xl text-gray-300 mb-4">⚠️</div>
+          <h3 className="text-lg font-medium text-gray-600 mb-2">
+            تعذر تحميل العلامات التجارية
+          </h3>
+          <p className="text-sm text-gray-500 text-center mb-4">
+            يرجى التحقق من الاتصال والمحاولة مرة أخرى
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -91,7 +138,7 @@ const ArabicBrands = () => {
             ) : (
               brands?.map((brand, index) => (
                 <ArabicProductCard
-                  key={index}
+                  key={brand?._id || index}
                   product={brand}
                   onClick={() =>
                     navigateWithParams("/user/offers/ar", {

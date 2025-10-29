@@ -29,6 +29,7 @@ const UserBrands = () => {
 
   // Log any errors for debugging
   useEffect(() => {
+    console.log("testinggggggggg");
     if (error) {
       safeConsole.error("Error loading brands:", error);
     }

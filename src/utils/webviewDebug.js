@@ -208,7 +208,7 @@ export const testAPIConnectivity = async (apiUrl) => {
  * Create debug overlay for development
  */
 export const createDebugOverlay = () => {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (import.meta.env.NODE_ENV !== 'development') return;
 
     const overlay = document.createElement('div');
     overlay.id = 'webview-debug-overlay';

@@ -16,7 +16,7 @@ const ArabicOfferCard = ({ data, tier }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
-  params.set("couponId", data._id);
+  params.set("couponId", data?._doc?._id);
   const couponUrl = `/user/coupon/ar?${params.toString()}`;
 
   moment.locale("ar");

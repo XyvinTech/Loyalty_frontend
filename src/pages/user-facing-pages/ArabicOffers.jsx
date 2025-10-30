@@ -134,7 +134,7 @@ const ArabicOffers = () => {
             ) : (
               offers?.map((offer, index) => {
                 const params = new URLSearchParams(searchParams);
-                params.set("couponId", offer?._id);
+                params.set("couponId", offer?._doc?._id);
                 const couponUrl = `/user/coupon/ar?${params.toString()}`;
 
                 return (

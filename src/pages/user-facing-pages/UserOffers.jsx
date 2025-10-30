@@ -130,7 +130,7 @@ const UserOffers = () => {
           <div className="grid grid-cols-1 gap-3 px-0 py-4">
             {offers.map((offer, index) => {
               const params = new URLSearchParams(searchParams);
-              params.set("couponId", offer?._id);
+              params.set("couponId", offer?._doc?._id);
               const couponUrl = `/user/coupon?${params.toString()}`;
 
               return (

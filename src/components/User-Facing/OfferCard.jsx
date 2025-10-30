@@ -14,7 +14,7 @@ const OfferCard = ({ data, tier }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
-  params.set("couponId", data._id);
+  params.set("couponId", data?._doc?._id);
   const couponUrl = `/user/coupon?${params.toString()}`;
   return (
     <div

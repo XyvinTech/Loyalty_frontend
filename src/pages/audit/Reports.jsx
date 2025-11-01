@@ -1,156 +1,278 @@
-import React, { useMemo, useState } from "react";
-import RefreshButton from "../../ui/RefreshButton";
-import ReportCard from "../../components/reports/ReportCard";
-import DoughnutChart from "../../ui/DoughnutChart";
-import {
-  DevicePhoneMobileIcon,
-  GlobeAltIcon,
-} from "@heroicons/react/24/outline";
-import StyledTable from "../../ui/StyledTable";
+import { useState } from "react";
+import { useReports } from "../../hooks/useReports";
+import { useAppTypes } from "../../hooks/useAppTypes";
+import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 
 const Reports = () => {
-  const [activeTab, setActiveTab] = useState("Overview");
-  const [loading, setLoading] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState("");
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [totalCount, setTotalCount] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [data, setData] = useState([
-    { id: 1, name: "John Doe", pointsRequired: 120, status: "Active" },
-    { id: 2, name: "Jane Smith", pointsRequired: 90, status: "Inactive" },
-    { id: 3, name: "Alice Johnson", pointsRequired: 150, status: "Active" },
-    { id: 4, name: "Michael Brown", pointsRequired: 80, status: "Pending" },
-    { id: 5, name: "Emily Davis", pointsRequired: 110, status: "Active" },
-  ]);
-  const chartData = {
-    labels: ["Mobile App", "Website"],
-    datasets: [
-      {
-        data: [50000, 40000],
-        backgroundColor: ["#2B5C3F", "#4C9067"],
-        borderWidth: 0,
-      },
-    ],
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const { useGeneratePointsReport, useUpdateTransactionAppTypes } =
+    useReports();
+  const { useGetAppTypes } = useAppTypes();
+
+  const generateMutation = useGeneratePointsReport();
+  const updateAppTypesMutation = useUpdateTransactionAppTypes();
+
+  // Prefetch app types for future use
+  useGetAppTypes();
+
+  const handleGenerateReport = () => {
+    const params = {};
+
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    generateMutation.mutate(params);
   };
 
-  const mobileAppData = {
-    title: "Mobile App",
-    points: 50000,
-    transactions: 1200,
-    activeUsers: 450,
-    platform: "iOS & Android",
-    trend: 12,
-    trendDirection: "up",
-    Icon: DevicePhoneMobileIcon,
+  const handleUpdateAppTypes = () => {
+    if (
+      window.confirm(
+        "This will update all transactions with null app_type using metadata.requested_by. Continue?"
+      )
+    ) {
+      updateAppTypesMutation.mutate();
+    }
   };
 
-  const websiteData = {
-    title: "Website",
-    points: 40000,
-    transactions: 900,
-    activeUsers: 300,
-    platform: "Web",
-    trend: 8,
-    trendDirection: "down",
-    Icon: GlobeAltIcon,
+  // Set default date range (last 30 days)
+  const setLast30Days = () => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - 30);
+
+    setEndDate(end.toISOString().split("T")[0]);
+    setStartDate(start.toISOString().split("T")[0]);
   };
-  const tableRows = useMemo(() => {
-    return data.map((item) => (
-      <tr key={item.id} className="hover:bg-gray-50">
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          {item.name}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {item.pointsRequired}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          <span className="px-2 py-1 text-xs font-medium rounded-full">
-            {item.status}
-          </span>
-        </td>
-      </tr>
-    ));
-  }, [data]);
+
+  // Set current month
+  const setCurrentMonth = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    setStartDate(start.toISOString().split("T")[0]);
+    setEndDate(end.toISOString().split("T")[0]);
+  };
+
+  // Set last month
+  const setLastMonth = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    setStartDate(start.toISOString().split("T")[0]);
+    setEndDate(end.toISOString().split("T")[0]);
+  };
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Reports</h1>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600">
-            Last Updated: {lastUpdated ? lastUpdated : "Fetching..."}
-          </span>
-          <RefreshButton />
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            Points Activity Report
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Generate detailed reports on user registration and points activity
+          </p>
         </div>
       </div>
 
-      <div className="flex space-x-4 mb-6">
-        <button
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === "Overview"
-              ? "bg-green-600 text-white"
-              : "bg-white text-gray-700"
-          }`}
-          onClick={() => setActiveTab("Overview")}
-        >
-          Overview
-        </button>
-        <button
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === "Customers"
-              ? "bg-green-600 text-white"
-              : "bg-white text-gray-700"
-          }`}
-          onClick={() => setActiveTab("Customers")}
-        >
-          Customers
-        </button>
-      </div>
+      {/* Report Generator Card */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">
+          Report Parameters
+        </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md md:col-span-2">
-          <h2 className="text-xl font-semibold mb-4">Points Distribution</h2>
-          <div className="w-full h-96 flex items-center justify-center">
-            <DoughnutChart data={chartData} />
+        <div className="space-y-6">
+          {/* Quick Date Presets */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Quick Date Range
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={setLast30Days}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Last 30 Days
+              </button>
+              <button
+                onClick={setCurrentMonth}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Current Month
+              </button>
+              <button
+                onClick={setLastMonth}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Last Month
+              </button>
+              <button
+                onClick={() => {
+                  setStartDate("");
+                  setEndDate("");
+                }}
+                className="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Clear Dates
+              </button>
+            </div>
+          </div>
+
+          {/* Date Range Inputs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="startDate"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Start Date
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="endDate"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                End Date
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                min={startDate}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+              />
+            </div>
+          </div>
+
+          {/* App Type Filter */}
+          {/* <div>
+            <label
+              htmlFor="appType"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Filter by App Type (Optional)
+            </label>
+            <select
+              id="appType"
+              value={selectedAppType}
+              onChange={(e) => setSelectedAppType(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+            >
+              <option value="">All App Types</option>
+              {appTypes.map((appType) => (
+                <option key={appType._id} value={appType._id}>
+                  {appType.name}
+                </option>
+              ))}
+            </select>
+          </div> */}
+
+          {/* Include Inactive Customers */}
+          {/* <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="includeInactive"
+              checked={includeInactive}
+              onChange={(e) => setIncludeInactive(e.target.checked)}
+              className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="includeInactive"
+              className="ml-2 block text-sm text-gray-700"
+            >
+              Include inactive customers in report
+            </label>
+          </div> */}
+
+          {/* Generate Button */}
+          <div className="flex justify-end pt-4 border-t">
+            <button
+              onClick={handleGenerateReport}
+              disabled={generateMutation.isPending}
+              className="flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <DocumentArrowDownIcon className="w-5 h-5" />
+              {generateMutation.isPending
+                ? "Generating Report..."
+                : "Generate Excel Report"}
+            </button>
           </div>
         </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
-          <ReportCard {...mobileAppData} />
-          <ReportCard {...websiteData} />
-        </div>
       </div>
-      <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">
-          Detailed Metrics
+
+      {/* Data Maintenance Utilities */}
+      {/* <div className="bg-white rounded-lg shadow-sm p-6">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">
+          Data Maintenance
+        </h2>
+        <div className="space-y-4">
+          <div className="flex items-start justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-gray-900">
+                Update Transaction App Types
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">
+                Update all transactions with null app_type by looking up the app
+                name from metadata.requested_by field. This is useful for fixing
+                earn transactions that were created before app_type was tracked.
+              </p>
+            </div>
+            <button
+              onClick={handleUpdateAppTypes}
+              disabled={updateAppTypesMutation.isPending}
+              className="ml-4 px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            >
+              {updateAppTypesMutation.isPending ? "Updating..." : "Update Now"}
+            </button>
+          </div>
+        </div>
+      </div> */}
+
+      {/* Report Information Card */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <h3 className="text-lg font-medium text-blue-900 mb-3">
+          Report Contents
         </h3>
-          {" "}
-          <StyledTable
-            paginationProps={{
-              currentPage,
-              totalCount,
-              itemsPerPage,
-              setCurrentPage,
-              setItemsPerPage,
-            }}
-          >
-            <thead className="bg-gray-50 w-full">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Points
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tableRows}
-            </tbody>
-          </StyledTable>
-      
+        <div className="text-sm text-blue-800 space-y-2">
+          <p>The generated Excel report will include the following metrics:</p>
+          <ul className="list-disc list-inside space-y-1 ml-2">
+            <li>
+              <strong>Registered Users:</strong> Total number of registered
+              users per app type
+            </li>
+            <li>
+              <strong>Points Earning:</strong> Number of unique users,
+              transactions, and total points earned
+            </li>
+            <li>
+              <strong>Points Redeemed:</strong> Number of unique users,
+              transactions, and total points redeemed
+            </li>
+            <li>
+              <strong>Opening Balance:</strong> Total points balance at the
+              start of the period
+            </li>
+            <li>
+              <strong>Closing Balance:</strong> Total points balance at the end
+              of the period
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

@@ -213,7 +213,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       label: "Audit",
       type: "dropdown",
       icon: AdjustmentsHorizontalIcon,
-      permissions: ["VIEW_AUDIT_LOGS"],
+      permissions: ["VIEW_AUDIT_LOGS", "VIEW_REPORTS", "EXPORT_REPORTS"],
       subItems: [
         {
           label: "Admin-System Logs",
@@ -232,6 +232,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           path: "/auth-logs",
           icon: CommandLineIcon,
           permissions: ["VIEW_AUDIT_LOGS"],
+        },
+        {
+          label: "Reports",
+          path: "/reports",
+          icon: DocumentChartBarIcon,
+          permissions: ["VIEW_REPORTS", "EXPORT_REPORTS"],
         },
       ],
     },

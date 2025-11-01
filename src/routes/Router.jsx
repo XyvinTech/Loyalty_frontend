@@ -26,6 +26,7 @@ import Support from "../pages/customer-management/Support";
 import KhedmahOffer from "../pages/ofters-and-promotions/KhedmahOffer";
 import SdkAccess from "../pages/system-and-settings/SdkAccess";
 import PaymentMethods from "../pages/reference-data/PaymentMethods";
+import ForcePasswordChange from "../components/auth/ForcePasswordChange";
 import {
   UserDashboard,
   PointsHistory,
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <LoginPage /> },
+      { path: "/force-password-change", element: <ForcePasswordChange /> },
       { path: "/demo", element: <DemoPage /> },
       { path: "/auth-demo", element: <AuthDemo /> },
       {

@@ -29,11 +29,15 @@ const LoginPage = () => {
     login(
       { email, password },
       {
-        onSuccess: () => {
-          navigate("/dashboard");
+        onSuccess: (response) => {
+          // Check if password change is required
+          const data = response?.data;
+          if (data?.requirePasswordChange || data?.isFirstLogin) {
+            navigate("/force-password-change");
+          } else {
+            navigate("/dashboard");
+          }
         },
-      },
-      {
         onError: (err) => {
           setError(
             err?.response?.data?.message || "Login failed. Please try again."

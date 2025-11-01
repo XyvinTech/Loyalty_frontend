@@ -13,11 +13,9 @@ export function useAuth() {
       mutationFn: (credentials) => authApi.login(credentials),
       onSuccess: (data) => {
         // Store token in localStorage
-        
-        if (data?.data) {
 
+        if (data?.data) {
           localStorage.setItem("token", data?.data);
-          
         }
 
         // Invalidate user query to refetch user data
@@ -78,7 +76,11 @@ export function useAuth() {
 
   // Check if user is authenticated
   const useIsAuthenticated = () => {
-    const { data: user, isLoading , refetch} = useGetCurrentUser({
+    const {
+      data: user,
+      isLoading,
+      refetch,
+    } = useGetCurrentUser({
       enabled: !!localStorage.getItem("token"),
     });
 
@@ -90,6 +92,16 @@ export function useAuth() {
     };
   };
 
+  // Force password change (for first-time login)
+  const useForcePasswordChange = () => {
+    return useMutation({
+      mutationFn: (passwordData) => authApi.forcePasswordChange(passwordData),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      },
+    });
+  };
+
   return {
     useLogin,
     useRegister,
@@ -98,6 +110,7 @@ export function useAuth() {
     useChangePassword,
     useLogout,
     useIsAuthenticated,
+    useForcePasswordChange,
   };
 }
 

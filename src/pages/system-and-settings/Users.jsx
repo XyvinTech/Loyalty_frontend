@@ -1,10 +1,10 @@
 import {
-  ArrowDownTrayIcon,
   EyeIcon,
   PencilIcon,
   TrashIcon,
+  KeyIcon,
 } from "@heroicons/react/24/outline";
-import React, { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
 import DeleteModal from "../../ui/DeleteModal";
 import ViewAdmin from "../../components/system-and-settings/ViewAdmin";
@@ -15,24 +15,31 @@ import Loader from "../../ui/Loader";
 import { useSubAdmin } from "../../hooks/useSubAdmin";
 import useUiStore from "../../store/ui";
 import AddSubAdmin from "../../components/system-and-settings/AddSubAdmin";
+import PasswordResetModal from "../../components/system-and-settings/PasswordResetModal";
 
 const Users = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [totalCount, setTotalCount] = useState(10);
+  const [totalCount] = useState(10);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [passwordResetOpen, setPasswordResetOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [data, setData] = useState(null);
-  const { useGetSubAdminById, useDeleteSubAdmin, useGetSubAdmin } =
-    useSubAdmin();
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [showPendingRequests, setShowPendingRequests] = useState(false);
+  const {
+    useGetSubAdminById,
+    useDeleteSubAdmin,
+    useGetSubAdmin,
+    useGetAllPasswordChangeRequests,
+  } = useSubAdmin();
   const { data: triggerSubAdminData } = useGetSubAdminById(data?.id);
   const {
     data: subAdmins,
     isLoading,
-    error,
     refetch,
     dataUpdatedAt,
   } = useGetSubAdmin({
@@ -40,6 +47,10 @@ const Users = () => {
     page: currentPage,
     search,
   });
+  const { data: passwordRequests, refetch: refetchRequests } =
+    useGetAllPasswordChangeRequests({
+      status: "pending",
+    });
   const deleteMutation = useDeleteSubAdmin();
   const { addToast } = useUiStore();
   const paginatedData = useMemo(() => {
@@ -128,13 +139,105 @@ const Users = () => {
           <RefreshButton
             onClick={() => {
               refetch();
+              refetchRequests();
             }}
             isLoading={isLoading}
           />
         </div>
-      </div>{" "}
+      </div>
+
+      {/* Password Reset Requests Banner */}
+      {passwordRequests?.data?.length > 0 && (
+        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <KeyIcon className="w-5 h-5 text-yellow-600" />
+              <div>
+                <p className="text-sm font-medium text-yellow-800">
+                  {passwordRequests.data.length} Pending Password Reset Request
+                  {passwordRequests.data.length > 1 ? "s" : ""}
+                </p>
+                <p className="text-xs text-yellow-600">
+                  Users are waiting for password reset approval
+                </p>
+              </div>
+            </div>
+            <StyledButton
+              name={showPendingRequests ? "Hide Requests" : "View Requests"}
+              onClick={() => setShowPendingRequests(!showPendingRequests)}
+              variant="secondary"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Password Reset Requests Table */}
+      {showPendingRequests && passwordRequests?.data?.length > 0 && (
+        <div className="mb-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Pending Password Reset Requests
+            </h3>
+          </div>
+          <StyledTable>
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  User
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Role
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Requested At
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {passwordRequests.data.map((request) => (
+                <tr key={request._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {request.user?.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {request.user?.email}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {request.user?.role?.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(request.requestedAt).toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <StyledButton
+                      name="Review"
+                      onClick={() => {
+                        setSelectedRequest(request);
+                        setPasswordResetOpen(true);
+                      }}
+                      variant="primary"
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </StyledTable>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <StyledSearchInput placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:w-auto" />
+        <StyledSearchInput
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full sm:w-auto"
+        />
 
         <div className="flex gap-3 ml-auto">
           <StyledButton
@@ -269,6 +372,14 @@ const Users = () => {
           setData(null);
         }}
         editData={triggerSubAdminData?.data}
+      />
+      <PasswordResetModal
+        isOpen={passwordResetOpen}
+        onClose={() => {
+          setPasswordResetOpen(false);
+          setSelectedRequest(null);
+        }}
+        request={selectedRequest}
       />
     </>
   );

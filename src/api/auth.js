@@ -1,5 +1,5 @@
-import apiClient from "./client"
-const baseURL=import.meta.env.VITE_API
+import apiClient from "./client";
+const baseURL = import.meta.env.VITE_API;
 const rootUrl = `${baseURL}auth`;
 
 // Authentication API service
@@ -29,7 +29,10 @@ const authApi = {
 
   // Change password
   changePassword: async (passwordData) => {
-    const response = await apiClient.put(`${rootUrl}/change-password`, passwordData);
+    const response = await apiClient.put(
+      `${rootUrl}/change-password`,
+      passwordData
+    );
     return response.data;
   },
 
@@ -39,6 +42,14 @@ const authApi = {
     return response.data;
   },
 
+  // Force password change (first-time login)
+  forcePasswordChange: async (passwordData) => {
+    const response = await apiClient.post(
+      `${rootUrl}/force-password-change`,
+      passwordData
+    );
+    return response.data;
+  },
 };
 
 export default authApi;

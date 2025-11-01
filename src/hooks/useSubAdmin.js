@@ -50,11 +50,63 @@ export function useSubAdmin() {
     });
   };
 
+  // Password Change Request hooks
+  const useCreatePasswordChangeRequest = () => {
+    return useMutation({
+      mutationFn: () => subAdminApi.createPasswordChangeRequest(),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["passwordChangeRequests"] });
+      },
+    });
+  };
+
+  const useGetAllPasswordChangeRequests = (params) => {
+    return useQuery({
+      queryKey: ["passwordChangeRequests", params],
+      queryFn: () => subAdminApi.getAllPasswordChangeRequests(params),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
+
+  const useGetMyPasswordChangeRequests = () => {
+    return useQuery({
+      queryKey: ["myPasswordChangeRequests"],
+      queryFn: () => subAdminApi.getMyPasswordChangeRequests(),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
+
+  const useApprovePasswordChangeRequest = () => {
+    return useMutation({
+      mutationFn: ({ requestId, data }) =>
+        subAdminApi.approvePasswordChangeRequest(requestId, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["passwordChangeRequests"] });
+        queryClient.invalidateQueries({ queryKey: ["subAdmins"] });
+      },
+    });
+  };
+
+  const useRejectPasswordChangeRequest = () => {
+    return useMutation({
+      mutationFn: ({ requestId, data }) =>
+        subAdminApi.rejectPasswordChangeRequest(requestId, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["passwordChangeRequests"] });
+      },
+    });
+  };
+
   return {
     useCreateSubAdmin,
     useGetSubAdmin,
     useGetSubAdminById,
     useUpdateSubAdmin,
     useDeleteSubAdmin,
+    useCreatePasswordChangeRequest,
+    useGetAllPasswordChangeRequests,
+    useGetMyPasswordChangeRequests,
+    useApprovePasswordChangeRequest,
+    useRejectPasswordChangeRequest,
   };
 }

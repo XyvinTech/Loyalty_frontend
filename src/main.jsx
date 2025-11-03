@@ -8,7 +8,6 @@ import { UIProvider } from "./ui/UIProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
 import {
   initGlobalErrorHandlers,
-  queryErrorHandler,
   safeConsole,
 } from "./utils/errorHandler";
 import { initWebViewDebug, monitorPerformance } from "./utils/webviewDebug";

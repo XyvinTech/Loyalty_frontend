@@ -15,7 +15,8 @@ export function useAuth() {
         // Store token in localStorage
 
         if (data?.data) {
-          localStorage.setItem("token", data?.data);
+          console.log(data?.data);
+          localStorage.setItem("token", data?.data.token);
         }
 
         // Invalidate user query to refetch user data

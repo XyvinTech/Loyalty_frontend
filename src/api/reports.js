@@ -1,7 +1,6 @@
 import apiClient from "./client";
 
-const baseURL = import.meta.env.VITE_API;
-const rootUrl = `${baseURL}reports`;
+const rootUrl = `/reports`;
 
 // Reports API service
 const reportsApi = {

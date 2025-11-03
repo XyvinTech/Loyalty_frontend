@@ -1,4 +1,3 @@
-import { create } from "zustand";
 import apiClient from "./client";
 
 const rootUrl = "/payment-method";

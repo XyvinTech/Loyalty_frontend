@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, uat-frontend, uat-frontend-runner]  
+    runs-on: [self-hosted, uat-frontend]  
 
     steps:
       - name: Checkout Code

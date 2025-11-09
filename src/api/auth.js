@@ -21,7 +21,7 @@ const authApi = {
     return response.data;
   },
 
-  // Update user profile
+  // Update user profiles
   updateProfile: async (userData) => {
     const response = await apiClient.put(`${rootUrl}/profile`, userData);
     return response.data;

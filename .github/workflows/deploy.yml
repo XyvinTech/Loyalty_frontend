@@ -1,13 +1,13 @@
-name: Deploy React App to  prod-Server
+name: Deploy React App to  UAT-Server
 
 on:
   push:
     branches:
-      - prod
+      - UAT
 
 jobs:
   deploy:
-    runs-on: [self-hosted, prod]
+    runs-on: [self-hosted, UAT]
 
     steps:
       - name: Checkout Code

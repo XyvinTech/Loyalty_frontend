@@ -2,6 +2,8 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import Layout from "../ui/Layout";
 import PointsCriteria from "../pages/points-management/PointsCriteria";
 import Tiers from "../pages/points-management/Tiers";
+import AddPoints from "../pages/points-management/AddPoints";
+import ReducePoints from "../pages/points-management/ReducePoints";
 import LoginPage from "../pages/LoginPage";
 import Customer from "../pages/customer-management/Customer";
 import Dashboard from "../pages/Dashboard";
@@ -89,6 +91,8 @@ const router = createBrowserRouter([
         children: [
           { path: "/dashboard", element: <Dashboard /> },
           { path: "/points-criteria", element: <PointsCriteria /> },
+          { path: "/add-points", element: <AddPoints /> },
+          { path: "/reduce-points", element: <ReducePoints /> },
           { path: "/tiers", element: <Tiers /> },
           { path: "/tier-eligibility", element: <TierEligibility /> },
           { path: "/transactions", element: <Transactions /> },

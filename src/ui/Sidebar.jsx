@@ -16,6 +16,7 @@ import {
   DevicePhoneMobileIcon,
   DocumentChartBarIcon,
   LockClosedIcon,
+  MinusCircleIcon,
   ServerIcon,
   TagIcon,
   TicketIcon,
@@ -91,6 +92,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           path: "/transactions",
           icon: ArrowPathIcon,
           permissions: ["VIEW_POINTS_HISTORY"],
+        },
+        {
+          label: "Add Points",
+          path: "/add-points",
+          icon: DocumentChartBarIcon,
+          permissions: ["ADJUST_POINTS"],
+        },
+        {
+          label: "Reduce Points",
+          path: "/reduce-points",
+          icon: MinusCircleIcon,
+          permissions: ["ADJUST_POINTS"],
         },
         {
           label: "Rules & Expiry",

@@ -1,23 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import authApi from "../api/auth";
+import useAuthStore from "../store/auth";
 
 /**
  * Custom hook for authentication using TanStack Query
  */
 export function useAuth() {
   const queryClient = useQueryClient();
+  const setAuthState = useAuthStore((state) => state.setAuth);
+  const clearAuthState = useAuthStore((state) => state.clearAuth);
+  const setFirstLogin = useAuthStore((state) => state.setFirstLogin);
 
   // Login user
   const useLogin = () => {
     return useMutation({
       mutationFn: (credentials) => authApi.login(credentials),
       onSuccess: (data) => {
-        // Store token in localStorage
-        
-        if (data?.data) {
+        const token = data?.data?.token;
+        const isFirstLogin = Boolean(data?.data?.isFirstLogin);
 
-          localStorage.setItem("token", data?.data);
-          
+        if (token) {
+          localStorage.setItem("token", token);
+          setAuthState({ token, isFirstLogin });
         }
 
         // Invalidate user query to refetch user data
@@ -40,6 +44,15 @@ export function useAuth() {
       queryFn: () => authApi.getCurrentUser(),
       staleTime: 5 * 60 * 1000, // 5 minutes
       retry: false,
+      onSuccess: (response) => {
+        if (response?.data) {
+          setAuthState({
+            user: response.data,
+            token: localStorage.getItem("token"),
+            isFirstLogin: useAuthStore.getState().isFirstLogin,
+          });
+        }
+      },
       ...options,
     });
   };
@@ -58,6 +71,9 @@ export function useAuth() {
   const useChangePassword = () => {
     return useMutation({
       mutationFn: (passwordData) => authApi.changePassword(passwordData),
+      onSuccess: () => {
+        setFirstLogin(false);
+      },
     });
   };
 
@@ -72,6 +88,7 @@ export function useAuth() {
         // Clear user data from cache
         queryClient.invalidateQueries({ queryKey: ["currentUser"] });
         queryClient.setQueryData(["currentUser"], null);
+        clearAuthState();
       },
     });
   };

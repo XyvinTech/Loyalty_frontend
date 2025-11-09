@@ -59,7 +59,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     return user?.data?.role?.permissions?.includes(permission);
   };
 
-  const hasAnyPermission = (permissions) => {
+  const hasAnyPermission = (permissions = []) => {
+    if (!permissions.length) return true;
     return permissions.some((perm) => hasPermission(perm));
   };
 
@@ -221,7 +222,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: LockClosedIcon,
           permissions: ["MANAGE_ROLES"],
         },
+       
       ],
+    },
+    {
+      label: "Account Security",
+      path: "/change-password",
+      icon: LockClosedIcon,
+      permissions: [],
     },
     {
       label: "Audit",

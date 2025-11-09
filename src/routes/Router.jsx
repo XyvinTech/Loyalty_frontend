@@ -28,6 +28,7 @@ import Support from "../pages/customer-management/Support";
 import KhedmahOffer from "../pages/ofters-and-promotions/KhedmahOffer";
 import SdkAccess from "../pages/system-and-settings/SdkAccess";
 import PaymentMethods from "../pages/reference-data/PaymentMethods";
+import ChangePassword from "../pages/system-and-settings/ChangePassword";
 import {
   UserDashboard,
   PointsHistory,
@@ -115,6 +116,7 @@ const router = createBrowserRouter([
           { path: "/auth-logs", element: <AuthLogs /> },
           { path: "/sdk-access", element: <SdkAccess /> },
           { path: "/support", element: <Support /> },
+          { path: "/change-password", element: <ChangePassword /> },
         ],
       },
       {

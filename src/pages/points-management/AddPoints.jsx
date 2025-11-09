@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
-import { CloudArrowUpIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import {
+  CloudArrowUpIcon,
+  DocumentArrowDownIcon,
+} from "@heroicons/react/24/outline";
 import StyledButton from "../../ui/StyledButton";
 import Loader from "../../ui/Loader";
 import useUiStore from "../../store/ui";
@@ -18,7 +21,6 @@ const tabs = [
 
 const initialIndividualState = {
   customerId: "",
-  points: "",
   pointCriteria: "",
   requestedBy: "",
   note: "",
@@ -43,27 +45,29 @@ const AddPoints = () => {
   const { addToast } = useUiStore();
 
   const { useGetCustomers } = useCustomers();
-  const { data: customersData, isLoading: isLoadingCustomers } = useGetCustomers({
-    page: 1,
-    limit: 50,
-    name: customerSearch || undefined,
-  });
+  const { data: customersData, isLoading: isLoadingCustomers } =
+    useGetCustomers({
+      page: 1,
+      limit: 50,
+      name: customerSearch || undefined,
+    });
 
   const { useGetPointsCriteria } = usePointsCriteria();
-  const {
-    data: pointsCriteriaData,
-    isLoading: isLoadingCriteria,
-  } = useGetPointsCriteria({
-    page: 1,
-    limit: 100,
-    search: pointCriteriaSearch || undefined,
-  });
+  const { data: pointsCriteriaData, isLoading: isLoadingCriteria } =
+    useGetPointsCriteria({
+      page: 1,
+      limit: 100,
+      search: pointCriteriaSearch || undefined,
+    });
 
   const { useGetAppTypes } = useAppTypes();
   const { data: appTypesData, isLoading: isLoadingAppTypes } = useGetAppTypes();
 
-  const { useAddPointsIndividual, useAddPointsBulk, useDownloadSampleTemplate } =
-    useManualPoints();
+  const {
+    useAddPointsIndividual,
+    useAddPointsBulk,
+    useDownloadSampleTemplate,
+  } = useManualPoints();
 
   const addPointsIndividual = useAddPointsIndividual();
   const addPointsBulk = useAddPointsBulk();
@@ -74,10 +78,14 @@ const AddPoints = () => {
     [customersData]
   );
 
-  const pointsCriteria = useMemo(
-    () => pointsCriteriaData?.data || [],
-    [pointsCriteriaData]
-  );
+  const pointsCriteria = useMemo(() => {
+    const list = pointsCriteriaData?.data || [];
+    return list.filter((criteria) => {
+      const eventName =
+        criteria?.eventType?.name?.en || criteria?.eventType?.name || "";
+      return eventName.toString().toUpperCase() === "PROMOTION";
+    });
+  }, [pointsCriteriaData]);
 
   const appTypes = useMemo(() => appTypesData?.data || [], [appTypesData]);
 
@@ -142,7 +150,6 @@ const AddPoints = () => {
 
     if (
       !individualForm.customerId ||
-      !individualForm.points ||
       !individualForm.pointCriteria ||
       !individualForm.requestedBy ||
       !individualForm.note
@@ -156,7 +163,6 @@ const AddPoints = () => {
 
     const payload = {
       customer_id: individualForm.customerId,
-      points: Number(individualForm.points),
       point_criteria: individualForm.pointCriteria,
       requested_by: individualForm.requestedBy,
       note: individualForm.note,
@@ -222,7 +228,7 @@ const AddPoints = () => {
 
         setBulkError("");
         setBulkPreview(parsed);
-      } catch (error) {
+      } catch {
         setBulkError("Unable to parse file. Ensure it is a valid Excel sheet.");
         setBulkPreview([]);
       }
@@ -321,22 +327,6 @@ const AddPoints = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Points
-          </label>
-          <input
-            type="number"
-            min="1"
-            className="mt-2 w-full rounded-md border border-gray-300 p-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            value={individualForm.points}
-            onChange={(event) =>
-              handleIndividualChange("points", event.target.value)
-            }
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
             Requested By (App Type)
           </label>
           <select
@@ -363,7 +353,9 @@ const AddPoints = () => {
           rows={4}
           className="mt-2 w-full rounded-md border border-gray-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           value={individualForm.note}
-          onChange={(event) => handleIndividualChange("note", event.target.value)}
+          onChange={(event) =>
+            handleIndividualChange("note", event.target.value)
+          }
           placeholder="Provide context for manual adjustment"
           required
         />
@@ -415,8 +407,8 @@ const AddPoints = () => {
               Upload CSV or Excel file
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              The file should include columns: customer_id, points, point_criteria,
-              note
+              The file should include columns: customer_id, points,
+              point_criteria, note
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -445,7 +437,8 @@ const AddPoints = () => {
           </div>
           {bulkFile && (
             <p className="text-xs text-gray-600">
-              Selected file: <span className="font-medium">{bulkFile.name}</span>
+              Selected file:{" "}
+              <span className="font-medium">{bulkFile.name}</span>
             </p>
           )}
           {bulkError && <p className="text-sm text-red-600">{bulkError}</p>}
@@ -560,11 +553,12 @@ const AddPoints = () => {
       </div>
 
       <div className="bg-white shadow-sm rounded-lg p-6">
-        {activeTab === "individual" ? renderIndividualForm() : renderBulkUpload()}
+        {activeTab === "individual"
+          ? renderIndividualForm()
+          : renderBulkUpload()}
       </div>
     </div>
   );
 };
 
 export default AddPoints;
-

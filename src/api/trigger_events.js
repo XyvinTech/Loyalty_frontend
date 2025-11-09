@@ -20,12 +20,14 @@ const triggerEventsApi = {
 
     // Create new trigger event
     createTriggerEvent: async (triggerEventData) => {
+        alert(JSON.stringify(triggerEventData));
         const response = await apiClient.post(rootUrl, triggerEventData);
         return response.data;
     },  
 
     // Update trigger event
     updateTriggerEvent: async (id, triggerEventData) => {
+        
         const response = await apiClient.put(`${rootUrl}/${id}`, triggerEventData);
         return response.data;
     },      

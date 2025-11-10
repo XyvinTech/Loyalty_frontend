@@ -138,6 +138,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: UsersIcon,
           permissions: ["VIEW_CUSTOMERS"],
         },
+        {
+          label: "Priority Customers",
+          path: "/priority-customers",
+          icon: TrophyIcon,
+          permissions: ["MANAGE_PRIORITY_CUSTOMERS"],
+        },
       ],
     },
      {

@@ -25,6 +25,7 @@ import TriggerEvents from "../pages/reference-data/TriggerEvents";
 import TriggerServices from "../pages/reference-data/TriggerServices";
 import AuthLogs from "../pages/audit/AuthLogs";
 import Support from "../pages/customer-management/Support";
+import PriorityCustomers from "../pages/customer-management/PriorityCustomers";
 import KhedmahOffer from "../pages/ofters-and-promotions/KhedmahOffer";
 import SdkAccess from "../pages/system-and-settings/SdkAccess";
 import PaymentMethods from "../pages/reference-data/PaymentMethods";
@@ -98,6 +99,7 @@ const router = createBrowserRouter([
           { path: "/tier-eligibility", element: <TierEligibility /> },
           { path: "/transactions", element: <Transactions /> },
           { path: "/customers", element: <Customer /> },
+          { path: "/priority-customers", element: <PriorityCustomers /> },
           { path: "/users", element: <Users /> },
           { path: "/role", element: <Role /> },
           { path: "/khedma-offers", element: <KhedmahOffer /> },

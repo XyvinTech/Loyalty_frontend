@@ -33,3 +33,4 @@ const manualPointsApi = {
 export default manualPointsApi;
 
 
+

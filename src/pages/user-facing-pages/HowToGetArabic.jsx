@@ -2,7 +2,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 import { useNavigate } from "react-router-dom";
 
-const HowtoGetArabic = () => {
+const HowtoGetArabic = ({link}) => {
   const navigate = useNavigate();
 
   return (
@@ -262,7 +262,7 @@ const HowtoGetArabic = () => {
                     className="text-sm font-medium"
                     style={{ color: "#784019" }}
                   >
-                    حد أدنى 300 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
+                    حد أدنى 150 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
                   </p>
                 </div>
 
@@ -278,7 +278,7 @@ const HowtoGetArabic = () => {
                       مضاعف النقاط
                     </div>
                     <div className="font-bold" style={{ color: "#FBC000" }}>
-                      ×2 النقاط المكتسبة
+                      ×1.25 النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -291,7 +291,7 @@ const HowtoGetArabic = () => {
                     >
                       صلاحية النقاط
                     </div>
-                    <div style={{ color: "#784019" }}>180 يوم</div>
+                    <div style={{ color: "#784019" }}>90 يوم</div>
                   </div>
                   <div
                     className="rounded-lg p-3"
@@ -551,7 +551,7 @@ const HowtoGetArabic = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions/ar")}
+             onClick={() => navigate(link ? "/terms-and-conditions/ar" : "/user/terms-and-conditions/ar")}
           >
             الشروط والأحكام
           </p>

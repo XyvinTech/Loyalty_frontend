@@ -3,7 +3,11 @@ import * as XLSX from "xlsx";
 import {
   CloudArrowUpIcon,
   DocumentArrowDownIcon,
+  CheckCircleIcon,
+  XMarkIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 import StyledButton from "../../ui/StyledButton";
 import Loader from "../../ui/Loader";
 import useUiStore from "../../store/ui";
@@ -26,9 +30,10 @@ const initialIndividualState = {
   note: "",
 };
 
-const requiredColumns = ["customer_id", "points", "point_criteria", "note"];
+const requiredColumns = ["customer_id", "point_criteria", "note"];
 
 const AddPoints = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("individual");
   const [individualForm, setIndividualForm] = useState(initialIndividualState);
   const [customerSearchInput, setCustomerSearchInput] = useState("");
@@ -37,6 +42,8 @@ const AddPoints = () => {
   const [bulkPreview, setBulkPreview] = useState([]);
   const [bulkRequestedBy, setBulkRequestedBy] = useState("");
   const [bulkError, setBulkError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successData, setSuccessData] = useState(null);
   const fileInputRef = useRef(null);
 
   const customerSearch = useDebouncedValue(customerSearchInput, 400);
@@ -281,6 +288,11 @@ const AddPoints = () => {
           type: "success",
           message: response?.message || "Bulk points uploaded successfully.",
         });
+        setSuccessData({
+          message: response?.message || "Bulk points uploaded successfully.",
+          recordsProcessed: bulkPreview.length,
+        });
+        setShowSuccessModal(true);
         setBulkFile(null);
         setBulkPreview([]);
         setBulkRequestedBy("");
@@ -378,6 +390,105 @@ const AddPoints = () => {
     </form>
   );
 
+  // Processing Modal Component
+  const ProcessingModal = () => {
+    if (!addPointsBulk.isLoading) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="relative">
+              <ArrowPathIcon className="h-16 w-16 text-green-600 animate-spin" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Processing Bulk Upload
+              </h3>
+              <p className="text-sm text-gray-600">
+                Please wait while we process your file...
+              </p>
+              <p className="text-xs text-gray-500 mt-2">
+                This may take a few moments depending on the file size.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Success Modal Component
+  const SuccessModal = () => {
+    if (!showSuccessModal || !successData) return null;
+
+    const handleClose = () => {
+      setShowSuccessModal(false);
+      setSuccessData(null);
+    };
+
+    const handleViewTransactions = () => {
+      handleClose();
+      navigate("/transactions");
+    };
+
+    // Auto-dismiss after 5 seconds
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        handleClose();
+      }, 5000);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+          <div className="flex justify-end mb-2">
+            <button
+              onClick={handleClose}
+              className="text-gray-400 hover:text-gray-500"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="relative">
+              <CheckCircleIcon className="h-16 w-16 text-green-600" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Upload Successful!
+              </h3>
+              <p className="text-sm text-gray-600 mb-1">
+                {successData.message}
+              </p>
+              {successData.recordsProcessed && (
+                <p className="text-xs text-gray-500">
+                  {successData.recordsProcessed} record(s) processed
+                </p>
+              )}
+            </div>
+            <div className="flex gap-3 w-full mt-6">
+              <StyledButton
+                type="button"
+                variant="secondary"
+                onClick={handleClose}
+                name="Close"
+                className="flex-1"
+              />
+              <StyledButton
+                type="button"
+                onClick={handleViewTransactions}
+                name="View Transactions"
+                className="flex-1"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderBulkUpload = () => (
     <form onSubmit={handleBulkSubmit} className="space-y-6">
       <div>
@@ -407,8 +518,7 @@ const AddPoints = () => {
               Upload CSV or Excel file
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              The file should include columns: customer_id, points,
-              point_criteria, note
+              The file should include columns: customer_id, point_criteria, note
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -557,6 +667,12 @@ const AddPoints = () => {
           ? renderIndividualForm()
           : renderBulkUpload()}
       </div>
+
+      {/* Processing Modal */}
+      <ProcessingModal />
+
+      {/* Success Modal */}
+      <SuccessModal />
     </div>
   );
 };

@@ -21,9 +21,7 @@ import useUiStore from "../../store/ui";
 const StatusBadge = ({ isActive }) => (
   <span
     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-      isActive
-        ? "bg-green-100 text-green-700"
-        : "bg-red-100 text-red-700"
+      isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
     }`}
   >
     {isActive ? "Active" : "Inactive"}
@@ -48,9 +46,7 @@ const PriorityCustomerForm = ({
   const [reason, setReason] = useState(initialData?.reason || "");
   const [customerSearchInput, setCustomerSearchInput] = useState("");
   const customerSearch = useDebouncedValue(customerSearchInput, 400);
-  const [isActive, setIsActive] = useState(
-    initialData?.is_active ?? true
-  );
+  const [isActive, setIsActive] = useState(initialData?.is_active ?? true);
 
   const { useGetCustomers, useGetCustomerById } = useCustomers();
   const { data: customersData, isLoading: isLoadingCustomers } =
@@ -60,9 +56,7 @@ const PriorityCustomerForm = ({
       name: customerSearch || undefined,
     });
 
-  const { data: selectedCustomerData } = useGetCustomerById(
-    selectedCustomerId
-  );
+  const { data: selectedCustomerData } = useGetCustomerById(selectedCustomerId);
 
   const customerOptions = useMemo(() => {
     const apiCustomers = customersData?.data?.customers || [];
@@ -108,17 +102,12 @@ const PriorityCustomerForm = ({
   if (!isOpen) return null;
 
   const tiers = tierOptions || [];
-  const selectedTier = tiers.find((tier) => tier.id === selectedTierId);
-  const currentTier = selectedCustomer?.tier || selectedCustomerData?.data?.tier;
-
-  const isMinimumTierValid =
-    !selectedTier ||
-    !currentTier ||
-    selectedTier.hierarchy_level <= (currentTier?.hierarchy_level ?? 0);
+  const currentTier =
+    selectedCustomer?.tier || selectedCustomerData?.data?.tier;
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!selectedCustomerId || !selectedTierId || !isMinimumTierValid) return;
+    if (!selectedCustomerId || !selectedTierId) return;
 
     const payload = {
       customer_id: selectedCustomerId,
@@ -200,12 +189,6 @@ const PriorityCustomerForm = ({
                   </option>
                 ))}
               </select>
-              {!isMinimumTierValid && (
-                <p className="mt-1 text-xs text-red-500">
-                  Minimum tier cannot be higher than the customer&apos;s current
-                  tier.
-                </p>
-              )}
             </div>
 
             <div>
@@ -279,12 +262,7 @@ const PriorityCustomerForm = ({
             <StyledButton
               type="submit"
               name={isEditMode ? "Save Changes" : "Add Priority"}
-              disabled={
-                isSubmitting ||
-                !selectedCustomerId ||
-                !selectedTierId ||
-                !isMinimumTierValid
-              }
+              disabled={isSubmitting || !selectedCustomerId || !selectedTierId}
             />
           </div>
         </form>
@@ -482,8 +460,7 @@ const PriorityCustomers = () => {
     });
   };
 
-  const isSubmitting =
-    createMutation.isPending || updateMutation.isPending;
+  const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   return (
     <div className="space-y-6">
@@ -671,4 +648,3 @@ const PriorityCustomers = () => {
 };
 
 export default PriorityCustomers;
-

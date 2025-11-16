@@ -84,7 +84,7 @@ const HowtoGetArabic = ({ link }) => {
                       مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold" style={{ color: "#A16133" }}>
-                      ×1 النقاط المكتسبة
+                      1× النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -152,7 +152,7 @@ const HowtoGetArabic = ({ link }) => {
                     <div className="text-sm font-medium text-white">
                       مضاعف النقاط (للنقاط المكتسبة)
                     </div>
-                    <div className="font-bold text-white">×1.1 النقاط المكتسبة</div>
+                    <div className="font-bold text-white">1.1× النقاط المكتسبة</div>
                   </div>
                   <div
                     className="rounded-lg p-3"
@@ -207,7 +207,7 @@ const HowtoGetArabic = ({ link }) => {
                     ذهبي
                   </h3>
                   <p className="text-sm font-medium" style={{ color: "#784019" }}>
-                    حد أدنى 150 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
+                    حد أدنى 300 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
                   </p>
                 </div>
 
@@ -220,7 +220,7 @@ const HowtoGetArabic = ({ link }) => {
                       مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold" style={{ color: "#FBC000" }}>
-                      ×1.25 النقاط المكتسبة
+                      2× النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -230,7 +230,7 @@ const HowtoGetArabic = ({ link }) => {
                     <div className="text-sm font-medium" style={{ color: "#784019" }}>
                       صلاحية النقاط
                     </div>
-                    <div style={{ color: "#784019" }}>90 يوم</div>
+                    <div style={{ color: "#784019" }}>180 يوم</div>
                   </div>
                   <div
                     className="rounded-lg p-3"
@@ -264,9 +264,12 @@ const HowtoGetArabic = ({ link }) => {
             {/* Bills Payment */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                دفع فاتورة الكهرباء أو المياه أو الاتصالات (آجل) أو خدمات شرطة
-                عمان السلطانية أو اشتراكات صندوق الحماية الاجتماعية
-              </h3>
+                دفع فاتورة الكهرباء أو إعادة الشحن
+دفع فاتورة المياه
+دفع فاتورة الاتصالات (آجل)
+خدمات شرطة عمان السلطانية
+إشتراكات صندوق الحماية الاجتماعية
+ </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-blue-200 flex-row-reverse">
                   <span className="font-medium text-gray-700">

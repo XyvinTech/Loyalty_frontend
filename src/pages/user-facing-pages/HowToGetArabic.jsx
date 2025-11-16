@@ -151,6 +151,7 @@ const HowtoGetArabic = ({ link }) => {
                   >
                     <div className="text-sm font-medium text-white">
                       مضاعف النقاط (للنقاط المكتسبة)
+                      مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold text-white">1.1× النقاط المكتسبة</div>
                   </div>
@@ -230,7 +231,7 @@ const HowtoGetArabic = ({ link }) => {
                     <div className="text-sm font-medium" style={{ color: "#784019" }}>
                       صلاحية النقاط
                     </div>
-                    <div style={{ color: "#784019" }}>180 يوم</div>
+                    <div style={{ color: "#784019" }}>90 يوم</div>
                   </div>
                   <div
                     className="rounded-lg p-3"

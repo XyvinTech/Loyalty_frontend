@@ -265,7 +265,7 @@ const HowtoGetArabic = ({ link }) => {
                     >
                       صلاحية النقاط
                     </div>
-                    <div style={{ color: "#784019" }}>90 يوم</div>
+                    <div style={{ color: "#784019" }}>180 يوم</div>
                   </div>
                   <div
                     className="rounded-lg p-3"

@@ -70,7 +70,10 @@ const HowtoGetArabic = ({ link }) => {
                   >
                     برونزي
                   </h3>
-                  <p className="text-sm font-medium" style={{ color: "#784019" }}>
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: "#784019" }}
+                  >
                     المستوى الأول (افتراضي)
                   </p>
                 </div>
@@ -80,18 +83,24 @@ const HowtoGetArabic = ({ link }) => {
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#FFDDBD" }}
                   >
-                    <div className="text-sm font-medium" style={{ color: "#784019" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#784019" }}
+                    >
                       مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold" style={{ color: "#A16133" }}>
-                      ×1 النقاط المكتسبة
+                      1× النقاط المكتسبة
                     </div>
                   </div>
                   <div
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#FFDDBD" }}
                   >
-                    <div className="text-sm font-medium" style={{ color: "#784019" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#784019" }}
+                    >
                       صلاحية النقاط
                     </div>
                     <div style={{ color: "#784019" }}>45 يوم</div>
@@ -100,7 +109,10 @@ const HowtoGetArabic = ({ link }) => {
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#FFDDBD" }}
                   >
-                    <div className="text-sm font-medium" style={{ color: "#784019" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#784019" }}
+                    >
                       أنواع العروض
                     </div>
                     <div className="text-sm" style={{ color: "#784019" }}>
@@ -125,7 +137,10 @@ const HowtoGetArabic = ({ link }) => {
                       background: "linear-gradient(90deg, #D8D8D8, #FFFFFF)",
                     }}
                   >
-                    <span className="font-bold text-xl" style={{ color: "#0E0E0E" }}>
+                    <span
+                      className="font-bold text-xl"
+                      style={{ color: "#0E0E0E" }}
+                    >
                       ف
                     </span>
                   </div>
@@ -139,7 +154,10 @@ const HowtoGetArabic = ({ link }) => {
                   >
                     فضي
                   </h3>
-                  <p className="text-sm font-medium" style={{ color: "#0E0E0E" }}>
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: "#0E0E0E" }}
+                  >
                     حد أدنى 100 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
                   </p>
                 </div>
@@ -150,9 +168,12 @@ const HowtoGetArabic = ({ link }) => {
                     style={{ backgroundColor: "#434343" }}
                   >
                     <div className="text-sm font-medium text-white">
-                      مضاعف النقاط (للنقاط المكتسبة)
+                      مضاعف النقاط (للنقاط المكتسبة) مضاعف النقاط (للنقاط
+                      المكتسبة)
                     </div>
-                    <div className="font-bold text-white">×1.1 النقاط المكتسبة</div>
+                    <div className="font-bold text-white">
+                      1.1× النقاط المكتسبة
+                    </div>
                   </div>
                   <div
                     className="rounded-lg p-3"
@@ -167,7 +188,9 @@ const HowtoGetArabic = ({ link }) => {
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#434343" }}
                   >
-                    <div className="text-sm font-medium text-white">أنواع العروض</div>
+                    <div className="text-sm font-medium text-white">
+                      أنواع العروض
+                    </div>
                     <div className="text-sm text-white">
                       مجموعة موسعة من العروض عبر الفئات - عروض أوسع تشمل أسلوب
                       الحياة والسفر والترفيه
@@ -191,7 +214,10 @@ const HowtoGetArabic = ({ link }) => {
                         "linear-gradient(90deg, #FBC000, #FFFFFF, #FFDD00)",
                     }}
                   >
-                    <span className="font-bold text-xl" style={{ color: "#784019" }}>
+                    <span
+                      className="font-bold text-xl"
+                      style={{ color: "#784019" }}
+                    >
                       ذ
                     </span>
                   </div>
@@ -206,8 +232,11 @@ const HowtoGetArabic = ({ link }) => {
                   >
                     ذهبي
                   </h3>
-                  <p className="text-sm font-medium" style={{ color: "#784019" }}>
-                    حد أدنى 150 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: "#784019" }}
+                  >
+                    حد أدنى 300 نقطة مكتسبة كل شهر لمدة ثلاثة أشهر متتالية
                   </p>
                 </div>
 
@@ -216,18 +245,24 @@ const HowtoGetArabic = ({ link }) => {
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#FFDDBD" }}
                   >
-                    <div className="text-sm font-medium" style={{ color: "#784019" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#784019" }}
+                    >
                       مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold" style={{ color: "#FBC000" }}>
-                      ×1.25 النقاط المكتسبة
+                      2× النقاط المكتسبة
                     </div>
                   </div>
                   <div
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#FFDDBD" }}
                   >
-                    <div className="text-sm font-medium" style={{ color: "#784019" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#784019" }}
+                    >
                       صلاحية النقاط
                     </div>
                     <div style={{ color: "#784019" }}>90 يوم</div>
@@ -236,13 +271,16 @@ const HowtoGetArabic = ({ link }) => {
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#FFDDBD" }}
                   >
-                    <div className="text-sm font-medium" style={{ color: "#784019" }}>
+                    <div
+                      className="text-sm font-medium"
+                      style={{ color: "#784019" }}
+                    >
                       أنواع العروض
                     </div>
                     <div className="text-sm" style={{ color: "#784019" }}>
                       الحد الأقصى من العروض بما في ذلك العروض المميزة والحصرية -
-                      عروض مميزة من أفضل العلامات التجارية (المنتجات الفاخرة، سفر،
-                      إلكترونيات، صحة، مطاعم فاخرة)
+                      عروض مميزة من أفضل العلامات التجارية (المنتجات الفاخرة،
+                      سفر، إلكترونيات، صحة، مطاعم فاخرة)
                     </div>
                   </div>
                 </div>
@@ -264,8 +302,9 @@ const HowtoGetArabic = ({ link }) => {
             {/* Bills Payment */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                دفع فاتورة الكهرباء أو المياه أو الاتصالات (آجل) أو خدمات شرطة
-                عمان السلطانية أو اشتراكات صندوق الحماية الاجتماعية
+                دفع فاتورة الكهرباء أو إعادة الشحن دفع فاتورة المياه دفع فاتورة
+                الاتصالات (آجل) خدمات شرطة عمان السلطانية إشتراكات صندوق الحماية
+                الاجتماعية
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-blue-200 flex-row-reverse">
@@ -312,7 +351,8 @@ const HowtoGetArabic = ({ link }) => {
             {/* Recharge */}
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                إعادة شحن الهواتف مسبقة الدفع وشراء القسائم الترفيهية وخدمات التأمين
+                إعادة شحن الهواتف مسبقة الدفع وشراء القسائم الترفيهية وخدمات
+                التأمين
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-green-200 flex-row-reverse">
@@ -372,19 +412,25 @@ const HowtoGetArabic = ({ link }) => {
                   <div className="font-medium text-gray-800">
                     الطلب الأول لأي عميل
                   </div>
-                  <div className="text-orange-600 font-bold">%2 من قيمة الطلب</div>
+                  <div className="text-orange-600 font-bold">
+                    %2 من قيمة الطلب
+                  </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border-r-4 border-gray-400">
                   <div className="font-medium text-gray-800">
                     من الطلب الثاني فصاعداً للعميل العادي
                   </div>
-                  <div className="text-gray-600 font-bold">%1 من قيمة الطلب</div>
+                  <div className="text-gray-600 font-bold">
+                    %1 من قيمة الطلب
+                  </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border-r-4 border-purple-400">
                   <div className="font-medium text-gray-800">
                     من الطلب الثاني فصاعداً للمشترك الماسي
                   </div>
-                  <div className="text-purple-600 font-bold">%2 من قيمة الطلب</div>
+                  <div className="text-purple-600 font-bold">
+                    %2 من قيمة الطلب
+                  </div>
                 </div>
               </div>
             </div>
@@ -397,13 +443,17 @@ const HowtoGetArabic = ({ link }) => {
               <div className="space-y-4">
                 <div className="p-3 bg-white rounded-lg">
                   <div className="flex justify-between items-center flex-row-reverse">
-                    <span className="font-medium text-gray-700">اشتراك شهري</span>
+                    <span className="font-medium text-gray-700">
+                      اشتراك شهري
+                    </span>
                     <span className="text-purple-600 font-bold">50 نقطة</span>
                   </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg">
                   <div className="flex justify-between items-center flex-row-reverse">
-                    <span className="font-medium text-gray-700">اشتراك سنوي</span>
+                    <span className="font-medium text-gray-700">
+                      اشتراك سنوي
+                    </span>
                     <span className="text-purple-600 font-bold">300 نقطة</span>
                   </div>
                 </div>
@@ -417,7 +467,9 @@ const HowtoGetArabic = ({ link }) => {
               </h3>
               <div className="space-y-4">
                 <div className="p-3 bg-white rounded-lg">
-                  <div className="font-medium text-gray-800 mb-2">إعادة شحن</div>
+                  <div className="font-medium text-gray-800 mb-2">
+                    إعادة شحن
+                  </div>
                   <div className="text-teal-600 font-bold text-lg">
                     %1 من قيمة الشحن
                   </div>

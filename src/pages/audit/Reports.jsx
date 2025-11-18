@@ -171,9 +171,9 @@ const Reports = () => {
         } else if (row.type === "redeemTotalPoints") {
           rowData[appTypeName] = data?.pointsRedeemed?.totalPoints || 0;
         } else if (row.type === "openingBalance") {
-          rowData[appTypeName] = reportData.openingBalance || 0;
+          rowData[appTypeName] = data?.openingBalance || 0;
         } else if (row.type === "closingBalance") {
-          rowData[appTypeName] = reportData.closingBalance || 0;
+          rowData[appTypeName] = data?.closingBalance || 0;
         }
       });
       return rowData;

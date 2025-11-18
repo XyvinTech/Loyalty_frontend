@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import RecentCustomersSkeleton from "./RecentCustomersSkeleton";
 
-const RecentCustomers = ({ customers }) => {
+const RecentCustomers = ({ customers, loading }) => {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-4">
@@ -10,10 +11,13 @@ const RecentCustomers = ({ customers }) => {
           View All
         </Link>
       </div>
-      <div className="space-y-4">
-        {customers.slice(0, 5).map((customer) => (
+      {loading ? (
+        <RecentCustomersSkeleton />
+      ) : (
+        <div className="space-y-4">
+          {customers?.slice(0, 5).map((customer) => (
           <Link
-            key={customer.id}
+            key={customer._id || customer.customer_id || customer.id}
             className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg"
           >
             <div className="flex items-center gap-3">
@@ -40,7 +44,8 @@ const RecentCustomers = ({ customers }) => {
             </span>
           </Link>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

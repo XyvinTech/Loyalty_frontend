@@ -1,7 +1,8 @@
 import { useState } from "react";
 import LineChart from "../LineChart";
+import ChartSkeleton from "./ChartSkeleton";
 
-const PointsActivity = ({ pointsActivityData }) => {
+const PointsActivity = ({ pointsActivityData, loading }) => {
   const [selectedRange, setSelectedRange] = useState("Last 7 Days");
 
   return (
@@ -12,6 +13,7 @@ const PointsActivity = ({ pointsActivityData }) => {
           className="text-xs border border-gray-300 rounded-lg px-3 py-3"
           value={selectedRange}
           onChange={(e) => setSelectedRange(e.target.value)}
+          disabled={loading}
         >
           <option>Last 7 Days</option>
           <option>Last 30 Days</option>
@@ -19,7 +21,11 @@ const PointsActivity = ({ pointsActivityData }) => {
         </select>
       </div>
       <div className="h-64">
-        <LineChart data={pointsActivityData} />
+        {loading ? (
+          <ChartSkeleton />
+        ) : (
+          <LineChart data={pointsActivityData} />
+        )}
       </div>
     </div>
   );

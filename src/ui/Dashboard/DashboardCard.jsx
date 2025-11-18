@@ -1,4 +1,10 @@
-const DashboardCard = ({ title, total, percentageChange, color, Icon, bg }) => {
+import DashboardCardSkeleton from "./DashboardCardSkeleton";
+
+const DashboardCard = ({ title, total, percentageChange, color, Icon, bg, loading }) => {
+  if (loading) {
+    return <DashboardCardSkeleton />;
+  }
+
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex items-center gap-4">

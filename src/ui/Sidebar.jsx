@@ -268,6 +268,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: CommandLineIcon,
           permissions: ["VIEW_AUDIT_LOGS"],
         },
+        {
+          label: "Reports",
+          path: "/reports",
+          icon: DocumentChartBarIcon,
+          permissions: ["VIEW_AUDIT_LOGS"],
+        },
       ],
     },
   ];

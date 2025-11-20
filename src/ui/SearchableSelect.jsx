@@ -152,11 +152,20 @@ const SearchableSelect = ({
                   }`}
                 >
                   <div className="font-medium">{item.label}</div>
-                  {item.subLabel && (
-                    <div className="text-xs text-gray-500">
-                      {item.subLabel}
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {item.subLabel && (
+                      <div className="text-xs text-gray-500">
+                        {item.subLabel}
+                      </div>
+                    )}
+                    {item.tier?.name && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                        {typeof item.tier.name === "string"
+                          ? item.tier.name
+                          : item.tier.name?.en || "-"}
+                      </span>
+                    )}
+                  </div>
                 </li>
               ))
             )}

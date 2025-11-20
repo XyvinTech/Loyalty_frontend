@@ -47,6 +47,7 @@ const PriorityCustomerForm = ({
   const [customerSearchInput, setCustomerSearchInput] = useState("");
   const customerSearch = useDebouncedValue(customerSearchInput, 400);
   const [isActive, setIsActive] = useState(initialData?.is_active ?? true);
+  const [tierFilter, setTierFilter] = useState("");
 
   const { useGetCustomers, useGetCustomerById } = useCustomers();
   const { data: customersData, isLoading: isLoadingCustomers } =
@@ -54,6 +55,7 @@ const PriorityCustomerForm = ({
       page: 1,
       limit: 50,
       name: customerSearch || undefined,
+      tier_id: tierFilter || undefined,
     });
 
   const { data: selectedCustomerData } = useGetCustomerById(selectedCustomerId);
@@ -97,6 +99,7 @@ const PriorityCustomerForm = ({
     setSelectedTierId(initialData?.tier?._id || "");
     setReason(initialData?.reason || "");
     setIsActive(initialData?.is_active ?? true);
+    setTierFilter("");
   }, [isOpen, initialData]);
 
   if (!isOpen) return null;
@@ -142,6 +145,28 @@ const PriorityCustomerForm = ({
 
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-6">
           <div className="grid grid-cols-1 gap-4">
+            {!isEditMode && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Filter by Current Tier (optional)
+                </label>
+                <select
+                  className="mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  value={tierFilter}
+                  onChange={(event) => setTierFilter(event.target.value)}
+                >
+                  <option value="">All Tiers</option>
+                  {tierOptions.map((tier) => (
+                    <option key={tier.id} value={tier.id}>
+                      {tier.label}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-gray-500">
+                  Filter customers by their current tier before searching
+                </p>
+              </div>
+            )}
             <div>
               {isEditMode ? (
                 <div>
@@ -584,10 +609,18 @@ const PriorityCustomers = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {item.customer?.tier?.name?.en || "-"}
+                    {item.customer?.tier?.name
+                      ? typeof item.customer.tier.name === "string"
+                        ? item.customer.tier.name
+                        : item.customer.tier.name?.en || "-"
+                      : "-"}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {item.tier?.name?.en || "-"}
+                    {item.tier?.name
+                      ? typeof item.tier.name === "string"
+                        ? item.tier.name
+                        : item.tier.name?.en || "-"
+                      : "-"}
                   </td>
                   <td className="px-6 py-4">
                     <StatusBadge isActive={item.is_active} />

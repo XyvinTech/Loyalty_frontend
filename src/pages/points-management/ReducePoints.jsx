@@ -5,6 +5,7 @@ import useUiStore from "../../store/ui";
 import { useCustomers } from "../../hooks/useCustomers";
 import { useManualPoints } from "../../hooks/useManualPoints";
 import { useAppTypes } from "../../hooks/useAppTypes";
+import { useTiers } from "../../hooks/useTiers";
 import SearchableSelect from "../../ui/SearchableSelect";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
 
@@ -16,6 +17,7 @@ const ReducePoints = () => {
     note: "",
   });
   const [customerSearchInput, setCustomerSearchInput] = useState("");
+  const [tierFilter, setTierFilter] = useState("");
 
   const customerSearch = useDebouncedValue(customerSearchInput, 400);
 
@@ -23,22 +25,23 @@ const ReducePoints = () => {
   const { useGetCustomers, useGetCustomerById } = useCustomers();
   const { useReducePoints } = useManualPoints();
   const { useGetAppTypes } = useAppTypes();
+  const { useGetTiers } = useTiers();
 
   const reducePoints = useReducePoints();
 
-  const {
-    data: customersData,
-    isLoading: isLoadingCustomers,
-  } = useGetCustomers({
-    page: 1,
-    limit: 50,
-    name: customerSearch || undefined,
-  });
+  const { data: customersData, isLoading: isLoadingCustomers } =
+    useGetCustomers({
+      page: 1,
+      limit: 50,
+      name: customerSearch || undefined,
+      tier_id: tierFilter || undefined,
+    });
 
   const { data: selectedCustomerData } = useGetCustomerById(
     formState.customerId
   );
   const { data: appTypesData, isLoading: isLoadingAppTypes } = useGetAppTypes();
+  const { data: tiersData } = useGetTiers();
 
   const customers = useMemo(
     () => customersData?.data?.customers || [],
@@ -51,7 +54,8 @@ const ReducePoints = () => {
       customers.map((customer) => ({
         id: customer._id,
         label: customer.customer_id,
-        subLabel: customer.name,
+        subLabel: customer.name || "-",
+        tier: customer.tier,
       })),
     [customers]
   );
@@ -65,6 +69,18 @@ const ReducePoints = () => {
       })),
     [appTypes]
   );
+
+  const tierOptions = useMemo(() => {
+    const tiers = tiersData?.data || [];
+    return tiers
+      .slice()
+      .sort((a, b) => b.hierarchy_level - a.hierarchy_level)
+      .map((tier) => ({
+        id: tier._id,
+        label: tier.name?.en || tier.name,
+        hierarchy_level: tier.hierarchy_level,
+      }));
+  }, [tiersData]);
 
   const handleChange = (field, value) => {
     setFormState((prev) => ({
@@ -81,6 +97,7 @@ const ReducePoints = () => {
       note: "",
     });
     setCustomerSearchInput("");
+    setTierFilter("");
   };
 
   const handleSubmit = (event) => {
@@ -119,7 +136,8 @@ const ReducePoints = () => {
         addToast({
           type: "success",
           message:
-            response?.message || "Points reduced successfully for the customer.",
+            response?.message ||
+            "Points reduced successfully for the customer.",
         });
         resetForm();
       },
@@ -148,14 +166,34 @@ const ReducePoints = () => {
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">Reduce Points</h1>
         <p className="text-xs text-gray-500 mt-1">
-          Manually debit loyalty points for a specific customer. This action uses
-          redemption logic and cannot be reversed.
+          Manually debit loyalty points for a specific customer. This action
+          uses redemption logic and cannot be reversed.
         </p>
       </div>
 
       <div className="bg-white shadow-sm rounded-lg p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Filter by Current Tier (optional)
+              </label>
+              <select
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                value={tierFilter}
+                onChange={(event) => setTierFilter(event.target.value)}
+              >
+                <option value="">All Tiers</option>
+                {tierOptions.map((tier) => (
+                  <option key={tier.id} value={tier.id}>
+                    {tier.label}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-gray-500">
+                Filter customers by their current tier before searching
+              </p>
+            </div>
             <SearchableSelect
               label="Customer"
               placeholder="Search customer ID"
@@ -249,4 +287,3 @@ const ReducePoints = () => {
 };
 
 export default ReducePoints;
-

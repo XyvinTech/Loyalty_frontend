@@ -15,6 +15,7 @@ import { useCustomers } from "../../hooks/useCustomers";
 import { usePointsCriteria } from "../../hooks/usePointsCriteria";
 import { useManualPoints } from "../../hooks/useManualPoints";
 import { useAppTypes } from "../../hooks/useAppTypes";
+import { useTiers } from "../../hooks/useTiers";
 import SearchableSelect from "../../ui/SearchableSelect";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
 
@@ -38,6 +39,7 @@ const AddPoints = () => {
   const [individualForm, setIndividualForm] = useState(initialIndividualState);
   const [customerSearchInput, setCustomerSearchInput] = useState("");
   const [pointCriteriaSearchInput, setPointCriteriaSearchInput] = useState("");
+  const [tierFilter, setTierFilter] = useState("");
   const [bulkFile, setBulkFile] = useState(null);
   const [bulkPreview, setBulkPreview] = useState([]);
   const [bulkRequestedBy, setBulkRequestedBy] = useState("");
@@ -57,6 +59,7 @@ const AddPoints = () => {
       page: 1,
       limit: 50,
       name: customerSearch || undefined,
+      tier_id: tierFilter || undefined,
     });
 
   const { useGetPointsCriteria } = usePointsCriteria();
@@ -69,6 +72,9 @@ const AddPoints = () => {
 
   const { useGetAppTypes } = useAppTypes();
   const { data: appTypesData, isLoading: isLoadingAppTypes } = useGetAppTypes();
+
+  const { useGetTiers } = useTiers();
+  const { data: tiersData } = useGetTiers();
 
   const {
     useAddPointsIndividual,
@@ -101,7 +107,8 @@ const AddPoints = () => {
       customers.map((customer) => ({
         id: customer._id,
         label: customer.customer_id,
-        subLabel: customer.name,
+        subLabel: customer.name || "-",
+        tier: customer.tier,
       })),
     [customers]
   );
@@ -131,6 +138,18 @@ const AddPoints = () => {
     [appTypes]
   );
 
+  const tierOptions = useMemo(() => {
+    const tiers = tiersData?.data || [];
+    return tiers
+      .slice()
+      .sort((a, b) => b.hierarchy_level - a.hierarchy_level)
+      .map((tier) => ({
+        id: tier._id,
+        label: tier.name?.en || tier.name,
+        hierarchy_level: tier.hierarchy_level,
+      }));
+  }, [tiersData]);
+
   useEffect(() => {
     if (activeTab === "individual") {
       setBulkFile(null);
@@ -150,6 +169,7 @@ const AddPoints = () => {
     setIndividualForm(initialIndividualState);
     setCustomerSearchInput("");
     setPointCriteriaSearchInput("");
+    setTierFilter("");
   };
 
   const handleIndividualSubmit = (event) => {
@@ -313,6 +333,26 @@ const AddPoints = () => {
   const renderIndividualForm = () => (
     <form onSubmit={handleIndividualSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Filter by Current Tier (optional)
+          </label>
+          <select
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+            value={tierFilter}
+            onChange={(event) => setTierFilter(event.target.value)}
+          >
+            <option value="">All Tiers</option>
+            {tierOptions.map((tier) => (
+              <option key={tier.id} value={tier.id}>
+                {tier.label}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-xs text-gray-500">
+            Filter customers by their current tier before searching
+          </p>
+        </div>
         <SearchableSelect
           label="Customer"
           placeholder="Search customer ID"

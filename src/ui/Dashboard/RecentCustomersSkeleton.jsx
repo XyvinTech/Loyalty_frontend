@@ -22,3 +22,5 @@ const RecentCustomersSkeleton = () => {
 
 export default RecentCustomersSkeleton;
 
+
+

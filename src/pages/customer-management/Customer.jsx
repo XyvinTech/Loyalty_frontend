@@ -1,24 +1,24 @@
 import {
   ArrowDownTrayIcon,
   PencilIcon,
-  TrashIcon,
   EyeIcon,
   FunnelIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import StyledButton from "../../ui/StyledButton";
 import StyledSearchInput from "../../ui/StyledSearchInput";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
 import AddCustomer from "../../components/customer-management/AddCustomer.jsx";
 import DeleteModal from "../../ui/DeleteModal";
 import RefreshButton from "../../ui/RefreshButton.jsx";
 import Loader from "../../ui/Loader.jsx";
 import { useCustomers } from "../../hooks/useCustomers.js";
+import { useTiers } from "../../hooks/useTiers";
 import useUiStore from "../../store/ui.js";
 
 // Filter Modal Component
-const FilterModal = ({ filters, onClose, onApply }) => {
+const FilterModal = ({ filters, onClose, onApply, tierOptions = [] }) => {
   const [localFilters, setLocalFilters] = useState(filters);
 
   const handleApply = () => {
@@ -28,151 +28,208 @@ const FilterModal = ({ filters, onClose, onApply }) => {
 
   return (
     <div className="fixed inset-0 bg-black/10 flex items-center justify-center z-50 mt-10">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
-        <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-          <h2 className="text-lg font-semibold">Filter Customers</h2>
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[85vh] flex flex-col">
+        <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-10">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Filter Customers
+          </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="text-gray-400 hover:text-gray-500 transition-colors"
           >
-            <XMarkIcon className="h-6 w-6" />
+            <XMarkIcon className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="px-6 py-4 overflow-y-auto space-y-4 flex-1">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.status || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  status: e.target.value || undefined,
-                })
-              }
-            >
-              <option value="">All Status</option>
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
-          </div>
+        <div className="px-4 py-4 overflow-y-auto flex-1">
+          <div className="grid grid-cols-2 gap-4">
+            {/* Filters Section */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Filters
+              </h3>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Registration Date From
-            </label>
-            <input
-              type="date"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.start_date || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  start_date: e.target.value || undefined,
-                })
-              }
-            />
-          </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Status
+                </label>
+                <select
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.status || ""}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      status: e.target.value || undefined,
+                    })
+                  }
+                >
+                  <option value="">All Status</option>
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Registration Date To
-            </label>
-            <input
-              type="date"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.end_date || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  end_date: e.target.value || undefined,
-                })
-              }
-            />
-          </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Tier
+                </label>
+                <select
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.tier_id || ""}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      tier_id: e.target.value || undefined,
+                    })
+                  }
+                >
+                  <option value="">All Tiers</option>
+                  {tierOptions.map((tier) => (
+                    <option key={tier.id} value={tier.id}>
+                      {tier.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Minimum Points
-            </label>
-            <input
-              type="number"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.min_points || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  min_points: e.target.value || undefined,
-                })
-              }
-            />
-          </div>
+            {/* Date Range Section */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Date Range
+              </h3>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Maximum Points
-            </label>
-            <input
-              type="number"
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.max_points || ""}
-              onChange={(e) =>
-                setLocalFilters({
-                  ...localFilters,
-                  max_points: e.target.value || undefined,
-                })
-              }
-            />
-          </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  From
+                </label>
+                <input
+                  type="date"
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.start_date || ""}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      start_date: e.target.value || undefined,
+                    })
+                  }
+                />
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sort By
-            </label>
-            <select
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.sort_by || "createdAt"}
-              onChange={(e) =>
-                setLocalFilters({ ...localFilters, sort_by: e.target.value })
-              }
-            >
-              <option value="createdAt">Registration Date</option>
-              <option value="total_points">Points</option>
-              <option value="name">Name</option>
-            </select>
-          </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  To
+                </label>
+                <input
+                  type="date"
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.end_date || ""}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      end_date: e.target.value || undefined,
+                    })
+                  }
+                />
+              </div>
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sort Order
-            </label>
-            <select
-              className="w-full rounded-md border border-gray-300 p-2"
-              value={localFilters.sort_order || "desc"}
-              onChange={(e) =>
-                setLocalFilters({ ...localFilters, sort_order: e.target.value })
-              }
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
+            {/* Point Range Section */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Point Range
+              </h3>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Minimum
+                </label>
+                <input
+                  type="number"
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.min_points || ""}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      min_points: e.target.value || undefined,
+                    })
+                  }
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Maximum
+                </label>
+                <input
+                  type="number"
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.max_points || ""}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      max_points: e.target.value || undefined,
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Sorting Section */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                Sorting
+              </h3>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Sort By
+                </label>
+                <select
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.sort_by || "createdAt"}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      sort_by: e.target.value,
+                    })
+                  }
+                >
+                  <option value="createdAt">Registration Date</option>
+                  <option value="total_points">Points</option>
+                  <option value="name">Name</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Order
+                </label>
+                <select
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={localFilters.sort_order || "desc"}
+                  onChange={(e) =>
+                    setLocalFilters({
+                      ...localFilters,
+                      sort_order: e.target.value,
+                    })
+                  }
+                >
+                  <option value="desc">Descending</option>
+                  <option value="asc">Ascending</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="px-6 py-4 border-t flex justify-end space-x-3 sticky bottom-0 bg-white z-10">
+        <div className="px-4 py-3 border-t flex justify-end space-x-2 sticky bottom-0 bg-white z-10">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
-          <StyledButton
-            name={"Apply"}
-            onClick={handleApply}
-            // className="px-4 py-2 bg-indigo-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-indigo-700"
-          />
+          <StyledButton name={"Apply"} onClick={handleApply} />
         </div>
       </div>
     </div>
@@ -285,6 +342,7 @@ const Customer = () => {
     limit: 10,
     name: "",
     status: undefined,
+    tier_id: undefined,
     start_date: undefined,
     end_date: undefined,
     min_points: undefined,
@@ -300,8 +358,15 @@ const Customer = () => {
   const [editCustomerId, setEditCustomerId] = useState(null); // Separate state for editing
   const [deleteCustomerId, setDeleteCustomerId] = useState(null); // Separate state for deleting
 
-  const { useGetCustomers, useDeleteCustomer, useGetCustomerById } =
-    useCustomers();
+  const {
+    useGetCustomers,
+    useDeleteCustomer,
+    useGetCustomerById,
+    useExportCustomers,
+  } = useCustomers();
+
+  const { useGetTiers } = useTiers();
+  const { data: tiersData } = useGetTiers();
 
   // Fetch customer data for editing
   const { data: editCustomerData } = useGetCustomerById(editCustomerId);
@@ -318,7 +383,20 @@ const Customer = () => {
   } = useGetCustomers(filters);
 
   const deleteMutation = useDeleteCustomer();
+  const exportMutation = useExportCustomers();
   const { addToast } = useUiStore();
+
+  const tierOptions = useMemo(() => {
+    const tiers = tiersData?.data || [];
+    return tiers
+      .slice()
+      .sort((a, b) => b.hierarchy_level - a.hierarchy_level)
+      .map((tier) => ({
+        id: tier._id,
+        label: tier.name?.en || tier.name,
+        hierarchy_level: tier.hierarchy_level,
+      }));
+  }, [tiersData]);
 
   const handleSearch = (value) => {
     setFilters((prev) => ({ ...prev, name: value, page: 1 }));
@@ -413,6 +491,39 @@ const Customer = () => {
     setEditCustomerId(null);
   };
 
+  const handleDownload = async () => {
+    try {
+      // Prepare filters for export (remove pagination)
+      const exportFilters = { ...filters };
+      delete exportFilters.page;
+      delete exportFilters.limit;
+
+      const blob = await exportMutation.mutateAsync(exportFilters);
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `customers_export_${
+        new Date().toISOString().split("T")[0]
+      }.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      addToast({
+        type: "success",
+        message: "Customers exported successfully!",
+      });
+    } catch (error) {
+      addToast({
+        type: "error",
+        message: error?.response?.data?.message || "Failed to export customers",
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -442,20 +553,32 @@ const Customer = () => {
             onClick={() => setShowFilterModal(true)}
             variant="secondary"
           />
-
           <StyledButton
+            name={
+              <>
+                <ArrowDownTrayIcon className="h-5 w-5" />
+                Download
+              </>
+            }
+            onClick={handleDownload}
+            variant="secondary"
+            disabled={exportMutation.isPending}
+          />
+
+          {/* <StyledButton
             name={
               <>
                 <span className="text-lg leading-none">+</span> Add Customer
               </>
             }
             onClick={() => setAddOpen(true)}
-          />
+          /> */}
         </div>
       </div>
 
       {/* Active Filters Display */}
       {(filters.status ||
+        filters.tier_id ||
         filters.start_date ||
         filters.end_date ||
         filters.min_points ||
@@ -468,6 +591,19 @@ const Customer = () => {
                 className="ml-2 h-4 w-4 cursor-pointer"
                 onClick={() =>
                   setFilters((prev) => ({ ...prev, status: undefined }))
+                }
+              />
+            </span>
+          )}
+          {filters.tier_id && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+              Tier:{" "}
+              {tierOptions.find((t) => t.id === filters.tier_id)?.label ||
+                "Selected"}
+              <XMarkIcon
+                className="ml-2 h-4 w-4 cursor-pointer"
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, tier_id: undefined }))
                 }
               />
             </span>
@@ -514,6 +650,7 @@ const Customer = () => {
               setFilters((prev) => ({
                 ...prev,
                 status: undefined,
+                tier_id: undefined,
                 start_date: undefined,
                 end_date: undefined,
                 min_points: undefined,
@@ -593,13 +730,13 @@ const Customer = () => {
                     {item.customer_id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.name||"-"}
+                    {item.name || "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    { item.app_type?.name || "-"}
+                    {item.app_type?.name || "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-600">
-                    {item.total_points?.toLocaleString()||0}
+                    {item.total_points?.toLocaleString() || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {item.tier?.name?.en}
@@ -672,6 +809,7 @@ const Customer = () => {
       {showFilterModal && (
         <FilterModal
           filters={filters}
+          tierOptions={tierOptions}
           onClose={() => setShowFilterModal(false)}
           onApply={(newFilters) => {
             setFilters({ ...newFilters, page: 1 });

@@ -294,7 +294,7 @@ const MetricTooltip = ({ explanation, children, position = "bottom" }) => {
 };
 
 const Reports = () => {
-  const { useGetReportData, useExportReportCSV } = useReports();
+  const { useGetReportData } = useReports();
 
   // Date state - default to current month
   const getCurrentMonthDates = () => {
@@ -319,9 +319,6 @@ const Reports = () => {
     error,
     refetch,
   } = useGetReportData(dateRange.startDate, dateRange.endDate);
-
-  // Export CSV mutation
-  const exportCSVMutation = useExportReportCSV();
 
   const reportData = reportDataResponse?.data?.data || null;
 
@@ -374,12 +371,58 @@ const Reports = () => {
     }
   };
 
-  // Handle CSV export
+  // Handle CSV export - Generate CSV from existing data
   const handleExportCSV = () => {
-    exportCSVMutation.mutate({
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
+    if (!reportData || !tableData || tableData.length === 0) {
+      alert("No data available to export");
+      return;
+    }
+
+    // Get app type names for CSV headers
+    const appTypes = reportData.appTypes || [];
+    const headers = ["Metric", ...appTypes.map((at) => at.name), "Total"];
+
+    // Convert tableData to CSV rows
+    const csvRows = [headers.join(",")];
+
+    tableData.forEach((row) => {
+      const rowValues = [
+        row.label,
+        ...appTypes.map((appType) => {
+          const value = row[appType.name];
+          // Handle empty strings, numbers, and section headers
+          if (value === "" || value === null || value === undefined) {
+            return "";
+          }
+          if (typeof value === "number") {
+            return value.toString();
+          }
+          // Escape commas and quotes in string values
+          return `"${String(value).replace(/"/g, '""')}"`;
+        }),
+        row["Total"] !== undefined && row["Total"] !== null
+          ? typeof row["Total"] === "number"
+            ? row["Total"].toString()
+            : `"${String(row["Total"]).replace(/"/g, '""')}"`
+          : "",
+      ];
+      csvRows.push(rowValues.join(","));
     });
+
+    // Create CSV content
+    const csvContent = csvRows.join("\n");
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    const filename = `reports_${dateRange.startDate}_${dateRange.endDate}.csv`;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
   };
 
   // Prepare table data
@@ -604,7 +647,7 @@ const Reports = () => {
         <h1 className="text-2xl font-semibold text-gray-900">Reports</h1>
         <button
           onClick={handleExportCSV}
-          disabled={exportCSVMutation.isPending || !reportData}
+          disabled={!reportData || isLoading}
           className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           <ArrowDownTrayIcon className="w-5 h-5" />
@@ -743,7 +786,7 @@ const Reports = () => {
                 <span></span>
               </MetricTooltip>
             </div>
-          
+
             <p className="text-2xl font-semibold text-gray-900 mt-1">
               {(
                 (reportData.closingBalance || 0) -

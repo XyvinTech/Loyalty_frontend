@@ -383,7 +383,16 @@ const Reports = () => {
     const headers = ["Metric", ...appTypes.map((at) => at.name), "Total"];
 
     // Convert tableData to CSV rows
-    const csvRows = [headers.join(",")];
+    const csvRows = [];
+
+    // Add date range header
+    csvRows.push("Report Period:");
+    csvRows.push(`Start Date: ${dateRange.startDate}`);
+    csvRows.push(`End Date: ${dateRange.endDate}`);
+    csvRows.push(""); // Blank row before data headers
+
+    // Add headers
+    csvRows.push(headers.join(","));
 
     tableData.forEach((row) => {
       const rowValues = [
@@ -408,6 +417,30 @@ const Reports = () => {
       ];
       csvRows.push(rowValues.join(","));
     });
+
+    // Add blank row for separation
+    csvRows.push("");
+
+    // Add Opening Balance Points row at the end
+    const reportDataObj = reportData.reportData || {};
+    const openingBalanceRow = ["Opening Balance Points"];
+    appTypes.forEach((appType) => {
+      const appTypeData = reportDataObj[appType.name];
+      const balance = appTypeData?.openingBalance || 0;
+      openingBalanceRow.push(balance.toString());
+    });
+    openingBalanceRow.push((reportData.openingBalance || 0).toString());
+    csvRows.push(openingBalanceRow.join(","));
+
+    // Add Closing Balance Points row at the end
+    const closingBalanceRow = ["Closing Balance Points"];
+    appTypes.forEach((appType) => {
+      const appTypeData = reportDataObj[appType.name];
+      const balance = appTypeData?.closingBalance || 0;
+      closingBalanceRow.push(balance.toString());
+    });
+    closingBalanceRow.push((reportData.closingBalance || 0).toString());
+    csvRows.push(closingBalanceRow.join(","));
 
     // Create CSV content
     const csvContent = csvRows.join("\n");
@@ -434,23 +467,19 @@ const Reports = () => {
 
     const rows = [
       {
-        label: "Opening Balance",
-        type: "openingBalance",
+        label: "Opening User Count ",
+        type: "openingUserCount",
         explanation: metricExplanations.openingBalance,
       },
-      {
-        label: "No of registered Users",
-        type: "registeredUsers",
-        explanation: metricExplanations.registeredUsers,
-      },
+
       {
         label: "New Registration during the period",
         type: "newRegistration",
         explanation: metricExplanations.newRegistration,
       },
       {
-        label: "Closing Balance",
-        type: "closingBalance",
+        label: "Closing User Count",
+        type: "closingUserCount",
         explanation: metricExplanations.closingBalance,
       },
       {
@@ -531,12 +560,16 @@ const Reports = () => {
 
         if (row.type === "sectionHeader") {
           rowData[appTypeName] = "";
+        } else if (row.type === "openingUserCount") {
+          rowData[appTypeName] = data?.openingUserCount || 0;
         } else if (row.type === "openingBalance") {
           rowData[appTypeName] = data?.openingBalance || 0;
         } else if (row.type === "registeredUsers") {
           rowData[appTypeName] = data?.registeredUsers || 0;
         } else if (row.type === "newRegistration") {
           rowData[appTypeName] = data?.registeredUsers || 0;
+        } else if (row.type === "closingUserCount") {
+          rowData[appTypeName] = data?.closingUserCount || 0;
         } else if (row.type === "closingBalance") {
           rowData[appTypeName] = data?.closingBalance || 0;
         } else if (row.type === "earnUserCount") {
@@ -578,12 +611,16 @@ const Reports = () => {
       // Add Total column
       if (row.type === "sectionHeader") {
         rowData["Total"] = "";
+      } else if (row.type === "openingUserCount") {
+        rowData["Total"] = totals.openingUserCount || 0;
       } else if (row.type === "openingBalance") {
         rowData["Total"] = totals.openingBalance || 0;
       } else if (row.type === "registeredUsers") {
         rowData["Total"] = totals.registeredUsers || 0;
       } else if (row.type === "newRegistration") {
         rowData["Total"] = totals.registeredUsers || 0;
+      } else if (row.type === "closingUserCount") {
+        rowData["Total"] = totals.closingUserCount || 0;
       } else if (row.type === "closingBalance") {
         rowData["Total"] = totals.closingBalance || 0;
       } else if (row.type === "earnUserCount") {

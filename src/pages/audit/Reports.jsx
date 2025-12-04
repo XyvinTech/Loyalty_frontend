@@ -110,15 +110,6 @@ const metricExplanations = {
     filters:
       "Only completed expire transactions within date range for this app type",
   },
-  totalAdjustedPoints: {
-    description:
-      "The net points adjusted during your selected period. This includes both adding points (like when cancelling a redemption) . For cancellation adjustments, we use the app type from the original transaction.",
-    formula: "Adding up points from adjust transactions in the date range ",
-    dataSource:
-      "Transaction records (with lookup to original transaction for app type)",
-    filters:
-      "Uses original transaction's app type when available, otherwise uses adjust transaction's app type",
-  },
   adminReductionPoints: {
     description:
       "The total points manually reduced by administrators during your selected period. These are identified by 'ADMIN' in the transaction ID.",
@@ -531,11 +522,6 @@ const Reports = () => {
         explanation: metricExplanations.totalExpiredPoints,
       },
       {
-        label: "Total Points Adjusted/Withdrawal",
-        type: "totalAdjustedPoints",
-        explanation: metricExplanations.totalAdjustedPoints,
-      },
-      {
         label: "Admin Manual Point Reduction",
         type: "adminReductionPoints",
         explanation: metricExplanations.adminReductionPoints,
@@ -588,23 +574,13 @@ const Reports = () => {
           rowData[appTypeName] = data?.pointsRedeemed?.totalPoints || 0;
         } else if (row.type === "totalExpiredPoints") {
           rowData[appTypeName] = data?.totalExpiredPoints || 0;
-        } else if (row.type === "totalAdjustedPoints") {
-          rowData[appTypeName] = data?.totalAdjustedPoints || 0;
         } else if (row.type === "adminReductionPoints") {
           rowData[appTypeName] = data?.adminReductionPoints || 0;
         } else if (row.type === "netMovement") {
-          // Calculate per app type net movement
-          const appTypeEarned = data?.pointsEarning?.totalPoints || 0;
-          const appTypeRedeemed = data?.pointsRedeemed?.totalPoints || 0;
-          const appTypeExpired = data?.totalExpiredPoints || 0;
-          const appTypeAdjusted = data?.totalAdjustedPoints || 0;
-          const appTypeAdminReduction = data?.adminReductionPoints || 0;
-          rowData[appTypeName] =
-            appTypeEarned -
-            appTypeRedeemed -
-            appTypeExpired -
-            appTypeAdminReduction +
-            appTypeAdjusted;
+          // Calculate per app type net movement (closing - opening, since points have signs)
+          const appTypeClosing = data?.closingBalance || 0;
+          const appTypeOpening = data?.openingBalance || 0;
+          rowData[appTypeName] = appTypeClosing - appTypeOpening;
         }
       });
 
@@ -639,8 +615,6 @@ const Reports = () => {
         rowData["Total"] = totals.pointsRedeemed?.totalPoints || 0;
       } else if (row.type === "totalExpiredPoints") {
         rowData["Total"] = totals.totalExpiredPoints || 0;
-      } else if (row.type === "totalAdjustedPoints") {
-        rowData["Total"] = totals.totalAdjustedPoints || 0;
       } else if (row.type === "adminReductionPoints") {
         rowData["Total"] = totals.adminReductionPoints || 0;
       } else if (row.type === "netMovement") {

@@ -28,6 +28,10 @@ const subAdminApi = {
         const response = await apiClient.delete(`${rootUrl}/${id}`);
         return response.data;
     },
+    adminResetPassword: async (id, data) => {
+        const response = await apiClient.put(`${rootUrl}/${id}/reset-password`, data);
+        return response.data;
+    },
 
 }
 

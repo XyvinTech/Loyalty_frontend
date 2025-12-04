@@ -253,7 +253,7 @@ const TransactionDetailModal = ({ transaction, onClose }) => {
               </h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm text-gray-600">
-                  Name: {transaction.customer_id?.name}
+                  Customer ID: {transaction.customer_id?.customer_id || transaction.customer_id}
                 </p>
               </div>
             </div>
@@ -428,7 +428,7 @@ const Transactions = () => {
     return transactions.map((item) => (
       <tr key={item.id} className="hover:bg-gray-50">
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          {item.customer_id?.name}
+          {item.customer_id?.customer_id}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm">
           <span
@@ -592,7 +592,7 @@ const Transactions = () => {
           <thead className="bg-gray-50 w-full">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
+                Customer ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Transaction Type

@@ -1,6 +1,5 @@
 import apiClient from "./client"
-const baseURL=import.meta.env.VITE_API
-const rootUrl = `${baseURL}/auth`;
+const rootUrl = "/auth";
 
 // Authentication API service
 const authApi = {
@@ -22,7 +21,7 @@ const authApi = {
     return response.data;
   },
 
-  // Update user profile
+  // Update user profiles
   updateProfile: async (userData) => {
     const response = await apiClient.put(`${rootUrl}/profile`, userData);
     return response.data;

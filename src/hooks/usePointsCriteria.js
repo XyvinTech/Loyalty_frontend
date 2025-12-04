@@ -13,6 +13,7 @@ export function usePointsCriteria() {
       queryKey: ["pointsCriteria", params],
       queryFn: () => pointsCriteriaApi.getPointsCriteria(params),
       staleTime: 5 * 60 * 1000, // 5 minutes
+      keepPreviousData: true,
     });
   };
 
@@ -23,6 +24,7 @@ export function usePointsCriteria() {
       queryFn: () => pointsCriteriaApi.getPointsCriteriaById(id),
       enabled: !!id,
       staleTime: 5 * 60 * 1000, // 5 minutes
+      keepPreviousData: true,
     });
   };
 

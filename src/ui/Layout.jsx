@@ -2,11 +2,39 @@ import { useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import useUiStore, { selectSidebarOpen } from "../store/ui";
+import useAuthStore, { selectIsFirstLogin } from "../store/auth";
+import { useAuth } from "../hooks/useAuth";
+import ForcePasswordChangeModal from "../components/auth/ForcePasswordChangeModal";
 
 // eslint-disable-next-line react/prop-types
 const Layout = ({ children }) => {
   const sidebarOpen = useUiStore(selectSidebarOpen);
   const setSidebarOpen = useUiStore((state) => state.setSidebarOpen);
+  const addToast = useUiStore((state) => state.addToast);
+  const isFirstLogin = useAuthStore(selectIsFirstLogin);
+  const { useChangePassword } = useAuth();
+  const changePasswordMutation = useChangePassword();
+
+  const handleForcePasswordChange = ({ currentPassword, newPassword }) => {
+    changePasswordMutation.mutate(
+      { oldPassword: currentPassword, newPassword },
+      {
+        onSuccess: (response) => {
+          addToast({
+            type: "success",
+            message: response?.message ?? "Password updated successfully",
+          });
+        },
+        onError: (error) => {
+          addToast({
+            type: "error",
+            message:
+              error?.response?.data?.message ?? "Failed to update password",
+          });
+        },
+      }
+    );
+  };
 
   // Close sidebar on mobile when route changes
   useEffect(() => {
@@ -44,6 +72,11 @@ const Layout = ({ children }) => {
           </p>
         </footer>
       </div>
+      <ForcePasswordChangeModal
+        isOpen={isFirstLogin}
+        onSubmit={handleForcePasswordChange}
+        isSubmitting={changePasswordMutation.isPending}
+      />
     </div>
   );
 };

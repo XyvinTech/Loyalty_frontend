@@ -17,15 +17,26 @@ const adminSchema = z.object({
   email: z.string().email("Invalid email"),
   phoneNumber: z.string().min(1, "Phone is required"),
   roleId: z.string().min(1, "Role is required"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .optional(),
 });
 
 const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
-  const { useCreateSubAdmin, useUpdateSubAdmin } = useSubAdmin();
+  const { useCreateSubAdmin, useUpdateSubAdmin, useAdminResetPassword } =
+    useSubAdmin();
   const createMutation = useCreateSubAdmin();
   const updateMutation = useUpdateSubAdmin();
+  const resetPasswordMutation = useAdminResetPassword();
   const { addToast } = useUiStore();
   const { useGetRoleSettings } = useRoleSettings();
   const { data: roleData } = useGetRoleSettings();
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [resetPasswordValue, setResetPasswordValue] = useState("");
+  const [confirmResetPasswordValue, setConfirmResetPasswordValue] =
+    useState("");
+  const [resetError, setResetError] = useState("");
   const {
     register,
     handleSubmit,
@@ -41,6 +52,7 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
       email: "",
       phoneNumber: "",
       roleId: "",
+      password: "",
     },
   });
   useEffect(() => {
@@ -51,18 +63,29 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
         email: email || "",
         phoneNumber: phoneNumber || "",
         roleId: role?._id || "",
+        password: "",
       });
+      setShowPasswordReset(false);
+      setResetPasswordValue("");
+      setConfirmResetPasswordValue("");
+      setResetError("");
     }
   }, [editData, reset]);
 
   const onSubmit = async (data) => {
-    const formData = {
-      ...data,
-      password: 'password123', 
-    };
+    const { password, ...rest } = data;
+
+    if (!editData && !password) {
+      addToast({
+        type: "error",
+        message: "Password is required",
+      });
+      return;
+    }
+
     if (editData) {
       updateMutation.mutate(
-        { id: editData?._id,formData: formData },
+        { id: editData?._id, formData: rest },
         {
           onSuccess: (response) => {
             addToast({ type: "success", message: response?.message });
@@ -78,16 +101,25 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
         }
       );
     } else {
-      createMutation.mutate(formData, {
-        onSuccess: (response) => {
-          addToast({ type: "success", message: response?.message });
-          onSuccess?.();
-          resetAndClose();
+      createMutation.mutate(
+        {
+          ...rest,
+          password,
         },
-        onError: (error) => {
-          addToast({ type: "error", message: error?.response?.data?.message });
-        },
-      });
+        {
+          onSuccess: (response) => {
+            addToast({ type: "success", message: response?.message });
+            onSuccess?.();
+            resetAndClose();
+          },
+          onError: (error) => {
+            addToast({
+              type: "error",
+              message: error?.response?.data?.message,
+            });
+          },
+        }
+      );
     }
   };
 
@@ -97,8 +129,52 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
       email: "",
       phoneNumber: "",
       roleId: "",
+      password: "",
     });
+    setShowPasswordReset(false);
+    setResetPasswordValue("");
+    setConfirmResetPasswordValue("");
+    setResetError("");
     onClose();
+  };
+
+  const handlePasswordReset = () => {
+    if (!editData?._id) {
+      return;
+    }
+
+    if (resetPasswordValue.length < 6) {
+      setResetError("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (resetPasswordValue !== confirmResetPasswordValue) {
+      setResetError("Passwords do not match.");
+      return;
+    }
+
+    setResetError("");
+    resetPasswordMutation.mutate(
+      { id: editData._id, password: resetPasswordValue },
+      {
+        onSuccess: (response) => {
+          addToast({
+            type: "success",
+            message: response?.message ?? "Password reset successfully",
+          });
+          setResetPasswordValue("");
+          setConfirmResetPasswordValue("");
+          setShowPasswordReset(false);
+        },
+        onError: (error) => {
+          addToast({
+            type: "error",
+            message:
+              error?.response?.data?.message ?? "Failed to reset password",
+          });
+        },
+      }
+    );
   };
 
   if (!isOpen) return null;
@@ -177,6 +253,75 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
               <p className="text-red-500 text-xs mt-1">{errors.roleId.message}</p>
             )}
           </div>
+          {!editData && (
+            <div>
+              <label className={labelClass}>Password</label>
+              <input
+                {...register("password")}
+                type="password"
+                placeholder="Enter Password"
+                className={inputClass}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password.message}</p>
+              )}
+            </div>
+          )}
+          {editData && (
+            <div className="space-y-4 rounded-md border border-gray-100 p-4">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-700">
+                  Reset Password
+                </h3>
+                <p className="text-xs text-gray-500">
+                  Set a temporary password for this user. They will be asked to
+                  change it on their next login.
+                </p>
+              </div>
+              <div>
+                <label className={labelClass}>New Password</label>
+                <input
+                  type="password"
+                  value={resetPasswordValue}
+                  onChange={(event) => {
+                    setResetPasswordValue(event.target.value);
+                    setResetError("");
+                  }}
+                  placeholder="Enter new password"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmResetPasswordValue}
+                  onChange={(event) => {
+                    setConfirmResetPasswordValue(event.target.value);
+                    setResetError("");
+                  }}
+                  placeholder="Confirm new password"
+                  className={inputClass}
+                />
+              </div>
+              {resetError && (
+                <p className="text-sm text-red-500">{resetError}</p>
+              )}
+              <div className="flex justify-end">
+                <StyledButton
+                  name={
+                    resetPasswordMutation.isPending
+                      ? "Updating..."
+                      : "Reset Password"
+                  }
+                  type="button"
+                  onClick={handlePasswordReset}
+                  disabled={resetPasswordMutation.isPending}
+                  variant="secondary"
+                />
+              </div>
+            </div>
+          )}
           <div className="flex justify-end gap-3 mt-6">
             <StyledButton
               name="Cancel"

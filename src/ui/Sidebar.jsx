@@ -16,6 +16,7 @@ import {
   DevicePhoneMobileIcon,
   DocumentChartBarIcon,
   LockClosedIcon,
+  MinusCircleIcon,
   ServerIcon,
   TagIcon,
   TicketIcon,
@@ -58,7 +59,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     return user?.data?.role?.permissions?.includes(permission);
   };
 
-  const hasAnyPermission = (permissions) => {
+  const hasAnyPermission = (permissions = []) => {
+    if (!permissions.length) return true;
     return permissions.some((perm) => hasPermission(perm));
   };
 
@@ -70,14 +72,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       permissions: ["VIEW_DASHBOARD"],
     },
     {
-      label: "Points Management",
+      label: "Transactions",
+      path: "/transactions",
+      icon: ArrowPathIcon,
+      permissions: ["VIEW_POINTS_HISTORY"],
+    },
+    {
+      label: "Points Configuration",
       type: "dropdown",
       icon: CurrencyDollarIcon,
       permissions: [
         "MANAGE_POINTS",
         "MANAGE_CRITERIA",
         "VIEW_POINTS_HISTORY",
-        "ADJUST_POINTS",
       ],
       subItems: [
         {
@@ -85,12 +92,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           path: "/points-criteria",
           icon: CurrencyDollarIcon,
           permissions: ["MANAGE_CRITERIA"],
-        },
-        {
-          label: "Transactions",
-          path: "/transactions",
-          icon: ArrowPathIcon,
-          permissions: ["VIEW_POINTS_HISTORY"],
         },
         {
           label: "Rules & Expiry",
@@ -113,6 +114,26 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       ],
     },
     {
+      label: "Manual Point Adjustment",
+      type: "dropdown",
+      icon: AdjustmentsHorizontalIcon,
+      permissions: ["ADJUST_POINTS"],
+      subItems: [
+        {
+          label: "Add Points",
+          path: "/add-points",
+          icon: DocumentChartBarIcon,
+          permissions: ["ADJUST_POINTS"],
+        },
+        {
+          label: "Reduce Points",
+          path: "/reduce-points",
+          icon: MinusCircleIcon,
+          permissions: ["ADJUST_POINTS"],
+        },
+      ],
+    },
+    {
       label: "Customer Management",
       type: "dropdown",
       icon: UserGroupIcon,
@@ -123,6 +144,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           path: "/customers",
           icon: UsersIcon,
           permissions: ["VIEW_CUSTOMERS"],
+        },
+        {
+          label: "Priority Customers",
+          path: "/priority-customers",
+          icon: TrophyIcon,
+          permissions: ["MANAGE_PRIORITY_CUSTOMERS"],
         },
       ],
     },
@@ -208,7 +235,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: LockClosedIcon,
           permissions: ["MANAGE_ROLES"],
         },
+       
       ],
+    },
+    {
+      label: "Account Security",
+      path: "/change-password",
+      icon: LockClosedIcon,
+      permissions: [],
     },
     {
       label: "Audit",
@@ -232,6 +266,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           label: "Authentication-Logs",
           path: "/auth-logs",
           icon: CommandLineIcon,
+          permissions: ["VIEW_AUDIT_LOGS"],
+        },
+        {
+          label: "Reports",
+          path: "/reports",
+          icon: DocumentChartBarIcon,
           permissions: ["VIEW_AUDIT_LOGS"],
         },
       ],
@@ -268,7 +308,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <button
                   onClick={() => toggleNav(item.label)}
                   className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                    item.subItems.some((subItem) => pathname === subItem.path)
+                    item.subItems.some(
+                      (subItem) =>
+                        (subItem.path && pathname === subItem.path) ||
+                        (subItem.type === "nested" &&
+                          subItem.subItems?.some(
+                            (nestedItem) => pathname === nestedItem.path
+                          ))
+                    )
                       ? "text-white bg-green-700/90"
                       : "text-gray-300 hover:bg-green-700/50 hover:text-white"
                   }`}
@@ -290,20 +337,73 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                       .filter((subItem) =>
                         hasAnyPermission(subItem.permissions ?? [])
                       )
-                      .map((subItem) => (
-                        <NavLink
-                          key={subItem.path}
-                          to={subItem.path}
-                          className={`flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg ${
-                            pathname.startsWith(subItem.path)
-                              ? "text-white bg-green-800"
-                              : "text-gray-200 hover:bg-green-700/30 hover:text-white"
-                          }`}
-                        >
-                          {subItem.icon && <subItem.icon className="w-4 h-4" />}
-                          {subItem.label}
-                        </NavLink>
-                      ))}
+                      .map((subItem) =>
+                        subItem.type === "nested" ? (
+                          <div key={subItem.label}>
+                            <button
+                              onClick={() => toggleNav(subItem.label)}
+                              className={`w-full flex items-center justify-between px-4 py-2 text-sm font-medium rounded-lg ${
+                                subItem.subItems?.some(
+                                  (nestedItem) => pathname === nestedItem.path
+                                )
+                                  ? "text-white bg-green-800"
+                                  : "text-gray-200 hover:bg-green-700/30 hover:text-white"
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                {subItem.icon && (
+                                  <subItem.icon className="w-4 h-4" />
+                                )}
+                                {subItem.label}
+                              </div>
+                              {expandedNav === subItem.label ? (
+                                <ChevronDownIcon className="w-3 h-3" />
+                              ) : (
+                                <ChevronRightIcon className="w-3 h-3" />
+                              )}
+                            </button>
+                            {expandedNav === subItem.label && (
+                              <div className="ml-4 mt-1 space-y-1">
+                                {subItem.subItems
+                                  ?.filter((nestedItem) =>
+                                    hasAnyPermission(nestedItem.permissions ?? [])
+                                  )
+                                  .map((nestedItem) => (
+                                    <NavLink
+                                      key={nestedItem.path}
+                                      to={nestedItem.path}
+                                      className={`flex items-center gap-3 px-4 py-2 text-xs font-medium rounded-lg ${
+                                        pathname.startsWith(nestedItem.path)
+                                          ? "text-white bg-green-900"
+                                          : "text-gray-300 hover:bg-green-800/50 hover:text-white"
+                                      }`}
+                                    >
+                                      {nestedItem.icon && (
+                                        <nestedItem.icon className="w-3 h-3" />
+                                      )}
+                                      {nestedItem.label}
+                                    </NavLink>
+                                  ))}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <NavLink
+                            key={subItem.path}
+                            to={subItem.path}
+                            className={`flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg ${
+                              pathname.startsWith(subItem.path)
+                                ? "text-white bg-green-800"
+                                : "text-gray-200 hover:bg-green-700/30 hover:text-white"
+                            }`}
+                          >
+                            {subItem.icon && (
+                              <subItem.icon className="w-4 h-4" />
+                            )}
+                            {subItem.label}
+                          </NavLink>
+                        )
+                      )}
                   </div>
                 )}
               </div>

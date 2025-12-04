@@ -12,9 +12,7 @@ import RecentCustomers from "../ui/Dashboard/RecentCustomers";
 import RecentActivity from "../ui/Dashboard/RecentActivity";
 import PointsActivity from "../ui/Dashboard/PointsActivity";
 import CustomerGrowth from "../ui/Dashboard/CustomerGrowth";
-import { useEffect, useState } from "react";
-import { dashboardApi } from "../api/dashboard";
-import useUiStore from "../store/ui";
+import { useDashboard } from "../hooks/useDashboard";
 
 // Default chart data structure
 const defaultChartData = {
@@ -37,11 +35,15 @@ const formatTransactionData = (transactions) => {
 
   return transactions.map((transaction) => ({
     ...transaction,
-    customer_name: transaction.customer_id?.name || "Unknown",
+    customerName: transaction.customer_id?.name || "Unknown",
     type: transaction.transaction_type,
-    amount: Math.abs(transaction.points),
     points: transaction.points,
-    date: new Date(transaction.transaction_date).toLocaleString(),
+    date: new Date(transaction.transaction_date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
   }));
 };
 
@@ -59,31 +61,11 @@ const formatCustomerData = (customers) => {
 };
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState("");
-  const [dashboardData, setDashboardData] = useState(null);
-  const { addToast } = useUiStore();
+  const { dashboardData, isLoading, refetch, dataUpdatedAt } = useDashboard();
 
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      const response = await dashboardApi.getStats();
-      setDashboardData(response.data.data);
-      setLastUpdated(new Date().toLocaleString());
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-      addToast({
-        type: "error",
-        message: "Failed to fetch dashboard data",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  const lastUpdated = dataUpdatedAt
+    ? new Date(dataUpdatedAt).toLocaleString()
+    : "";
 
   const overviewCards = [
     {
@@ -269,25 +251,25 @@ const Dashboard = () => {
             Dashboard
           </h1>
           <p className="text-xs text-gray-500 mt-1">
-            Last Updated: {lastUpdated || "Fetching..."}
+            Last Updated: {lastUpdated || (isLoading ? "Fetching..." : "Never")}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={fetchDashboardData} isLoading={loading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
         </div>
       </div>
 
       {/* Overview Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {overviewCards.map((item, index) => (
-          <DashboardCard key={index} {...item} />
+          <DashboardCard key={index} {...item} loading={isLoading} />
         ))}
       </div>
 
       {/* Points Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {pointsCards.map((item, index) => (
-          <DashboardCard key={index} {...item} />
+          <DashboardCard key={index} {...item} loading={isLoading} />
         ))}
       </div>
 
@@ -299,14 +281,14 @@ const Dashboard = () => {
           </h3>
           <RecentActivity
             transactions={formattedTransactions}
-            loading={loading}
+            loading={isLoading}
           />
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Recent Customers
           </h3>
-          <RecentCustomers customers={formattedCustomers} loading={loading} />
+          <RecentCustomers customers={formattedCustomers} loading={isLoading} />
         </div>
       </div>
 
@@ -319,7 +301,7 @@ const Dashboard = () => {
           <div className="h-[300px]">
             <PointsActivity
               pointsActivityData={formatPointsActivityData()}
-              loading={loading}
+              loading={isLoading}
             />
           </div>
         </div>
@@ -330,7 +312,7 @@ const Dashboard = () => {
           <div className="h-[300px]">
             <CustomerGrowth
               customerGrowthData={formatCustomerGrowthData()}
-              loading={loading}
+              loading={isLoading}
             />
           </div>
         </div>

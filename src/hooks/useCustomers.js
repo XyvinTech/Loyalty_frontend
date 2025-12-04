@@ -16,6 +16,7 @@ export function useCustomers() {
       queryKey: ["customers", params],
       queryFn: () => customersApi.getCustomers(params),
       staleTime: 2 * 60 * 1000, // 2 minutes
+      keepPreviousData: true,
     });
   };
 
@@ -26,6 +27,7 @@ export function useCustomers() {
       queryFn: () => customersApi.getCustomerById(id),
       enabled: !!id,
       staleTime: 2 * 60 * 1000, // 2 minutes
+      keepPreviousData: true,
     });
   };
 

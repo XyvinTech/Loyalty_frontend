@@ -50,11 +50,22 @@ export function useSubAdmin() {
     });
   };
 
+  const useAdminResetPassword = () => {
+    return useMutation({
+      mutationFn: ({ id, password }) =>
+        subAdminApi.adminResetPassword(id, { newPassword: password }),
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: ["subAdmins", variables.id] });
+      },
+    });
+  };
+
   return {
     useCreateSubAdmin,
     useGetSubAdmin,
     useGetSubAdminById,
     useUpdateSubAdmin,
     useDeleteSubAdmin,
+    useAdminResetPassword,
   };
 }

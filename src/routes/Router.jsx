@@ -18,7 +18,8 @@ import Brands from "../pages/reference-data/Brands";
 import Categories from "../pages/reference-data/Categories";
 import Rules from "../pages/points-management/Rules";
 import TierEligibility from "../pages/points-management/TierEligibility";
-import Reports from "../pages/audit/Reports";
+import SummaryReport from "../pages/reports/SummaryReport";
+import TransactionReport from "../pages/reports/TransactionReport";
 import Theme from "../pages/system-and-settings/Theme";
 import { AuthProvider } from "../ui/AuthProvider";
 import TriggerEvents from "../pages/reference-data/TriggerEvents";
@@ -111,7 +112,8 @@ const router = createBrowserRouter([
           { path: "/payment-methods", element: <PaymentMethods /> },
           { path: "/categories", element: <Categories /> },
           { path: "/rules", element: <Rules /> },
-          { path: "/reports", element: <Reports /> },
+          { path: "/summary-reports", element: <SummaryReport /> },
+          { path: "/transaction-reports", element: <TransactionReport /> },
           { path: "/theme", element: <Theme /> },
           { path: "/trigger-events", element: <TriggerEvents /> },
           { path: "/trigger-services", element: <TriggerServices /> },

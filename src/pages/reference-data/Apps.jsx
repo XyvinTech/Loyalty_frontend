@@ -127,6 +127,7 @@ const Apps = () => {
               </>
             }
             onClick={() => {
+              setData(null);
               setAddOpen(true);
             }}
           />
@@ -173,7 +174,7 @@ const Apps = () => {
           setData(null);
         }}
         onSuccess={() => {
-          setData({});
+          setData(null);
         }}
         editData={triggerAppData}
       />

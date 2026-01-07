@@ -268,11 +268,25 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: CommandLineIcon,
           permissions: ["VIEW_AUDIT_LOGS"],
         },
+      ],
+    },
+    {
+      label: "Reports",
+      type: "dropdown",
+      icon: DocumentChartBarIcon,
+      permissions: ["VIEW_REPORTS"],
+      subItems: [
         {
-          label: "Reports",
-          path: "/reports",
+          label: "Summary Report",
+          path: "/summary-reports",
           icon: DocumentChartBarIcon,
-          permissions: ["VIEW_AUDIT_LOGS"],
+          permissions: ["VIEW_REPORTS"],
+        },
+        {
+          label: "Transaction Report",
+          path: "/transaction-reports",
+          icon: DocumentChartBarIcon,
+          permissions: ["VIEW_REPORTS"],
         },
       ],
     },

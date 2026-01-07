@@ -152,6 +152,7 @@ const TriggerEvents = () => {
               </>
             }
             onClick={() => {
+              setEditData(null);
               setAddOpen(true);
             }}
           />

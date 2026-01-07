@@ -152,6 +152,7 @@ const TriggerServices = () => {
               </>
             }
             onClick={() => {
+              setId(null);
               setAddOpen(true);
             }}
           />

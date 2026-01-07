@@ -75,7 +75,7 @@ const UserFacingLayout = () => (
     <Outlet />
   </UserLayout>
 );
-const ArabicFacingLayout= () => (
+const ArabicFacingLayout = () => (
   <ArabicLayout>
     <ScrollToTop />
     <Outlet />
@@ -138,7 +138,7 @@ const router = createBrowserRouter([
           { path: "/user/how-to", element: <HowtoGet /> },
         ],
       },
-            {
+      {
         path: "/user",
         element: <ArabicFacingLayout />,
         children: [
@@ -151,10 +151,8 @@ const router = createBrowserRouter([
           { path: "/user/support", element: <UserSupport /> },
           { path: "/user/terms-and-conditions/ar", element: <TermsArabic /> },
           { path: "/user/how-to/ar", element: <HowtoGetArabic /> },
-
         ],
       },
-      
     ],
   },
 ]);

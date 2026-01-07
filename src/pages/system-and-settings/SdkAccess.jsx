@@ -29,7 +29,6 @@ const SdkAccess = () => {
   }, [appTypes]);
   const handleCreateAccess = () => {
     if (selectedAppType) {
-      console.log("create access for app type", selectedAppType);
       createMutation.mutate({
         app_id: selectedAppType,
       });
@@ -56,8 +55,6 @@ const SdkAccess = () => {
   };
   return (
     <div className="p-8 space-y-8">
-      
-
       {appTypes && appTypes.length > 0 && (
         <div className="mb-6">
           <h2 className="text-lg font-medium text-gray-800 mb-4">App Types</h2>

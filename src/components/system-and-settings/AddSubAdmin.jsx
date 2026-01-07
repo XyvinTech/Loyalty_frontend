@@ -56,7 +56,12 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
   useEffect(() => {
     if (editData) {
       const { name, email, phoneNumber, role } = editData || {};
-      console.log("Setting form data for edit:", { name, email, phoneNumber, role });
+      console.log("Setting form data for edit:", {
+        name,
+        email,
+        phoneNumber,
+        role,
+      });
       reset({
         name: name || "",
         email: email || "",
@@ -100,18 +105,19 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
         {
           onSuccess: (response) => {
             console.log("Update success:", response);
-            addToast({ 
-              type: "success", 
-              message: response?.message || "User updated successfully" 
+            addToast({
+              type: "success",
+              message: response?.message || "User updated successfully",
             });
             onSuccess?.();
             resetAndClose();
           },
           onError: (error) => {
             console.error("Update error:", error);
-            const errorMessage = error?.response?.data?.message || 
-                                error?.message || 
-                                "Failed to update user";
+            const errorMessage =
+              error?.response?.data?.message ||
+              error?.message ||
+              "Failed to update user";
             addToast({
               type: "error",
               message: errorMessage,
@@ -269,7 +275,9 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
               ))}
             </select>
             {errors.roleId && (
-              <p className="text-red-500 text-xs mt-1">{errors.roleId.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.roleId.message}
+              </p>
             )}
           </div>
           {!editData && (
@@ -282,7 +290,9 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
                 className={inputClass}
               />
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           )}

@@ -41,6 +41,7 @@ const TransactionReport = () => {
   const transactionCount = exportCountData?.count || 0;
   const maxExportRows = exportCountData?.maxExportRows || 100000;
   const exceedsLimit = exportCountData?.exceedsLimit || false;
+  const suggestedEndDate = exportCountData?.suggestedEndDate || null;
 
   // Refetch count when date range changes
   useEffect(() => {
@@ -98,6 +99,21 @@ const TransactionReport = () => {
     }
   };
 
+  // Handle applying suggested date range
+  const handleApplySuggestedRange = () => {
+    if (suggestedEndDate) {
+      const suggestedDate = new Date(suggestedEndDate);
+      const suggestedDateStr = suggestedDate.toISOString().split("T")[0];
+      
+      setDateRange({
+        startDate: dateRange.startDate,
+        endDate: suggestedDateStr,
+      });
+      setCustomEndDate(suggestedDateStr);
+      setIsCustomRange(true);
+    }
+  };
+
   // Handle CSV export
   const handleExportCSV = () => {
     if (!dateRange.startDate || !dateRange.endDate) {
@@ -105,7 +121,12 @@ const TransactionReport = () => {
       return;
     }
 
-    // Show warning for large exports
+    // Don't allow export if limit is exceeded (user must adjust date range first)
+    if (exceedsLimit) {
+      return;
+    }
+
+    // Show warning for large exports (but still allow if under limit)
     if (transactionCount > 50000 && !showLargeExportWarning) {
       setShowLargeExportWarning(true);
       return;
@@ -116,7 +137,6 @@ const TransactionReport = () => {
     exportMutation.mutate({
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
-      limit: exceedsLimit ? maxExportRows : undefined,
     });
   };
 
@@ -137,23 +157,25 @@ const TransactionReport = () => {
             Export all transaction data within a specified time duration
           </p>
         </div>
-        <button
-          onClick={handleExportCSV}
-          disabled={exportMutation.isPending || transactionCount === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          {exportMutation.isPending ? (
-            <>
-              <Loader />
-              <span>Exporting...</span>
-            </>
-          ) : (
-            <>
-              <ArrowDownTrayIcon className="w-5 h-5" />
-              <span>Export CSV</span>
-            </>
-          )}
-        </button>
+        {!exceedsLimit && (
+          <button
+            onClick={handleExportCSV}
+            disabled={exportMutation.isPending || transactionCount === 0}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {exportMutation.isPending ? (
+              <>
+                <Loader />
+                <span>Exporting...</span>
+              </>
+            ) : (
+              <>
+                <ArrowDownTrayIcon className="w-5 h-5" />
+                <span>Export CSV</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {/* Transaction Count Card */}
@@ -179,18 +201,72 @@ const TransactionReport = () => {
               )}
             </div>
           </div>
-
-          {/* Export limit warning */}
-          {exceedsLimit && !isCountLoading && (
-            <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
-              <ExclamationTriangleIcon className="w-5 h-5 text-amber-600" />
-              <span className="text-sm text-amber-800">
-                Only first {formatNumber(maxExportRows)} rows will be exported
-              </span>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Date Range Adjustment Card - Shown when limit is exceeded */}
+      {exceedsLimit && suggestedEndDate && !isCountLoading && (
+        <div className="bg-amber-50 border-2 border-amber-300 rounded-lg p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <ExclamationTriangleIcon className="w-8 h-8 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-amber-900 mb-2">
+                Date Range Adjustment Required
+              </h3>
+              <p className="text-sm text-amber-800 mb-4">
+                Due to the large size of the total data ({formatNumber(transactionCount)} transactions), 
+                only complete date ranges can be exported. The system has calculated a safe end date 
+                that ensures you get full, complete data from the start date.
+              </p>
+              <div className="bg-white rounded-lg p-4 mb-4 border border-amber-200">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">Current Range:</span>
+                    <span className="text-sm text-gray-600">
+                      {new Date(dateRange.startDate).toLocaleDateString()} -{" "}
+                      {new Date(dateRange.endDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="border-t border-gray-200 pt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-green-700">
+                        Suggested Range:
+                      </span>
+                      <span className="text-sm font-semibold text-green-700">
+                        {new Date(dateRange.startDate).toLocaleDateString()} -{" "}
+                        {new Date(suggestedEndDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      This range contains approximately {formatNumber(maxExportRows)} transactions 
+                      with complete date coverage
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleApplySuggestedRange}
+                  className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm transition-colors"
+                >
+                  Apply Suggested Date Range
+                </button>
+                <button
+                  onClick={() => {
+                    setCustomStartDate(dateRange.startDate);
+                    setCustomEndDate(suggestedEndDate.split("T")[0]);
+                  }}
+                  className="px-4 py-2 bg-white border border-amber-300 text-amber-700 rounded-lg hover:bg-amber-50 font-medium text-sm transition-colors"
+                >
+                  Manually Adjust Dates
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Large Export Warning Modal */}
       {showLargeExportWarning && (

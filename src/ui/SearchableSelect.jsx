@@ -58,6 +58,12 @@ const SearchableSelect = ({
   }, [isOpen, selectedItem]);
 
   const filteredItems = useMemo(() => {
+    // If onSearch is provided, let server handle filtering
+    if (onSearch) {
+      return items;
+    }
+
+    // Client-side filtering only when no server search
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) {
       return items;
@@ -72,7 +78,7 @@ const SearchableSelect = ({
         .includes(normalizedQuery);
       return labelMatch || subLabelMatch;
     });
-  }, [items, query]);
+  }, [items, query, onSearch]);
 
   const handleInputChange = (event) => {
     const value = event.target.value;

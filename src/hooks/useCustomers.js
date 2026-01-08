@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import customersApi from "../api/customers";
 
 /**
@@ -16,7 +16,7 @@ export function useCustomers() {
       queryKey: ["customers", params],
       queryFn: () => customersApi.getCustomers(params),
       staleTime: 2 * 60 * 1000, // 2 minutes
-      keepPreviousData: true,
+      placeholderData: keepPreviousData,
     });
   };
 
@@ -27,7 +27,7 @@ export function useCustomers() {
       queryFn: () => customersApi.getCustomerById(id),
       enabled: !!id,
       staleTime: 2 * 60 * 1000, // 2 minutes
-      keepPreviousData: true,
+      placeholderData: keepPreviousData,
     });
   };
 

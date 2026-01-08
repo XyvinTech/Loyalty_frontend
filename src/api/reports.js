@@ -20,6 +20,26 @@ export const reportsApi = {
       responseType: "blob",
     });
   },
+
+  // Get transaction count for export estimation
+  getTransactionExportCount: (startDate, endDate) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    return apiClient.get(`${rootUrl}/transaction-export/count?${params.toString()}`);
+  },
+
+  // Export transaction report as CSV (streaming)
+  exportTransactionReport: (startDate, endDate, limit) => {
+    const params = new URLSearchParams();
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+    if (limit) params.append("limit", limit);
+    return apiClient.get(`${rootUrl}/transaction-export?${params.toString()}`, {
+      responseType: "blob",
+      timeout: 0, // No timeout - streaming response
+    });
+  },
 };
 
 export default reportsApi;

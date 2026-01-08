@@ -284,7 +284,7 @@ const MetricTooltip = ({ explanation, children, position = "bottom" }) => {
   );
 };
 
-const Reports = () => {
+const SummaryReport = () => {
   const { useGetReportData } = useReports();
 
   // Date state - default to current month
@@ -655,7 +655,7 @@ const Reports = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-900">Reports</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Summary Report</h1>
         <button
           onClick={handleExportCSV}
           disabled={!reportData || isLoading}
@@ -902,4 +902,4 @@ const Reports = () => {
   );
 };
 
-export default Reports;
+export default SummaryReport;

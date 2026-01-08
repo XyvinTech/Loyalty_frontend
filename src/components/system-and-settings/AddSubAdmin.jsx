@@ -12,15 +12,13 @@ import useUiStore from "../../store/ui";
 import { useRoleSettings } from "../../hooks/useRoleSettings";
 import { useSubAdmin } from "../../hooks/useSubAdmin";
 
-const adminSchema = z.object({
+// Base schema without password validation (handled in onSubmit)
+const baseAdminSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
   phoneNumber: z.string().min(1, "Phone is required"),
   roleId: z.string().min(1, "Role is required"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .optional(),
+  password: z.string().optional(), // No validation - handled in onSubmit
 });
 
 const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
@@ -46,7 +44,7 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(adminSchema),
+    resolver: zodResolver(baseAdminSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -58,21 +56,37 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
   useEffect(() => {
     if (editData) {
       const { name, email, phoneNumber, role } = editData || {};
+      console.log("Setting form data for edit:", {
+        name,
+        email,
+        phoneNumber,
+        role,
+      });
       reset({
         name: name || "",
         email: email || "",
         phoneNumber: phoneNumber || "",
-        roleId: role?._id || "",
+        roleId: role?._id || role || "",
         password: "",
       });
       setShowPasswordReset(false);
       setResetPasswordValue("");
       setConfirmResetPasswordValue("");
       setResetError("");
+    } else {
+      // Reset form when adding new user
+      reset({
+        name: "",
+        email: "",
+        phoneNumber: "",
+        roleId: "",
+        password: "",
+      });
     }
   }, [editData, reset]);
 
   const onSubmit = async (data) => {
+    console.log("Form submitted with data:", data);
     const { password, ...rest } = data;
 
     if (!editData && !password) {
@@ -84,18 +98,29 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
     }
 
     if (editData) {
+      console.log("Updating user with:", { id: editData?._id, formData: rest });
+      // For updates, send all form fields (password is excluded)
       updateMutation.mutate(
         { id: editData?._id, formData: rest },
         {
           onSuccess: (response) => {
-            addToast({ type: "success", message: response?.message });
+            console.log("Update success:", response);
+            addToast({
+              type: "success",
+              message: response?.message || "User updated successfully",
+            });
             onSuccess?.();
             resetAndClose();
           },
           onError: (error) => {
+            console.error("Update error:", error);
+            const errorMessage =
+              error?.response?.data?.message ||
+              error?.message ||
+              "Failed to update user";
             addToast({
               type: "error",
-              message: error?.response?.data?.message,
+              message: errorMessage,
             });
           },
         }
@@ -250,7 +275,9 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
               ))}
             </select>
             {errors.roleId && (
-              <p className="text-red-500 text-xs mt-1">{errors.roleId.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.roleId.message}
+              </p>
             )}
           </div>
           {!editData && (
@@ -263,7 +290,9 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
                 className={inputClass}
               />
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
               )}
             </div>
           )}
@@ -322,16 +351,42 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
               </div>
             </div>
           )}
+          {/* Show validation errors summary */}
+          {Object.keys(errors).length > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3">
+              <p className="text-sm font-medium text-red-800 mb-2">
+                Please fix the following errors:
+              </p>
+              <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                {Object.entries(errors).map(([field, error]) => (
+                  <li key={field}>
+                    {field}: {error?.message || "Invalid value"}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="flex justify-end gap-3 mt-6">
             <StyledButton
               name="Cancel"
               onClick={resetAndClose}
               variant="tertiary"
+              disabled={createMutation.isPending || updateMutation.isPending}
             />
             <StyledButton
-              name={editData ? "Edit" : "Add User"}
+              name={
+                editData
+                  ? updateMutation.isPending
+                    ? "Updating..."
+                    : "Update User"
+                  : createMutation.isPending
+                  ? "Creating..."
+                  : "Add User"
+              }
               type="submit"
               variant="primary"
+              disabled={createMutation.isPending || updateMutation.isPending}
             />
           </div>
         </form>

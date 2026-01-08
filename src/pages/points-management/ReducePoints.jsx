@@ -152,9 +152,10 @@ const ReducePoints = () => {
     });
   };
 
+  // Only show full-page loader on initial load (when no data has been fetched yet)
   if (
-    (isLoadingCustomers && !customers.length) ||
-    (isLoadingAppTypes && !appTypes.length)
+    (isLoadingCustomers && !customersData) ||
+    (isLoadingAppTypes && !appTypesData)
   ) {
     return <Loader />;
   }

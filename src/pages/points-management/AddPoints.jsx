@@ -460,8 +460,6 @@ const AddPoints = () => {
 
   // Success Modal Component
   const SuccessModal = () => {
-    if (!showSuccessModal || !successData) return null;
-
     const handleClose = () => {
       setShowSuccessModal(false);
       setSuccessData(null);
@@ -474,11 +472,14 @@ const AddPoints = () => {
 
     // Auto-dismiss after 5 seconds
     useEffect(() => {
+      if (!showSuccessModal || !successData) return;
       const timer = setTimeout(() => {
         handleClose();
       }, 5000);
       return () => clearTimeout(timer);
     }, []);
+
+    if (!showSuccessModal || !successData) return null;
 
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -667,10 +668,11 @@ const AddPoints = () => {
     </form>
   );
 
+  // Only show full-page loader on initial load (when no data has been fetched yet)
   if (
-    (isLoadingCustomers && !customers.length) ||
-    (isLoadingCriteria && !pointsCriteria.length) ||
-    (isLoadingAppTypes && !appTypes.length)
+    (isLoadingCustomers && !customersData) ||
+    (isLoadingCriteria && !pointsCriteriaData) ||
+    (isLoadingAppTypes && !appTypesData)
   ) {
     return <Loader />;
   }

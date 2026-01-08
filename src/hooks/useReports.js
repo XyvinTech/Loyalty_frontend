@@ -38,9 +38,42 @@ export function useReports() {
     });
   };
 
+  // Get transaction export count for estimation
+  const useGetTransactionExportCount = (startDate, endDate) => {
+    return useQuery({
+      queryKey: ["reports", "transaction-export-count", startDate, endDate],
+      queryFn: () => reportsApi.getTransactionExportCount(startDate, endDate),
+      staleTime: 30 * 1000, // 30 seconds
+      enabled: !!(startDate && endDate),
+    });
+  };
+
+  // Export transaction report as CSV (streaming)
+  const useExportTransactionReport = () => {
+    return useMutation({
+      mutationFn: ({ startDate, endDate, limit }) =>
+        reportsApi.exportTransactionReport(startDate, endDate, limit),
+      onSuccess: (data, variables) => {
+        // Create blob and download
+        const blob = new Blob([data.data], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        const filename = `transaction_report_${variables.startDate}_${variables.endDate}.csv`;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      },
+    });
+  };
+
   return {
     useGetReportData,
     useExportReportCSV,
+    useGetTransactionExportCount,
+    useExportTransactionReport,
   };
 }
 

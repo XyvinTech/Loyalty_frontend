@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import pointsCriteriaApi from "../api/points_criteria";
 
 /**
@@ -13,7 +13,7 @@ export function usePointsCriteria() {
       queryKey: ["pointsCriteria", params],
       queryFn: () => pointsCriteriaApi.getPointsCriteria(params),
       staleTime: 5 * 60 * 1000, // 5 minutes
-      keepPreviousData: true,
+      placeholderData: keepPreviousData,
     });
   };
 
@@ -24,7 +24,7 @@ export function usePointsCriteria() {
       queryFn: () => pointsCriteriaApi.getPointsCriteriaById(id),
       enabled: !!id,
       staleTime: 5 * 60 * 1000, // 5 minutes
-      keepPreviousData: true,
+      placeholderData: keepPreviousData,
     });
   };
 

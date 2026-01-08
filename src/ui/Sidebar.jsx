@@ -31,7 +31,6 @@ import { useAuth } from "../hooks/useAuth";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const { useGetCurrentUser } = useAuth();
   const { data: user } = useGetCurrentUser();
-  console.log("user", user?.data?.role?.permissions);
 
   const location = useLocation();
   const { pathname } = location;
@@ -69,7 +68,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       label: "Dashboard",
       path: "/dashboard",
       icon: ChartBarIcon,
-      permissions: ["VIEW_DASHBOARD"],
+      permissions: [], // Accessible to all authenticated users
     },
     {
       label: "Transactions",
@@ -81,11 +80,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       label: "Points Configuration",
       type: "dropdown",
       icon: CurrencyDollarIcon,
-      permissions: [
-        "MANAGE_POINTS",
-        "MANAGE_CRITERIA",
-        "VIEW_POINTS_HISTORY",
-      ],
+      permissions: ["MANAGE_POINTS", "MANAGE_CRITERIA", "VIEW_POINTS_HISTORY"],
       subItems: [
         {
           label: "Points Criteria",
@@ -153,7 +148,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         },
       ],
     },
-     {
+    {
       label: "Reference Data",
       type: "dropdown",
       icon: Cog6ToothIcon,
@@ -235,7 +230,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: LockClosedIcon,
           permissions: ["MANAGE_ROLES"],
         },
-       
       ],
     },
     {
@@ -268,11 +262,25 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: CommandLineIcon,
           permissions: ["VIEW_AUDIT_LOGS"],
         },
+      ],
+    },
+    {
+      label: "Reports",
+      type: "dropdown",
+      icon: DocumentChartBarIcon,
+      permissions: ["VIEW_REPORTS"],
+      subItems: [
         {
-          label: "Reports",
-          path: "/reports",
+          label: "Summary Report",
+          path: "/summary-reports",
           icon: DocumentChartBarIcon,
-          permissions: ["VIEW_AUDIT_LOGS"],
+          permissions: ["VIEW_REPORTS"],
+        },
+        {
+          label: "Transaction Report",
+          path: "/transaction-reports",
+          icon: DocumentChartBarIcon,
+          permissions: ["VIEW_REPORTS"],
         },
       ],
     },
@@ -366,7 +374,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                               <div className="ml-4 mt-1 space-y-1">
                                 {subItem.subItems
                                   ?.filter((nestedItem) =>
-                                    hasAnyPermission(nestedItem.permissions ?? [])
+                                    hasAnyPermission(
+                                      nestedItem.permissions ?? []
+                                    )
                                   )
                                   .map((nestedItem) => (
                                     <NavLink

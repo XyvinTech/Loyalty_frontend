@@ -3,10 +3,10 @@ import {
   PencilIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import StyledButton from "../../ui/StyledButton";
-import StyledSearchInput from "../../ui/StyledSearchInput";
+import StyledButton from "../../ui/StyledButton.jsx";
+import StyledSearchInput from "../../ui/StyledSearchInput.jsx";
 import { useEffect, useMemo, useState } from "react";
-import StyledTable from "../../ui/StyledTable";
+import StyledTable from "../../ui/StyledTable.jsx";
 import RefreshButton from "../../ui/RefreshButton.jsx";
 import Loader from "../../ui/Loader.jsx";
 import { useTriggerServices } from "../../hooks/useTriggerServices.js";
@@ -152,6 +152,7 @@ const TriggerServices = () => {
               </>
             }
             onClick={() => {
+              setId(null);
               setAddOpen(true);
             }}
           />

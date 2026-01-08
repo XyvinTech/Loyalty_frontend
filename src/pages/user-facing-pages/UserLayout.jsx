@@ -83,7 +83,6 @@ const UserLayout = ({ children, currentPage = "home" }) => {
       href: "/user/offers",
     },
   ];
-console.log("customerData",customerData)
   const handleNavigation = (item) => {
     if (!isAuthenticated) return;
 

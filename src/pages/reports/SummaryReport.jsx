@@ -493,7 +493,7 @@ const SummaryReport = () => {
         explanation: metricExplanations.earnTotalPoints,
       },
       {
-        label: "Total Promotion Points",
+        label: "Admin Manual Promotion Points Addition",
         type: "totalPromoPoints",
         explanation: metricExplanations.totalPromoPoints,
       },

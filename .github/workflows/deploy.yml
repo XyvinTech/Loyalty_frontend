@@ -1,13 +1,13 @@
-name: Deploy React App to Server
+name: Deploy React App to  prod-Server
 
 on:
   push:
     branches:
-      - UAT
+      - prod
 
 jobs:
   deploy:
-    runs-on: [self-hosted, uat-frontend]  
+    runs-on: [self-hosted, prod]
 
     steps:
       - name: Checkout Code
@@ -16,12 +16,12 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Install Dependencies and Build
         env:
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
-          VITE_API_UAT: ${{ secrets.VITE_API_UAT }}
+          VITE_API: ${{ secrets.VITE_API_PROD }}
         run: |
           npm ci
           npm run build
@@ -29,16 +29,13 @@ jobs:
       - name: Rename dist to loyalty-frontend
         run: mv ./dist ./loyalty-frontend
 
-      - name: Save staging IP locally
-        run: echo "${{ secrets.SERVER_HOST }}" > /home/loyalty/staging_host_ip.txt
-
-
+  
       - name: Clean Temporary Directory on Server
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST_PROD }}
+          username: ${{ secrets.SERVER_USER_PROD }}
+          password: ${{ secrets.SERVER_PASSWORD_PROD }}
           script: |
             rm -rf ~/deploy-temp
             mkdir ~/deploy-temp
@@ -46,21 +43,21 @@ jobs:
       - name: Copy Files to Server
         uses: appleboy/scp-action@v0.1.3
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST_PROD }}
+          username: ${{ secrets.SERVER_USER_PROD }}
+          password: ${{ secrets.SERVER_PASSWORD_PROD }}
           source: ./loyalty-frontend/
           target: ~/deploy-temp/loyalty-frontend/
 
       - name: Deploy on Server
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST_PROD }}
+          username: ${{ secrets.SERVER_USER_PROD }}
+          password: ${{ secrets.SERVER_PASSWORD_PROD }}
           script: |
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf ~/deploy-temp
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/cache/nginx/*
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S systemctl restart nginx
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S rm -rf ~/deploy-temp
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S rm -rf /var/cache/nginx/*
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S systemctl restart nginx

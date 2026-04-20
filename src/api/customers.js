@@ -67,6 +67,7 @@ const customersApi = {
     const response = await apiClient.get(`${rootUrl}/export`, {
       params,
       responseType: "blob",
+      timeout: 0,
     });
     return response.data;
   },

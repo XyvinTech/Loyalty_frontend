@@ -1,10 +1,12 @@
 import axios from "axios";
-const sdkUrl = "https://khedmahloyalty.oifcoman.com:3737/api/v1";
-// const sdkUrl = "http://localhost:3000/api/v1";
 
-// Create SDK API client
+const sdkUrl =
+  import.meta.env.VITE_SDK_API ||
+  import.meta.env.VITE_APP_URL ||
+  "http://localhost:3000/api/v1";
+
 const sdkApiClient = axios.create({
-   baseURL: sdkUrl,
+  baseURL: sdkUrl,
   headers: {
     "Content-Type": "application/json",
   },

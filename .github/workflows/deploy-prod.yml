@@ -23,7 +23,10 @@ jobs:
         env:
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
           VITE_API_BASE_URL: ${{ secrets.VITE_API_PROD }}
+          VITE_API_UAT: ${{ secrets.VITE_API_PROD }}
+          VITE_API_PROD: ${{ secrets.VITE_API_PROD }}
         run: |
+          rm -f .env .env.local .env.production .env.production.local
           npm ci
           npm run build
 

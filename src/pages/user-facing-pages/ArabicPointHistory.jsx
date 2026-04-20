@@ -37,14 +37,22 @@ const getTransactionMetaArabic = (transaction) => {
         color: "text-[#ED4747]",
         sign: "-",
       };
-    case "adjust":
+    case "adjust": {
+      // Determine sign based on transaction_id prefix
+      let adjustSign = "";
+      if (transaction.transaction_id?.startsWith("PROMO-")) {
+        adjustSign = "+";
+      } else if (transaction.transaction_id?.startsWith("ADMIN-")) {
+        adjustSign = "-";
+      }
       return {
         title: "تعديل النقاط",
         icon: <AdjustmentsHorizontalIcon className="w-6 h-6 text-blue-500" />,
         bg: "bg-blue-50",
         color: "text-blue-600",
-        sign: "",
+        sign: adjustSign,
       };
+    }
     case "expire":
       return {
         title: "انتهت صلاحية النقاط",

@@ -2,7 +2,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const HowtoGet = () => {
+const HowtoGet = ({ link }) => {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-white px-4 py-6 sm:px-6 sm:py-8 font-sans">
@@ -326,9 +326,9 @@ const HowtoGet = () => {
             {/* Electricity, Water, Telecom Postpaid, ROP, SPF */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Electricity Bill Payment, Water Bill Payment, Telecom Post Paid
-                Bill Payment, Electricity Prepaid Recharge, ROP Payments, Social
-                Protection Fund Payments
+                Electricity Bill Payment or Recharge, Water Bill Payment,
+                Telecom Post Paid Bill Payment, Electricity Prepaid Recharge,
+                ROP Payments, Social Protection Fund Payments
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-blue-200">
@@ -373,7 +373,8 @@ const HowtoGet = () => {
             {/* Telecom Recharge, Purchase of Vouchers & Insurance */}
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Telecom Recharge, Purchase of Vouchers & Insurance
+                Telecom Recharge, Purchase of Entertainment Vouchers & Insurance
+                Services
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-green-200">
@@ -536,8 +537,8 @@ const HowtoGet = () => {
                 <span className="text-sm">4</span>
               </div>
               <p>
-                Maintain greater than OMR 3.000 transactions for bill payments to
-                earn 35 points
+                Maintain greater than OMR 3.000 transactions for bill payments
+                to earn 35 points
               </p>
             </div>
           </div>
@@ -545,7 +546,11 @@ const HowtoGet = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions")}
+            onClick={() =>
+              navigate(
+                link ? "/terms-and-conditions" : "/user/terms-and-conditions"
+              )
+            }
           >
             Terms and Conditions
           </p>

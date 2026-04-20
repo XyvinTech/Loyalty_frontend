@@ -1,8 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 
-const HowtoGetArabic = () => {
+const HowtoGetArabic = ({ link }) => {
   const navigate = useNavigate();
 
   return (
@@ -11,6 +10,7 @@ const HowtoGetArabic = () => {
       dir="rtl"
     >
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4 flex-row-reverse justify-end">
             <button
@@ -26,7 +26,7 @@ const HowtoGetArabic = () => {
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               اكتشف جميع الطرق التي يمكنك من خلالها كسب نقاط المكافآت من خلال
-              خدمات خدمة واحصل على المزايا الحصرية
+              خدمات تطبيق خدمة واحصل على المزايا الحصرية.
             </p>
           </div>
         </div>
@@ -44,18 +44,8 @@ const HowtoGetArabic = () => {
             {/* Bronze Tier */}
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
-              style={{
-                backgroundColor: "#DF9872",
-                borderColor: "#DF9872",
-              }}
+              style={{ backgroundColor: "#DF9872", borderColor: "#DF9872" }}
             >
-              <div
-                className="absolute inset-0 opacity-20"
-                // style={{
-                //   background:
-                //     "linear-gradient(270deg, #FBC07F, #FFF9F3, #F9B97C, #A75D32)",
-                // }}
-              ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
                   <div
@@ -97,10 +87,10 @@ const HowtoGetArabic = () => {
                       className="text-sm font-medium"
                       style={{ color: "#784019" }}
                     >
-                      مضاعف النقاط
+                      مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold" style={{ color: "#A16133" }}>
-                      ×1 النقاط المكتسبة
+                      1× النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -123,7 +113,7 @@ const HowtoGetArabic = () => {
                       className="text-sm font-medium"
                       style={{ color: "#784019" }}
                     >
-                      العروض
+                      أنواع العروض
                     </div>
                     <div className="text-sm" style={{ color: "#784019" }}>
                       مجموعة عروض قياسية - عروض يومية على الأساسيات والمطاعم
@@ -137,17 +127,8 @@ const HowtoGetArabic = () => {
             {/* Silver Tier */}
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
-              style={{
-                backgroundColor: "#C0C0C0",
-                borderColor: "#C0C0C0",
-              }}
+              style={{ backgroundColor: "#C0C0C0", borderColor: "#C0C0C0" }}
             >
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  background: "linear-gradient(270deg, #090909, #6F6F6F)",
-                }}
-              ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
                   <div
@@ -187,10 +168,10 @@ const HowtoGetArabic = () => {
                     style={{ backgroundColor: "#434343" }}
                   >
                     <div className="text-sm font-medium text-white">
-                      مضاعف النقاط
+                      مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold text-white">
-                      × 1.1 النقاط المكتسبة
+                      1.1× النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -206,7 +187,9 @@ const HowtoGetArabic = () => {
                     className="rounded-lg p-3"
                     style={{ backgroundColor: "#434343" }}
                   >
-                    <div className="text-sm font-medium text-white">العروض</div>
+                    <div className="text-sm font-medium text-white">
+                      أنواع العروض
+                    </div>
                     <div className="text-sm text-white">
                       مجموعة موسعة من العروض عبر الفئات - عروض أوسع تشمل أسلوب
                       الحياة والسفر والترفيه
@@ -219,18 +202,8 @@ const HowtoGetArabic = () => {
             {/* Gold Tier */}
             <div
               className="rounded-xl p-6 border-2 relative overflow-hidden"
-              style={{
-                backgroundColor: "#FFD700",
-                borderColor: "#FFD700",
-              }}
+              style={{ backgroundColor: "#FFD700", borderColor: "#FFD700" }}
             >
-              <div
-                className="absolute inset-0 opacity-30"
-                style={{
-                  background:
-                    "linear-gradient(270deg, #FFF08B, #FED500, #FFE289, #FDCD01, #FFC100)",
-                }}
-              ></div>
               <div className="relative z-10">
                 <div className="text-center mb-4">
                   <div
@@ -275,10 +248,10 @@ const HowtoGetArabic = () => {
                       className="text-sm font-medium"
                       style={{ color: "#784019" }}
                     >
-                      مضاعف النقاط
+                      مضاعف النقاط (للنقاط المكتسبة)
                     </div>
                     <div className="font-bold" style={{ color: "#FBC000" }}>
-                      ×2 النقاط المكتسبة
+                      2× النقاط المكتسبة
                     </div>
                   </div>
                   <div
@@ -301,7 +274,7 @@ const HowtoGetArabic = () => {
                       className="text-sm font-medium"
                       style={{ color: "#784019" }}
                     >
-                      العروض
+                      أنواع العروض
                     </div>
                     <div className="text-sm" style={{ color: "#784019" }}>
                       الحد الأقصى من العروض بما في ذلك العروض المميزة والحصرية -
@@ -328,8 +301,8 @@ const HowtoGetArabic = () => {
             {/* Bills Payment */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                دفع فاتورة الكهرباء، دفع فاتورة المياه، دفع فاتورة الاتصالات
-                (آجل)، المدفوعات لشرطة عمان السلطانية، إشتراكات صندوق الحماية
+                دفع فاتورة الكهرباء أو إعادة الشحن دفع فاتورة المياه دفع فاتورة
+                الاتصالات (آجل) خدمات شرطة عمان السلطانية إشتراكات صندوق الحماية
                 الاجتماعية
               </h3>
               <div className="space-y-3">
@@ -344,7 +317,7 @@ const HowtoGetArabic = () => {
                     الحد الأدنى للمعاملة:
                   </span>
                   <span className="text-gray-600">
-                    قيمة معاملة لا تقل عن &gt; 3.000 ريال عماني
+                    قيمة معاملة لا تقل عن 3.000 ريال عماني
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2 flex-row-reverse">
@@ -374,10 +347,11 @@ const HowtoGetArabic = () => {
               </div>
             </div>
 
-            {/* Telecom Recharge */}
+            {/* Recharge */}
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                إعادة شحن الكهرباء مسبقة الدفع وشراء القسائم والتأمين
+                إعادة شحن الهواتف مسبقة الدفع وشراء القسائم الترفيهية وخدمات
+                التأمين
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center py-2 border-b border-green-200 flex-row-reverse">
@@ -388,12 +362,12 @@ const HowtoGetArabic = () => {
                     2% من قيمة المعاملة
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-blue-200 flex-row-reverse">
+                <div className="flex justify-between items-center py-2 border-b border-green-200 flex-row-reverse">
                   <span className="font-medium text-gray-700">
                     الحد الأدنى للمعاملة:
                   </span>
                   <span className="text-gray-600">
-                    قيمة معاملة لا تقل عن &gt; 1.000 ريال عماني
+                    قيمة معاملة لا تقل عن 1.000 ريال عماني
                   </span>
                 </div>
               </div>
@@ -403,7 +377,7 @@ const HowtoGetArabic = () => {
                 </h4>
                 <div className="grid grid-cols-1 gap-1 text-sm text-gray-600">
                   <span>1. إعادة شحن عمانتل</span>
-                  <span>2. اعادة شحن أوريدو</span>
+                  <span>2. إعادة شحن أوريدو</span>
                   <span>3. إعادة شحن فودافون</span>
                   <span>4. إعادة شحن فريندي</span>
                   <span>5. إعادة شحن رنة</span>
@@ -417,7 +391,7 @@ const HowtoGetArabic = () => {
           </div>
         </div>
 
-        {/* Khedmah Delivery App Section */}
+        {/* Delivery App Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center flex-row-reverse">
             <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center ml-3">
@@ -433,28 +407,28 @@ const HowtoGetArabic = () => {
                 تم تسليم الطلب
               </h3>
               <div className="space-y-4">
-                <div className="p-3 bg-white rounded-lg border-l-0 border-r-4 border-orange-400">
+                <div className="p-3 bg-white rounded-lg border-r-4 border-orange-400">
                   <div className="font-medium text-gray-800">
                     الطلب الأول لأي عميل
                   </div>
                   <div className="text-orange-600 font-bold">
-                    2% من قيمة الطلب
+                    %2 من قيمة الطلب
                   </div>
                 </div>
-                <div className="p-3 bg-white rounded-lg border-l-0 border-r-4 border-gray-400">
+                <div className="p-3 bg-white rounded-lg border-r-4 border-gray-400">
                   <div className="font-medium text-gray-800">
                     من الطلب الثاني فصاعداً للعميل العادي
                   </div>
                   <div className="text-gray-600 font-bold">
-                    1% من قيمة الطلب
+                    %1 من قيمة الطلب
                   </div>
                 </div>
-                <div className="p-3 bg-white rounded-lg border-l-0 border-r-4 border-purple-400">
+                <div className="p-3 bg-white rounded-lg border-r-4 border-purple-400">
                   <div className="font-medium text-gray-800">
                     من الطلب الثاني فصاعداً للمشترك الماسي
                   </div>
                   <div className="text-purple-600 font-bold">
-                    2% من قيمة الطلب
+                    %2 من قيمة الطلب
                   </div>
                 </div>
               </div>
@@ -496,7 +470,7 @@ const HowtoGetArabic = () => {
                     إعادة شحن
                   </div>
                   <div className="text-teal-600 font-bold text-lg">
-                    1% من قيمة الشحن
+                    %1 من قيمة الشحن
                   </div>
                 </div>
               </div>
@@ -551,7 +525,13 @@ const HowtoGetArabic = () => {
         <div className="flex justify-end mt-4">
           <p
             className="text-xs text-gray-500 cursor-pointer hover:underline"
-            onClick={() => navigate("/user/terms-and-conditions/ar")}
+            onClick={() =>
+              navigate(
+                link
+                  ? "/terms-and-conditions/ar"
+                  : "/user/terms-and-conditions/ar"
+              )
+            }
           >
             الشروط والأحكام
           </p>

@@ -124,6 +124,23 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/how-to-earn-points",
+        element: <HowtoGet link />,
+      },
+      {
+        path: "/terms-and-conditions",
+        element: <Terms />,
+      },
+      {
+        path: "/ar/how-to-earn-points",
+        element: <HowtoGetArabic link />,
+      },
+      {
+        path: "/ar/terms-and-conditions",
+        element: <TermsArabic />,
+      },
+
+      {
         path: "/user",
         element: <UserFacingLayout />,
         children: [

@@ -52,7 +52,7 @@ jobs:
       - name: Deploy on Server
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.SERVER_HOST_PRO }}
+          host: ${{ secrets.SERVER_HOST_PROD }}
           username: ${{ secrets.SERVER_USER_PROD }}
           password: ${{ secrets.SERVER_PASSWORD_PROD }}
           script: |

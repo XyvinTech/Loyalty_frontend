@@ -5,7 +5,6 @@ import {
   DocumentArrowDownIcon,
   CheckCircleIcon,
   XMarkIcon,
-  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import StyledButton from "../../ui/StyledButton";
@@ -51,7 +50,7 @@ const AddPoints = () => {
   const customerSearch = useDebouncedValue(customerSearchInput, 400);
   const pointCriteriaSearch = useDebouncedValue(pointCriteriaSearchInput, 400);
 
-  const { addToast } = useUiStore();
+  const { addToast, setBulkJob } = useUiStore();
 
   const { useGetCustomers } = useCustomers();
   const { data: customersData, isLoading: isLoadingCustomers } =
@@ -304,15 +303,36 @@ const AddPoints = () => {
 
     addPointsBulk.mutate(formData, {
       onSuccess: (response) => {
-        addToast({
-          type: "success",
-          message: response?.message || "Bulk points uploaded successfully.",
-        });
-        setSuccessData({
-          message: response?.message || "Bulk points uploaded successfully.",
-          recordsProcessed: bulkPreview.length,
-        });
-        setShowSuccessModal(true);
+        const data = response?.data ?? response;
+        const jobId = data?.jobId;
+        const totalRows = data?.totalRows ?? bulkPreview.length;
+        const estimatedTimeMs = data?.estimatedTimeMs;
+
+        if (jobId) {
+          setBulkJob({
+            jobId,
+            status: "pending",
+            totalRows,
+            estimatedTimeMs,
+            progress: 0,
+            processedCount: 0,
+          });
+          addToast({
+            type: "success",
+            message:
+              "Upload started. Processing in background. You can navigate away and check the status bar above.",
+          });
+        } else {
+          addToast({
+            type: "success",
+            message: response?.message || "Bulk points uploaded successfully.",
+          });
+          setSuccessData({
+            message: response?.message || "Bulk points uploaded successfully.",
+            recordsProcessed: totalRows,
+          });
+          setShowSuccessModal(true);
+        }
         setBulkFile(null);
         setBulkPreview([]);
         setBulkRequestedBy("");
@@ -430,35 +450,7 @@ const AddPoints = () => {
     </form>
   );
 
-  // Processing Modal Component
-  const ProcessingModal = () => {
-    if (!addPointsBulk.isLoading) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <div className="relative">
-              <ArrowPathIcon className="h-16 w-16 text-green-600 animate-spin" />
-            </div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Processing Bulk Upload
-              </h3>
-              <p className="text-sm text-gray-600">
-                Please wait while we process your file...
-              </p>
-              <p className="text-xs text-gray-500 mt-2">
-                This may take a few moments depending on the file size.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Success Modal Component
+  // Success Modal Component (for individual add only; bulk uses the persistent banner)
   const SuccessModal = () => {
     const handleClose = () => {
       setShowSuccessModal(false);
@@ -710,10 +702,7 @@ const AddPoints = () => {
           : renderBulkUpload()}
       </div>
 
-      {/* Processing Modal */}
-      <ProcessingModal />
-
-      {/* Success Modal */}
+      {/* Success Modal (individual add only) */}
       <SuccessModal />
     </div>
   );

@@ -13,7 +13,13 @@ const manualPointsApi = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 0,
     });
+    return response.data;
+  },
+
+  getBulkJobStatus: async (jobId) => {
+    const response = await apiClient.get(`${rootUrl}/add-bulk/status/${jobId}`);
     return response.data;
   },
 

@@ -14,6 +14,10 @@ import { useTriggerServices } from "../../hooks/useTriggerServices";
 import { useTriggerEvents } from "../../hooks/useTriggerEvents";
 import { useKhedmahOffer } from "../../hooks/useKhedmahOffer";
 import uploadApi from "../../api/upload";
+import {
+  validateImageFileForUpload,
+  getImageUploadRulesSummary,
+} from "../../utils/validateImageFile";
 import ImageCropper from "../ImageCropper";
 
 const AddKhedmahOffer = ({ isOpen, onClose, editData }) => {
@@ -257,8 +261,16 @@ const AddKhedmahOffer = ({ isOpen, onClose, editData }) => {
     let imageUrl = data.posterImage;
     const file = watch("posterImage");
     if (file instanceof File || file instanceof Blob) {
-      const uploadResponse = await uploadApi.uploadImage(file);
-      imageUrl = uploadResponse.data?.url;
+      try {
+        const uploadResponse = await uploadApi.uploadImage(file);
+        imageUrl = uploadResponse.data?.url;
+      } catch (err) {
+        addToast({
+          type: "error",
+          message: err?.message || "Image upload failed.",
+        });
+        return;
+      }
     }
 
     const formData = {
@@ -364,6 +376,11 @@ const AddKhedmahOffer = ({ isOpen, onClose, editData }) => {
   };
 
   const handleCropComplete = (croppedBlob, croppedImageUrl) => {
+    const result = validateImageFileForUpload(croppedBlob);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      return;
+    }
     setImagePreview(croppedImageUrl);
     setValue("posterImage", croppedBlob);
     setIsCropping(false);
@@ -374,12 +391,17 @@ const AddKhedmahOffer = ({ isOpen, onClose, editData }) => {
   };
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setOriginalFile(file);
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
-      setValue("posterImage", file);
+    if (!file) return;
+    const result = validateImageFileForUpload(file);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      e.target.value = "";
+      return;
     }
+    setOriginalFile(file);
+    const imageUrl = URL.createObjectURL(file);
+    setImagePreview(imageUrl);
+    setValue("posterImage", file);
   };
   const inputClass =
     "w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-colors";
@@ -522,9 +544,12 @@ const AddKhedmahOffer = ({ isOpen, onClose, editData }) => {
                   <label className="text-xs font-medium text-gray-500">
                     Poster Image
                   </label>
+                  <p className="text-xs text-gray-500 mt-0.5 mb-1">
+                    {getImageUploadRulesSummary()}
+                  </p>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/webp,image/jpeg,image/png,image/gif,.webp,.jpg,.jpeg,.png,.gif"
                     className="hidden"
                     id="file-upload"
                     onChange={handleFileChange}

@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import StyledButton from "../../ui/StyledButton";
 import useUiStore from "../../store/ui";
 import { ArrowUpTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -75,14 +75,15 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
           onSuccess: (data) => {
             addToast({
               type: "success",
-              message: data?.message,
+              message: data?.message ?? "Customer updated successfully.",
             });
             resetAndClose();
           },
           onError: (error) => {
             addToast({
               type: "error",
-              message: error?.response?.data?.message,
+              message:
+                error?.response?.data?.message ?? "Could not update customer.",
             });
           },
         }
@@ -92,14 +93,15 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
         onSuccess: (data) => {
           addToast({
             type: "success",
-            message: data?.message,
+            message: data?.message ?? "Customer added successfully.",
           });
           resetAndClose();
         },
         onError: (error) => {
           addToast({
             type: "error",
-            message: error?.response?.data?.message,
+            message:
+              error?.response?.data?.message ?? "Could not add customer.",
           });
         },
       });
@@ -235,12 +237,18 @@ const AddCustomer = ({ isOpen, onClose, editData }) => {
               name="Cancel"
               onClick={resetAndClose}
               variant="tertiary"
+              disabled={
+                createMutation.isPending || updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Update" : "Add Customer"}
               type="submit"
               variant="primary"
-              disabled={createMutation.isPending || updateMutation.isPending}
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

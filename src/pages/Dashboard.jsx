@@ -61,7 +61,8 @@ const formatCustomerData = (customers) => {
 };
 
 const Dashboard = () => {
-  const { dashboardData, isLoading, refetch, dataUpdatedAt } = useDashboard();
+  const { dashboardData, isLoading, isFetching, refetch, dataUpdatedAt } =
+    useDashboard();
 
   const lastUpdated = dataUpdatedAt
     ? new Date(dataUpdatedAt).toLocaleString()
@@ -255,7 +256,7 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
         </div>
       </div>
 

@@ -32,6 +32,7 @@ const TierEligibility = () => {
   const {
     data: criteriaData,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = useGetTierEligibilityCriteria({
@@ -56,14 +57,15 @@ const TierEligibility = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
         setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.message,
+          message: error?.message ?? "Delete failed.",
         });
       },
     });
@@ -167,7 +169,7 @@ const TierEligibility = () => {
           </p>
         </div>
         <div className="flex space-x-3">
-          <RefreshButton onClick={refetch} dataUpdatedAt={dataUpdatedAt} />
+          <RefreshButton onClick={refetch} isLoading={isFetching} />
           <StyledButton
             name="Add Criteria"
             onClick={() => setOpen(true)}
@@ -233,11 +235,12 @@ const TierEligibility = () => {
       <AddTierEligibility open={open} setOpen={setOpen} data={data} />
 
       <DeleteModal
-  data="Tier Eligibility Criteria"
-  isOpen={deleteOpen}
-  onClose={() => setDeleteOpen(false)}
-  onConfirm={handleDelete}
-/>
+        data="Tier Eligibility Criteria"
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
+      />
     </div>
   );
 };

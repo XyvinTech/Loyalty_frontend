@@ -283,11 +283,14 @@ const PriorityCustomerForm = ({
               name="Cancel"
               variant="secondary"
               type="button"
+              disabled={isSubmitting}
             />
             <StyledButton
               type="submit"
               name={isEditMode ? "Save Changes" : "Add Priority"}
-              disabled={isSubmitting || !selectedCustomerId || !selectedTierId}
+              disabled={!selectedCustomerId || !selectedTierId}
+              isLoading={isSubmitting}
+              loadingLabel={isEditMode ? "Saving…" : "Adding…"}
             />
           </div>
         </form>
@@ -675,6 +678,7 @@ const PriorityCustomers = () => {
         onClose={() => setDeletingPriority(null)}
         onConfirm={handleConfirmDelete}
         data="priority customer"
+        confirmLoading={deleteMutation.isPending}
       />
     </div>
   );

@@ -1,6 +1,12 @@
 import StyledButton from "./StyledButton";
 
-const DeleteModal = ({ isOpen, onClose, onConfirm, data }) => {
+const DeleteModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  data,
+  confirmLoading = false,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -14,8 +20,19 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, data }) => {
           undone.
         </p>
         <div className="mt-6 flex justify-end space-x-4">
-          <StyledButton onClick={onClose} name={"Cancel"} variant="tertiary" />
-          <StyledButton onClick={onConfirm} name={"Delete"} variant="delete" />
+          <StyledButton
+            onClick={onClose}
+            name={"Cancel"}
+            variant="tertiary"
+            disabled={confirmLoading}
+          />
+          <StyledButton
+            onClick={onConfirm}
+            name={"Delete"}
+            variant="delete"
+            isLoading={confirmLoading}
+            loadingLabel="Deleting…"
+          />
         </div>
       </div>
     </div>

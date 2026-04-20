@@ -62,7 +62,7 @@ const customersApi = {
 
  
 
-  // Export customers
+  // Export customers as CSV (blob)
   exportCustomers: async (params) => {
     const response = await apiClient.get(`${rootUrl}/export`, {
       params,

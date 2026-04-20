@@ -53,7 +53,13 @@ const Theme = () => {
           </h1>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <StyledButton name={<>Save Changes</>} onClick={handleSaveChanges} />
+          <StyledButton
+            name="Save Changes"
+            onClick={handleSaveChanges}
+            isLoading={updateMutation.isPending}
+            loadingLabel="Saving…"
+            disabled={resetMutation.isPending}
+          />
         </div>
       </div>
 
@@ -175,12 +181,31 @@ const Theme = () => {
           </div>
 
           <div className="mt-6">
-            <button
-              onClick={() => resetMutation.mutate()}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium"
-            >
-              Reset to Defaults
-            </button>
+            <StyledButton
+              name="Reset to Defaults"
+              variant="secondary"
+              className="w-full justify-center"
+              onClick={() =>
+                resetMutation.mutate(undefined, {
+                  onSuccess: () => {
+                    addToast({
+                      type: "success",
+                      message: "Theme reset to defaults.",
+                    });
+                  },
+                  onError: (error) => {
+                    addToast({
+                      type: "error",
+                      message:
+                        error?.response?.data?.message ?? "Reset failed.",
+                    });
+                  },
+                })
+              }
+              isLoading={resetMutation.isPending}
+              loadingLabel="Resetting…"
+              disabled={updateMutation.isPending}
+            />
           </div>
         </div>
       </div>

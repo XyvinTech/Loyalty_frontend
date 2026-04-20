@@ -427,11 +427,18 @@ const AddTier = ({ isOpen, onClose, editData }) => {
                 onClose();
               }}
               variant="tertiary"
+              disabled={
+                createMutation.isPending || updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData?.data ? "Update" : "Add Tier"}
               type="submit"
               variant="primary"
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={editData?.data ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

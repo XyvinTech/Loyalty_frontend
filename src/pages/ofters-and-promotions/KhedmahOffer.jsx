@@ -31,6 +31,7 @@ const KhedmahOffer = () => {
   const {
     data: offerData,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = getKhedmahOffers();
@@ -57,18 +58,18 @@ const KhedmahOffer = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
+        setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Delete failed.",
         });
       },
     });
-    setDeleteOpen(false);
-    setData(null);
   };
 
   return (
@@ -83,7 +84,7 @@ const KhedmahOffer = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton isLoading={isLoading} onClick={() => refetch()} />
+          <RefreshButton isLoading={isFetching} onClick={() => refetch()} />
           {/* <StyledSearchInput
             placeholder="Search offers"
             className="w-full sm:w-auto"
@@ -348,6 +349,7 @@ const KhedmahOffer = () => {
             }}
             onConfirm={handleDelete}
             data={"offer"}
+            confirmLoading={deleteMutation.isPending}
           />
 
           <AddKhedmahOfter

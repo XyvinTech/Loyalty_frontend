@@ -254,11 +254,18 @@ const labelClass = "block text-xs font-medium text-gray-500 mb-1";
               name="Cancel"
               onClick={resetAndClose}
               variant="tertiary"
+              disabled={
+                createMutation.isPending || updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Save Changes" : "Create Role"}
               type="submit"
               variant="primary"
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

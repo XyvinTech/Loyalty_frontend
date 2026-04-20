@@ -32,6 +32,7 @@ const Users = () => {
   const {
     data: subAdmins,
     isLoading,
+    isFetching,
     error,
     refetch,
     dataUpdatedAt,
@@ -73,18 +74,18 @@ const Users = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "User deleted successfully.",
         });
+        setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Could not delete user.",
         });
       },
     });
-    setDeleteOpen(false);
-    setData(null);
   };
   const handleBulkDelete = async () => {
     if (!selectedRows.length) return;
@@ -129,7 +130,7 @@ const Users = () => {
             onClick={() => {
               refetch();
             }}
-            isLoading={isLoading}
+            isLoading={isFetching}
           />
         </div>
       </div>{" "}
@@ -256,6 +257,7 @@ const Users = () => {
         onClose={() => setDeleteOpen(false)}
         data={"User"}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
       <ViewAdmin
         isOpen={viewOpen}

@@ -438,12 +438,13 @@ const AddPoints = () => {
           type="button"
           variant="secondary"
           onClick={resetIndividualForm}
-          disabled={addPointsIndividual.isLoading}
+          disabled={addPointsIndividual.isPending}
           name="Reset"
         />
         <StyledButton
           type="submit"
-          isLoading={addPointsIndividual.isLoading}
+          isLoading={addPointsIndividual.isPending}
+          loadingLabel="Adding points…"
           name="Add Points"
         />
       </div>
@@ -569,7 +570,8 @@ const AddPoints = () => {
               type="button"
               variant="download"
               onClick={handleDownloadTemplate}
-              isLoading={downloadTemplate.isLoading}
+              isLoading={downloadTemplate.isPending}
+              loadingLabel="Preparing file…"
               name={
                 <>
                   <DocumentArrowDownIcon className="h-4 w-4" />
@@ -648,12 +650,13 @@ const AddPoints = () => {
               fileInputRef.current.value = "";
             }
           }}
-          disabled={addPointsBulk.isLoading}
+          disabled={addPointsBulk.isPending}
           name="Clear"
         />
         <StyledButton
           type="submit"
-          isLoading={addPointsBulk.isLoading}
+          isLoading={addPointsBulk.isPending}
+          loadingLabel="Uploading…"
           name="Upload Points"
         />
       </div>

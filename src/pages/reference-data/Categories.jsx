@@ -30,6 +30,7 @@ const Categories = () => {
   const {
     data: categories,
     isLoading,
+    isFetching,
     error,
     refetch,
     dataUpdatedAt,
@@ -82,18 +83,18 @@ const Categories = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
+        setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Delete failed.",
         });
       },
     });
-    setDeleteOpen(false);
-    setData(null);
   };
   const handleBulkDelete = async () => {
     if (!selectedRows.length) return;
@@ -136,7 +137,7 @@ const Categories = () => {
             onClick={() => {
               refetch();
             }}
-            isLoading={isLoading}
+            isLoading={isFetching}
           />
           <StyledSearchInput
             placeholder="Search"
@@ -273,6 +274,7 @@ const Categories = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
     </>
   );

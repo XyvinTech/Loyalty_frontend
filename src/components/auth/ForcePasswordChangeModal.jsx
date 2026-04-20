@@ -93,8 +93,9 @@ const ForcePasswordChangeModal = ({
 
           <StyledButton
             type="submit"
-            name={isSubmitting ? "Updating..." : "Update Password"}
-            disabled={isSubmitting}
+            name="Update Password"
+            isLoading={isSubmitting}
+            loadingLabel="Saving…"
             className="w-full justify-center"
           />
         </form>

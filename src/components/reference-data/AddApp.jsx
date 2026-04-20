@@ -7,6 +7,10 @@ import StyledButton from "../../ui/StyledButton";
 import useUiStore from "../../store/ui";
 import { useAppTypes } from "../../hooks/useAppTypes";
 import uploadApi from "../../api/upload";
+import {
+  validateImageFileForUpload,
+  getImageUploadRulesSummary,
+} from "../../utils/validateImageFile";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -33,6 +37,7 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
     },
   });
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const { useCreateAppType, useUpdateAppType } = useAppTypes();
   const createMutation = useCreateAppType();
   const updateMutation = useUpdateAppType();
@@ -51,6 +56,7 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
   }, [editData, reset]);
 
   const onSubmit = async (data) => {
+    setIsSaving(true);
     try {
       let imageUrl = data.icon;
       const file = watch("icon");
@@ -66,6 +72,7 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
 
       if (editData) {
         if (!editData?.data?._id) {
+          setIsSaving(false);
           addToast({
             type: "error",
             message: "Cannot update: Missing App ID",
@@ -95,6 +102,7 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
                   error?.response?.data?.message || "Failed to update app",
               });
             },
+            onSettled: () => setIsSaving(false),
           }
         );
       } else {
@@ -114,9 +122,11 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
               message: error?.response?.data?.message || "Failed to create app",
             });
           },
+          onSettled: () => setIsSaving(false),
         });
       }
     } catch (error) {
+      setIsSaving(false);
       console.error("Submission Error:", error);
       addToast({
         type: "error",
@@ -127,10 +137,15 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      setValue("icon", file);
+    if (!file) return;
+    const result = validateImageFileForUpload(file);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      e.target.value = "";
+      return;
     }
+    setImagePreview(URL.createObjectURL(file));
+    setValue("icon", file);
   };
 
   const resetAndClose = () => {
@@ -174,9 +189,12 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
 
           <div>
             <label className={labelClass}>Icon</label>
+            <p className="text-xs text-gray-500 mt-0.5 mb-1">
+              {getImageUploadRulesSummary()}
+            </p>
             <input
               type="file"
-              accept="image/*"
+              accept="image/webp,image/jpeg,image/png,image/gif,.webp,.jpg,.jpeg,.png,.gif"
               className="hidden"
               id="file-upload"
               onChange={handleFileChange}
@@ -217,11 +235,22 @@ const AddApp = ({ isOpen, onClose, onSuccess, editData }) => {
               name="Cancel"
               onClick={resetAndClose}
               variant="tertiary"
+              disabled={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Update" : "Add App"}
               type="submit"
               variant="primary"
+              isLoading={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

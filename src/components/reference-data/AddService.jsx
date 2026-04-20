@@ -9,6 +9,10 @@ import { useTriggerServices } from "../../hooks/useTriggerServices";
 import { useTriggerEvents } from "../../hooks/useTriggerEvents";
 import Select from "react-select";
 import uploadApi from "../../api/upload";
+import {
+  validateImageFileForUpload,
+  getImageUploadRulesSummary,
+} from "../../utils/validateImageFile";
 
 const serviceSchema = z.object({
   title: z.object({
@@ -26,6 +30,7 @@ const serviceSchema = z.object({
 });
 
 const AddService = ({ isOpen, onClose, editData }) => {
+  const [isSaving, setIsSaving] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [activeLanguage, setActiveLanguage] = useState("en");
 
@@ -77,6 +82,7 @@ const AddService = ({ isOpen, onClose, editData }) => {
   }, [editData, setValue]);
 
   const onSubmit = async (formData) => {
+    setIsSaving(true);
     try {
       let imageUrl = formData.icon;
       const file = watch("icon");
@@ -95,7 +101,10 @@ const AddService = ({ isOpen, onClose, editData }) => {
 
       action.mutate(payload, {
         onSuccess: (data) => {
-          addToast({ type: "success", message: data?.message });
+          addToast({
+            type: "success",
+            message: data?.message ?? "Service saved successfully.",
+          });
           reset({
             title: { en: "", ar: "" },
             description: { en: "", ar: "" },
@@ -108,21 +117,28 @@ const AddService = ({ isOpen, onClose, editData }) => {
         onError: (error) => {
           addToast({
             type: "error",
-            message: error?.response?.data?.message,
+            message: error?.response?.data?.message ?? "Could not save service.",
           });
         },
+        onSettled: () => setIsSaving(false),
       });
     } catch (e) {
+      setIsSaving(false);
       addToast({ type: "error", message: e.message });
     }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      setValue("icon", file);
+    if (!file) return;
+    const result = validateImageFileForUpload(file);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      e.target.value = "";
+      return;
     }
+    setImagePreview(URL.createObjectURL(file));
+    setValue("icon", file);
   };
 
   if (!isOpen) return null;
@@ -218,9 +234,12 @@ const AddService = ({ isOpen, onClose, editData }) => {
 
             <div>
               <label className="text-xs font-medium text-gray-500">Icon</label>
+              <p className="text-xs text-gray-500 mt-0.5 mb-1">
+                {getImageUploadRulesSummary()}
+              </p>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/webp,image/jpeg,image/png,image/gif,.webp,.jpg,.jpeg,.png,.gif"
                 className="hidden"
                 id="file-upload"
                 onChange={handleFileChange}
@@ -300,12 +319,22 @@ const AddService = ({ isOpen, onClose, editData }) => {
                 onClose();
               }}
               variant="tertiary"
+              disabled={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData?.data ? "Update" : "Add Service"}
               type="submit"
               variant="primary"
-              disabled={createMutation.isLoading || updateMutation.isLoading}
+              isLoading={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
+              loadingLabel={editData?.data ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

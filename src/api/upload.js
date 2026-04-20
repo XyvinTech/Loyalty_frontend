@@ -1,10 +1,16 @@
 import apiClient from "./client";
+import { validateImageFileForUpload } from "../utils/validateImageFile";
 
 const uploadUrl = "/upload";
 
 const uploadApi = {
   // Upload Image
   uploadImage: async (imageFile) => {
+    const check = validateImageFileForUpload(imageFile);
+    if (!check.ok) {
+      throw new Error(check.message);
+    }
+
     const formData = new FormData();
     formData.append("photo", imageFile);
 
@@ -19,6 +25,11 @@ const uploadApi = {
 
   // Update Image
   updateImage: async (imageFile) => {
+    const check = validateImageFileForUpload(imageFile);
+    if (!check.ok) {
+      throw new Error(check.message);
+    }
+
     const formData = new FormData();
     formData.append("image", imageFile);
 

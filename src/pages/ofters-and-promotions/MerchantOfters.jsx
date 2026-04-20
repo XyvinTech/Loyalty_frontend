@@ -30,6 +30,7 @@ const MerchantOffers = () => {
   const {
     data: offerData,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = getMerchantOffers(
@@ -73,18 +74,18 @@ const MerchantOffers = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
+        setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Delete failed.",
         });
       },
     });
-    setDeleteOpen(false);
-    setData(null);
   };
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const MerchantOffers = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
           <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
@@ -374,6 +375,8 @@ const MerchantOffers = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        data="offer"
+        confirmLoading={deleteMutation.isPending}
       />
       <AddOffer
         isOpen={addOpen}

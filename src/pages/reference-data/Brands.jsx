@@ -29,6 +29,7 @@ const Brands = () => {
   const {
     data: brands,
     isLoading,
+    isFetching,
     error,
     refetch,
     dataUpdatedAt,
@@ -77,18 +78,18 @@ const Brands = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Brand deleted successfully.",
         });
+        setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Could not delete brand.",
         });
       },
     });
-    setDeleteOpen(false);
-    setData(null);
   };
   const handleBulkDelete = async () => {
     if (!selectedRows.length) return;
@@ -131,7 +132,7 @@ const Brands = () => {
             onClick={() => {
               refetch();
             }}
-            isLoading={isLoading}
+            isLoading={isFetching}
           />
            <StyledSearchInput
             placeholder="Search"
@@ -274,6 +275,7 @@ const Brands = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
     </>
   );

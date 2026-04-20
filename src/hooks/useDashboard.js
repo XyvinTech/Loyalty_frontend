@@ -8,6 +8,7 @@ export function useDashboard() {
   const {
     data,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,
@@ -25,6 +26,7 @@ export function useDashboard() {
   return {
     dashboardData: data,
     isLoading,
+    isFetching,
     isError,
     error,
     refetch,

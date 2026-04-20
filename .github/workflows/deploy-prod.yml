@@ -28,6 +28,7 @@ jobs:
           VITE_SDK_API: ${{ secrets.VITE_API_PROD }}
           VITE_APP_URL: ${{ secrets.VITE_API_PROD }}
         run: |
+          rm -f .env .env.local .env.production .env.production.local
           npm ci
           npm run build
 

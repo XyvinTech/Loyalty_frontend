@@ -25,6 +25,7 @@ const ApiLogs = () => {
     data: logs,
     dataUpdatedAt,
     isLoading,
+    isFetching,
     refetch,
   } = useSdkLogs({
     page: currentPage,
@@ -139,7 +140,7 @@ const ApiLogs = () => {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
         </div>
       </div>
 

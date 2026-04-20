@@ -37,6 +37,7 @@ const PointsCriteria = () => {
   const {
     data: pointsCriteriaData,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = useGetPointsCriteria({
@@ -65,8 +66,13 @@ const PointsCriteria = () => {
   const handleDelete = () => {
     deleteMutation.mutate(selected, {
       onSuccess: (response) => {
-        addToast({ type: "success", message: response?.message });
+        addToast({
+          type: "success",
+          message: response?.message ?? "Deleted successfully.",
+        });
         refetch();
+        setDeleteOpen(false);
+        setSelected(null);
       },
       onError: (error) => {
         addToast({
@@ -75,8 +81,6 @@ const PointsCriteria = () => {
         });
       },
     });
-    setDeleteOpen(false);
-    setSelected(null);
   };
 
   const handleDeleteOpen = (id) => {
@@ -105,7 +109,7 @@ const PointsCriteria = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+            <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
             <StyledSearchInput
               placeholder="Search"
               className="w-full sm:w-auto"
@@ -232,6 +236,7 @@ const PointsCriteria = () => {
           onClose={() => setDeleteOpen(false)}
           onConfirm={handleDelete}
           data={"Points Criteria"}
+          confirmLoading={deleteMutation.isPending}
         />
       </div>
     </>

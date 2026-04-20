@@ -15,6 +15,10 @@ import { useOffers } from "../../hooks/useOffers";
 import { useTiers } from "../../hooks/useTiers";
 import ImageCropper from "../ImageCropper";
 import uploadApi from "../../api/upload";
+import {
+  validateImageFileForUpload,
+  getImageUploadRulesSummary,
+} from "../../utils/validateImageFile";
 import BulkCouponUpload from "./BulkCouponUpload";
 
 const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
@@ -370,6 +374,11 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
   };
 
   const handleCropComplete = (croppedBlob, croppedImageUrl) => {
+    const result = validateImageFileForUpload(croppedBlob);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      return;
+    }
     setImagePreview(croppedImageUrl);
     setValue("posterImage", croppedBlob);
     setIsCropping(false);
@@ -380,19 +389,32 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
   };
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setOriginalFile(file);
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
-      setValue("posterImage", file);
+    if (!file) return;
+    const result = validateImageFileForUpload(file);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      e.target.value = "";
+      return;
     }
+    setOriginalFile(file);
+    const imageUrl = URL.createObjectURL(file);
+    setImagePreview(imageUrl);
+    setValue("posterImage", file);
   };
   const onSubmit = async (data) => {
     let imageUrl = data.posterImage;
     const file = watch("posterImage");
     if (file instanceof File || file instanceof Blob) {
-      const uploadResponse = await uploadApi.uploadImage(file);
-      imageUrl = uploadResponse.data?.url;
+      try {
+        const uploadResponse = await uploadApi.uploadImage(file);
+        imageUrl = uploadResponse.data?.url;
+      } catch (err) {
+        addToast({
+          type: "error",
+          message: err?.message || "Image upload failed.",
+        });
+        return;
+      }
     }
     const formData = {
       merchantId: data.merchantId,
@@ -826,9 +848,12 @@ const AddOffer = ({ isOpen, onClose, editData, offerType }) => {
                 <label className="text-xs font-medium text-gray-500">
                   Poster Image
                 </label>
+                <p className="text-xs text-gray-500 mt-0.5 mb-1">
+                  {getImageUploadRulesSummary()}
+                </p>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/webp,image/jpeg,image/png,image/gif,.webp,.jpg,.jpeg,.png,.gif"
                   className="hidden"
                   id="file-upload"
                   onChange={handleFileChange}

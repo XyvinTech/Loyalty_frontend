@@ -375,18 +375,13 @@ const AddSubAdmin = ({ isOpen, onClose, onSuccess, editData }) => {
               disabled={createMutation.isPending || updateMutation.isPending}
             />
             <StyledButton
-              name={
-                editData
-                  ? updateMutation.isPending
-                    ? "Updating..."
-                    : "Update User"
-                  : createMutation.isPending
-                  ? "Creating..."
-                  : "Add User"
-              }
+              name={editData ? "Update User" : "Add User"}
               type="submit"
               variant="primary"
-              disabled={createMutation.isPending || updateMutation.isPending}
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

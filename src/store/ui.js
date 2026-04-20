@@ -20,6 +20,9 @@ const useUiStore = create(
       // Toast notifications
       toasts: [],
 
+      // Bulk upload job status (persists across page navigation)
+      bulkJob: null,
+
       // Actions
 
       // Sidebar actions
@@ -58,12 +61,17 @@ const useUiStore = create(
           toasts: state.toasts.filter((toast) => toast.id !== id),
         })),
       clearToasts: () => set({ toasts: [] }),
+
+      // Bulk job actions
+      setBulkJob: (job) => set({ bulkJob: job }),
+      clearBulkJob: () => set({ bulkJob: null }),
     }),
     {
       name: "ui-storage", // name for the localStorage key
       partialize: (state) => ({
         theme: state.theme,
         sidebarExpanded: state.sidebarExpanded,
+        bulkJob: state.bulkJob,
       }), // only persist these fields
     }
   )
@@ -77,5 +85,6 @@ export const selectTheme = (state) => state.theme;
 export const selectActiveModal = (state) => state.activeModal;
 export const selectModalData = (state) => state.modalData;
 export const selectToasts = (state) => state.toasts;
+export const selectBulkJob = (state) => state.bulkJob;
 
 export default useUiStore;

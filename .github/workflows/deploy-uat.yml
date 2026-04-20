@@ -1,0 +1,66 @@
+name: UAT - Deploy Frontend
+
+on:
+  push:
+    branches:
+      - UAT
+
+jobs:
+  deploy-uat:
+    name: Deploy Frontend to UAT Server
+    runs-on: [self-hosted, uat-frontend]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies and Build
+        env:
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_UAT }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Rename dist to loyalty-frontend
+        run: mv ./dist ./loyalty-frontend
+
+      - name: Save staging IP locally
+        run: echo "${{ secrets.SERVER_HOST }}" > /home/loyalty/staging_host_ip.txt
+
+      - name: Clean Temporary Directory on Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            rm -rf ~/deploy-temp
+            mkdir ~/deploy-temp
+
+      - name: Copy Files to Server
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: ./loyalty-frontend/
+          target: ~/deploy-temp/loyalty-frontend/
+
+      - name: Deploy on Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf ~/deploy-temp
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S rm -rf /var/cache/nginx/*
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S systemctl restart nginx

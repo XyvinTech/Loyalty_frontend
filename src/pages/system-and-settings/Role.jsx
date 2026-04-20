@@ -19,6 +19,7 @@ const Role = () => {
   const {
     data: roleSettings,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = useGetRoleSettings();
@@ -41,18 +42,18 @@ const Role = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Role deleted successfully.",
         });
+        setDeleteOpen(false);
+        setSelectedRole(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Could not delete role.",
         });
       },
     });
-    setDeleteOpen(false);
-    setSelectedRole(null);
   };
 
   const formatDate = (timestamp) => {
@@ -93,7 +94,7 @@ const Role = () => {
           </p>
         </div>
         <div className="flex items-center gap-3 mt-4 md:mt-0">
-          <RefreshButton onClick={refetch} isLoading={isLoading} />
+          <RefreshButton onClick={refetch} isLoading={isFetching} />
           <StyledButton
             name={
              <> <span className="flex items-center gap-2">
@@ -179,6 +180,7 @@ const Role = () => {
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
         data={"Role"}
+        confirmLoading={deleteMutation.isPending}
       />
     </div>
   );

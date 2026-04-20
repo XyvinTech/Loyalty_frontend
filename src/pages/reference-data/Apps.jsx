@@ -22,6 +22,7 @@ const Apps = () => {
   const {
     data: appTypes,
     isLoading,
+    isFetching,
     error,
     refetch,
     dataUpdatedAt,
@@ -88,18 +89,18 @@ const Apps = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
+        setDeleteOpen(false);
+        setData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Delete failed.",
         });
       },
     });
-    setDeleteOpen(false);
-    setData(null);
   };
   return (
     <>
@@ -114,7 +115,7 @@ const Apps = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
 {/* 
           <StyledSearchInput
             placeholder="Search"
@@ -183,6 +184,7 @@ const Apps = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
     </>
   );

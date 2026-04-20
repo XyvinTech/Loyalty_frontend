@@ -1,5 +1,6 @@
 import {
   ArrowDownTrayIcon,
+  ArrowPathIcon,
   PencilIcon,
   EyeIcon,
   FunnelIcon,
@@ -375,6 +376,7 @@ const Customer = () => {
   const {
     data: customers,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = useGetCustomers(filters);
@@ -428,18 +430,19 @@ const Customer = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Customer deleted successfully.",
         });
+        setDeleteOpen(false);
+        setDeleteCustomerId(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message:
+            error?.response?.data?.message ?? "Could not delete customer.",
         });
       },
     });
-    setDeleteOpen(false);
-    setDeleteCustomerId(null);
   };
 
   const handleSelectAll = () => {
@@ -489,21 +492,25 @@ const Customer = () => {
   };
 
   const handleDownload = async () => {
-    try {
-      // Prepare filters for export (remove pagination)
-      const exportFilters = { ...filters };
-      delete exportFilters.page;
-      delete exportFilters.limit;
+    const exportFilters = { ...filters };
+    delete exportFilters.page;
+    delete exportFilters.limit;
 
+    addToast({
+      type: "info",
+      message:
+        "Preparing customer export (CSV). This may take a moment for large lists.",
+    });
+
+    try {
       const blob = await exportMutation.mutateAsync(exportFilters);
 
-      // Create download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = `customers_export_${
         new Date().toISOString().split("T")[0]
-      }.xlsx`;
+      }.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -511,12 +518,28 @@ const Customer = () => {
 
       addToast({
         type: "success",
-        message: "Customers exported successfully!",
+        message: "Customer CSV downloaded successfully.",
       });
     } catch (error) {
+      let message = "Failed to export customers";
+      try {
+        const data = error?.response?.data;
+        if (data instanceof Blob) {
+          const text = await data.text();
+          const json = JSON.parse(text);
+          message = json.message || message;
+        } else if (typeof data?.message === "string") {
+          message = data.message;
+        }
+      } catch {
+        /* use default */
+      }
+      if (message === "Failed to export customers" && error?.message) {
+        message = error.message;
+      }
       addToast({
         type: "error",
-        message: error?.response?.data?.message || "Failed to export customers",
+        message,
       });
     }
   };
@@ -533,7 +556,7 @@ const Customer = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
           <StyledSearchInput
             placeholder="Search customers..."
             value={filters.name}
@@ -552,10 +575,17 @@ const Customer = () => {
           />
           <StyledButton
             name={
-              <>
-                <ArrowDownTrayIcon className="h-5 w-5" />
-                Download
-              </>
+              exportMutation.isPending ? (
+                <>
+                  <ArrowPathIcon className="h-5 w-5 shrink-0 animate-spin" />
+                  Downloading…
+                </>
+              ) : (
+                <>
+                  <ArrowDownTrayIcon className="h-5 w-5 shrink-0" />
+                  Download CSV
+                </>
+              )
             }
             onClick={handleDownload}
             variant="secondary"
@@ -572,6 +602,22 @@ const Customer = () => {
           /> */}
         </div>
       </div>
+
+      {exportMutation.isPending && (
+        <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <ArrowPathIcon className="h-6 w-6 text-blue-600 shrink-0 animate-spin" />
+            <div>
+              <h3 className="font-medium text-blue-800">Download in progress</h3>
+              <p className="text-sm text-blue-700 mt-1">
+                Your customer list is being exported as CSV on the server. You
+                can keep using this page; the file will save automatically when
+                it is ready. Very large exports can take a minute or two.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Active Filters Display */}
       {(filters.status ||
@@ -791,6 +837,7 @@ const Customer = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
 
       {/* Customer Detail Modal */}

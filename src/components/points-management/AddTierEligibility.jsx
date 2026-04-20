@@ -292,16 +292,18 @@ const AddTierEligibility = ({ open, setOpen, data = null }) => {
               type="button"
               variant="secondary"
               onClick={() => setOpen(false)}
-            >
-              Cancel
-            </StyledButton>
+              disabled={
+                createMutation.isPending || updateMutation.isPending
+              }
+            />
             <StyledButton
               name={isEditing ? "Update" : "Create"}
               type="submit"
-              loading={createMutation.isPending || updateMutation.isPending}
-            >
-              {isEditing ? "Update" : "Create"}
-            </StyledButton>
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={isEditing ? "Saving…" : "Adding…"}
+            />
           </div>
         </form>
       </div>

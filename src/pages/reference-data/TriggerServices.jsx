@@ -31,6 +31,7 @@ const TriggerServices = () => {
   const {
     data: triggerServices,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = useGetTriggerServices({
@@ -83,18 +84,18 @@ const TriggerServices = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
+        setDeleteOpen(false);
+        setId(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Delete failed.",
         });
       },
     });
-    setDeleteOpen(false);
-    setId(null);
   };
   const handleBulkDelete = async () => {
     if (!selectedRows.length) return;
@@ -134,7 +135,7 @@ const TriggerServices = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
           <StyledSearchInput
             placeholder="Search"
             className="w-full sm:w-auto"
@@ -285,6 +286,7 @@ const TriggerServices = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
     </>
   );

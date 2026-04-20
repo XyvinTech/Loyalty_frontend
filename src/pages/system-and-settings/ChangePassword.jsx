@@ -127,10 +127,9 @@ const ChangePassword = () => {
 
         <StyledButton
           type="submit"
-          name={
-            changePasswordMutation.isPending ? "Updating..." : "Change Password"
-          }
-          disabled={changePasswordMutation.isPending}
+          name="Change Password"
+          isLoading={changePasswordMutation.isPending}
+          loadingLabel="Saving…"
         />
       </form>
     </div>

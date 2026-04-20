@@ -11,6 +11,10 @@ import StyledButton from "../../ui/StyledButton";
 import { useCategory } from "../../hooks/useCategory";
 import useUiStore from "../../store/ui";
 import uploadApi from "../../api/upload";
+import {
+  validateImageFileForUpload,
+  getImageUploadRulesSummary,
+} from "../../utils/validateImageFile";
 
 const schema = z.object({
   title: z.object({
@@ -31,6 +35,7 @@ const schema = z.object({
 const AddCategory = ({ isOpen, onClose, editData }) => {
   const [activeLanguage, setActiveLanguage] = useState("en");
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const {
     register,
@@ -73,6 +78,7 @@ const AddCategory = ({ isOpen, onClose, editData }) => {
   }, [editData, setValue]);
 
   const onSubmit = async (data) => {
+    setIsSaving(true);
     try {
       let imageUrl = data.image;
       const file = watch("image");
@@ -90,7 +96,10 @@ const AddCategory = ({ isOpen, onClose, editData }) => {
 
       action.mutate(payload, {
         onSuccess: (data) => {
-          addToast({ type: "success", message: data?.message });
+          addToast({
+            type: "success",
+            message: data?.message ?? "Category saved successfully.",
+          });
           reset({
             title: { en: "", ar: "" },
             image: "",
@@ -101,20 +110,30 @@ const AddCategory = ({ isOpen, onClose, editData }) => {
           onClose();
         },
         onError: (error) => {
-          addToast({ type: "error", message: error?.response?.data?.message });
+          addToast({
+            type: "error",
+            message: error?.response?.data?.message ?? "Could not save category.",
+          });
         },
+        onSettled: () => setIsSaving(false),
       });
     } catch (error) {
+      setIsSaving(false);
       addToast({ type: "error", message: error.message });
     }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      setValue("image", file);
+    if (!file) return;
+    const result = validateImageFileForUpload(file);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      e.target.value = "";
+      return;
     }
+    setImagePreview(URL.createObjectURL(file));
+    setValue("image", file);
   };
 
   if (!isOpen) return null;
@@ -189,9 +208,12 @@ const AddCategory = ({ isOpen, onClose, editData }) => {
 
             <div>
               <label className="text-xs font-medium text-gray-500">Icon</label>
+              <p className="text-xs text-gray-500 mt-0.5 mb-1">
+                {getImageUploadRulesSummary()}
+              </p>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/webp,image/jpeg,image/png,image/gif,.webp,.jpg,.jpeg,.png,.gif"
                 className="hidden"
                 id="file-upload"
                 onChange={handleFileChange}
@@ -264,11 +286,22 @@ const AddCategory = ({ isOpen, onClose, editData }) => {
                 onClose();
               }}
               variant="tertiary"
+              disabled={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Update" : "Add Category"}
               type="submit"
               variant="primary"
+              isLoading={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

@@ -1,12 +1,15 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_PROD,
+  baseURL:
+    import.meta.env.VITE_API_BASE_URL ||
+    import.meta.env.VITE_API_UAT ||
+    import.meta.env.VITE_API_PROD,
   headers: {
     "Content-Type": "application/json",
     "api-key": import.meta.env.VITE_API_KEY,
   },
-  timeout: 10000, // 10 secondss
+  timeout: 10000,
 });
 
 // Request interceptor for adding auth token

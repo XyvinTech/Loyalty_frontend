@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import BulkJobBanner from "../components/BulkJobBanner";
 import useUiStore, { selectSidebarOpen } from "../store/ui";
 import useAuthStore, { selectIsFirstLogin } from "../store/auth";
 import { useAuth } from "../hooks/useAuth";
@@ -53,6 +54,7 @@ const Layout = ({ children }) => {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <BulkJobBanner />
         <main className="flex-1 pb-16">
           <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
             {children}

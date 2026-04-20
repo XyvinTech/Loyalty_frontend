@@ -28,6 +28,7 @@ const TriggerEvents = () => {
   const {
     data: triggerEvents,
     isLoading,
+    isFetching,
     refetch,
     dataUpdatedAt,
   } = useGetTriggerEvents({
@@ -78,18 +79,18 @@ const TriggerEvents = () => {
       onSuccess: (response) => {
         addToast({
           type: "success",
-          message: response?.message,
+          message: response?.message ?? "Deleted successfully.",
         });
+        setDeleteOpen(false);
+        setEditData(null);
       },
       onError: (error) => {
         addToast({
           type: "error",
-          message: error?.response?.data?.message,
+          message: error?.response?.data?.message ?? "Delete failed.",
         });
       },
     });
-    setDeleteOpen(false);
-    setEditData(null);
   };
   const handleBulkDelete = async () => {
     if (!selectedRows.length) return;
@@ -133,7 +134,7 @@ const TriggerEvents = () => {
             onClick={() => {
               refetch();
             }}
-            isLoading={isLoading}
+            isLoading={isFetching}
           />
           <StyledSearchInput
             placeholder="Search"
@@ -268,6 +269,7 @@ const TriggerEvents = () => {
         isOpen={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDelete}
+        confirmLoading={deleteMutation.isPending}
       />
     </>
   );

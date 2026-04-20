@@ -7,6 +7,10 @@ import StyledButton from "../../ui/StyledButton";
 import { useBrands } from "../../hooks/useBrand";
 import useUiStore from "../../store/ui";
 import uploadApi from "../../api/upload";
+import {
+  validateImageFileForUpload,
+  getImageUploadRulesSummary,
+} from "../../utils/validateImageFile";
 
 const schema = z.object({
   title: z.object({
@@ -25,6 +29,7 @@ const schema = z.object({
 const AddBrand = ({ isOpen, onClose, editData }) => {
   const [activeLanguage, setActiveLanguage] = useState("en");
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const {
     register,
@@ -67,6 +72,7 @@ const AddBrand = ({ isOpen, onClose, editData }) => {
   }, [editData, setValue]);
 
   const onSubmit = async (formData) => {
+    setIsSaving(true);
     try {
       let imageUrl = formData.image;
       const file = watch("image");
@@ -84,24 +90,37 @@ const AddBrand = ({ isOpen, onClose, editData }) => {
 
       action.mutate(payload, {
         onSuccess: (data) => {
-          addToast({ type: "success", message: data?.message });
+          addToast({
+            type: "success",
+            message: data?.message ?? "Brand saved successfully.",
+          });
           resetAndClose();
         },
         onError: (error) => {
-          addToast({ type: "error", message: error?.response?.data?.message });
+          addToast({
+            type: "error",
+            message: error?.response?.data?.message ?? "Could not save brand.",
+          });
         },
+        onSettled: () => setIsSaving(false),
       });
     } catch (error) {
+      setIsSaving(false);
       addToast({ type: "error", message: error.message });
     }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      setValue("image", file);
+    if (!file) return;
+    const result = validateImageFileForUpload(file);
+    if (!result.ok) {
+      addToast({ type: "error", message: result.message });
+      e.target.value = "";
+      return;
     }
+    setImagePreview(URL.createObjectURL(file));
+    setValue("image", file);
   };
 
   const resetAndClose = () => {
@@ -182,9 +201,12 @@ const AddBrand = ({ isOpen, onClose, editData }) => {
 
             <div>
               <label className="text-xs font-medium text-gray-500">Logo</label>
+              <p className="text-xs text-gray-500 mt-0.5 mb-1">
+                {getImageUploadRulesSummary()}
+              </p>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/webp,image/jpeg,image/png,image/gif,.webp,.jpg,.jpeg,.png,.gif"
                 className="hidden"
                 id="file-upload"
                 onChange={handleFileChange}
@@ -253,11 +275,22 @@ const AddBrand = ({ isOpen, onClose, editData }) => {
               name="Cancel"
               onClick={() => resetAndClose()}
               variant="tertiary"
+              disabled={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Update" : "Add Brand"}
               type="submit"
               variant="primary"
+              isLoading={
+                isSaving ||
+                createMutation.isPending ||
+                updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

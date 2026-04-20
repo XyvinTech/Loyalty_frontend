@@ -25,6 +25,7 @@ const AuthLogs = () => {
     data: logs,
     dataUpdatedAt,
     isLoading,
+    isFetching,
     refetch,
   } = useAuthLogs({
     page: currentPage,
@@ -139,7 +140,7 @@ const AuthLogs = () => {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
         </div>
       </div>
 

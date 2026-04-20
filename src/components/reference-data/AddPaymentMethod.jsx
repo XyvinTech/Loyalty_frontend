@@ -109,11 +109,18 @@ const AddPaymentMethod = ({ isOpen, onClose, editData }) => {
               name="Cancel"
               onClick={() => resetAndClose()}
               variant="tertiary"
+              disabled={
+                createMutation.isPending || updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Update" : "Add Payment Method"}
               type="submit"
               variant="primary"
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

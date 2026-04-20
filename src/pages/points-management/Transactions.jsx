@@ -394,6 +394,7 @@ const Transactions = () => {
     dataUpdatedAt,
     refetch,
     isLoading,
+    isFetching,
   } = useGetTransactions(filters);
 
   const transactions = transactionsData?.data?.transactions || [];
@@ -478,7 +479,10 @@ const Transactions = () => {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
-          <RefreshButton onClick={() => refetch()} isLoading={isLoading} />
+          <RefreshButton
+            onClick={() => refetch()}
+            isLoading={isFetching}
+          />
           {/* <StyledSearchInput
             placeholder="Search transactions..."
             value={filters.search}

@@ -272,12 +272,13 @@ const ReducePoints = () => {
               type="button"
               variant="secondary"
               onClick={resetForm}
-              disabled={reducePoints.isLoading}
+              disabled={reducePoints.isPending}
               name="Reset"
             />
             <StyledButton
               type="submit"
-              isLoading={reducePoints.isLoading}
+              isLoading={reducePoints.isPending}
+              loadingLabel="Processing…"
               name="Reduce Points"
             />
           </div>

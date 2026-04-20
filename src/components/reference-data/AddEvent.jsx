@@ -260,12 +260,18 @@ const AddEvent = ({ isOpen, onClose, onSuccess, editData }) => {
               name="Cancel"
               onClick={resetAndClose}
               variant="tertiary"
+              disabled={
+                createMutation.isPending || updateMutation.isPending
+              }
             />
             <StyledButton
               name={editData ? "Update" : "Add Event"}
               type="submit"
               variant="primary"
-              disabled={createMutation.isLoading || updateMutation.isLoading}
+              isLoading={
+                createMutation.isPending || updateMutation.isPending
+              }
+              loadingLabel={editData ? "Saving…" : "Adding…"}
             />
           </div>
         </form>

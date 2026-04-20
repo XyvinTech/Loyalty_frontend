@@ -1,0 +1,63 @@
+name: PROD - Deploy Frontend
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  deploy-prod:
+    name: Deploy Frontend to Production Server
+    runs-on: [self-hosted, prod-frontend]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies and Build
+        env:
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_PROD }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Rename dist to loyalty-frontend
+        run: mv ./dist ./loyalty-frontend
+
+      - name: Clean Temporary Directory on Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          script: |
+            rm -rf ~/deploy-temp
+            mkdir ~/deploy-temp
+
+      - name: Copy Files to Server
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          source: ./loyalty-frontend/
+          target: ~/deploy-temp/loyalty-frontend/
+
+      - name: Deploy on Server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          script: |
+            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
+            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
+            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S rm -rf ~/deploy-temp
+            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S rm -rf /var/cache/nginx/*
+            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S systemctl restart nginx

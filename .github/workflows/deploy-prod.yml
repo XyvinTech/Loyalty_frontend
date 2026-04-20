@@ -33,9 +33,9 @@ jobs:
       - name: Clean Temporary Directory on Server
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.PROD_SERVER_HOST }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST_PROD }}
+          username: ${{ secrets.SERVER_USER_PROD }}
+          password: ${{ secrets.SERVER_PASSWORD_PROD }}
           script: |
             rm -rf ~/deploy-temp
             mkdir ~/deploy-temp
@@ -43,21 +43,21 @@ jobs:
       - name: Copy Files to Server
         uses: appleboy/scp-action@v0.1.3
         with:
-          host: ${{ secrets.PROD_SERVER_HOST }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST_PROD }}
+          username: ${{ secrets.SERVER_USER_PROD }}
+          password: ${{ secrets.SERVER_PASSWORD_PROD }}
           source: ./loyalty-frontend/
           target: ~/deploy-temp/loyalty-frontend/
 
       - name: Deploy on Server
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.PROD_SERVER_HOST }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          host: ${{ secrets.SERVER_HOST_PRO }}
+          username: ${{ secrets.SERVER_USER_PROD }}
+          password: ${{ secrets.SERVER_PASSWORD_PROD }}
           script: |
-            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
-            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
-            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S rm -rf ~/deploy-temp
-            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S rm -rf /var/cache/nginx/*
-            echo "${{ secrets.PROD_SERVER_PASSWORD }}" | sudo -S systemctl restart nginx
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S rm -rf /var/www/html/loyalty-frontend
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S mv ~/deploy-temp/loyalty-frontend /var/www/html/
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S rm -rf ~/deploy-temp
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S rm -rf /var/cache/nginx/*
+            echo "${{ secrets.SERVER_PASSWORD_PROD }}" | sudo -S systemctl restart nginx

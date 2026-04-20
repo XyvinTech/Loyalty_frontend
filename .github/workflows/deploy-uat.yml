@@ -1,4 +1,4 @@
-name: Deploy React App to Servers
+name: UAT - Deploy Frontend
 
 on:
   push:
@@ -6,8 +6,9 @@ on:
       - UAT
 
 jobs:
-  deploy:
-    runs-on: [self-hosted, uat-frontend]  
+  deploy-uat:
+    name: Deploy Frontend to UAT Server
+    runs-on: [self-hosted, uat-frontend]
 
     steps:
       - name: Checkout Code
@@ -21,7 +22,7 @@ jobs:
       - name: Install Dependencies and Build
         env:
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
-          VITE_API_UAT: ${{ secrets.VITE_API_UAT }}
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_UAT }}
         run: |
           npm ci
           npm run build
@@ -31,7 +32,6 @@ jobs:
 
       - name: Save staging IP locally
         run: echo "${{ secrets.SERVER_HOST }}" > /home/loyalty/staging_host_ip.txt
-
 
       - name: Clean Temporary Directory on Server
         uses: appleboy/ssh-action@v0.1.6

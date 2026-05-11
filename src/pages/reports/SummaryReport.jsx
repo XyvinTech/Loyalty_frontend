@@ -119,6 +119,15 @@ const metricExplanations = {
     filters:
       "Only admin redeem transactions within date range for this app type",
   },
+  redemptionCancellations: {
+    description:
+      "Points restored to customers when their redemptions were cancelled during the selected period. These are positive-point reversals that offset prior redemptions.",
+    formula:
+      "Adding up points from adjust transactions whose transaction ID ends with '_cancelled'",
+    dataSource: "Transaction records",
+    filters:
+      "Only completed cancellation adjustments within date range for this app type",
+  },
   netMovement: {
     description:
       "The net change in points during your selected period. This shows the overall movement of points after accounting for all earning, redeeming, expiring, adjusting, and admin reductions.",
@@ -527,6 +536,11 @@ const SummaryReport = () => {
         explanation: metricExplanations.adminReductionPoints,
       },
       {
+        label: "Redemption Cancellations",
+        type: "redemptionCancellations",
+        explanation: metricExplanations.redemptionCancellations,
+      },
+      {
         label: "Net Movement",
         type: "netMovement",
         explanation: metricExplanations.netMovement,
@@ -576,6 +590,9 @@ const SummaryReport = () => {
           rowData[appTypeName] = data?.totalExpiredPoints || 0;
         } else if (row.type === "adminReductionPoints") {
           rowData[appTypeName] = data?.adminReductionPoints || 0;
+        } else if (row.type === "redemptionCancellations") {
+          rowData[appTypeName] =
+            data?.redemptionCancellations?.totalPoints || 0;
         } else if (row.type === "netMovement") {
           // Calculate per app type net movement (closing - opening, since points have signs)
           const appTypeClosing = data?.closingBalance || 0;
@@ -617,6 +634,8 @@ const SummaryReport = () => {
         rowData["Total"] = totals.totalExpiredPoints || 0;
       } else if (row.type === "adminReductionPoints") {
         rowData["Total"] = totals.adminReductionPoints || 0;
+      } else if (row.type === "redemptionCancellations") {
+        rowData["Total"] = totals.redemptionCancellations?.totalPoints || 0;
       } else if (row.type === "netMovement") {
         rowData["Total"] = totals.netMovement || 0;
       }

@@ -426,6 +426,11 @@ const TransactionReport = () => {
             <span className="w-2 h-2 bg-green-600 rounded-full"></span>
             <span className="text-gray-700">Transaction Type</span>
           </div>
+          <div className="flex items-start gap-2 ml-4">
+            <span className="text-xs text-gray-500 mt-0.5">
+              Adjust rows are sub-categorised as <code>redemption_cancellation</code>, <code>promotion</code>, or <code>admin_reduction</code> based on the transaction reference.
+            </span>
+          </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-600 rounded-full"></span>
             <span className="text-gray-700">Points</span>

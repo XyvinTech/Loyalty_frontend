@@ -35,7 +35,7 @@ const formatTransactionData = (transactions) => {
 
   return transactions.map((transaction) => ({
     ...transaction,
-    customerName: transaction.customer_id?.name || "Unknown",
+    customerId: transaction.customer_id?.customer_id || transaction.customer_id?._id || "",
     type: transaction.transaction_type,
     points: transaction.points,
     date: new Date(transaction.transaction_date).toLocaleDateString("en-US", {

@@ -65,7 +65,7 @@ const PriorityCustomerForm = ({
     const options = apiCustomers.map((customer) => ({
       id: customer._id,
       label: customer.customer_id,
-      subLabel: customer.name || "-",
+      subLabel: customer.email || "-",
       tier: customer.tier,
     }));
 
@@ -77,7 +77,7 @@ const PriorityCustomerForm = ({
       options.unshift({
         id: initialData.customer._id,
         label: initialData.customer.customer_id,
-        subLabel: initialData.customer.name || "-",
+        subLabel: initialData.customer.email || "-",
         tier: initialData.customer.tier,
       });
     }
@@ -174,11 +174,8 @@ const PriorityCustomerForm = ({
                     Customer
                   </span>
                   <div className="mt-2 rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
-                    <div className="font-semibold">
-                      {initialData?.customer?.name || "-"}
-                    </div>
-                    <div className="text-gray-500">
-                      {initialData?.customer?.customer_id}
+                    <div className="font-mono font-semibold">
+                      {initialData?.customer?.customer_id || "-"}
                     </div>
                   </div>
                 </div>
@@ -604,11 +601,8 @@ const PriorityCustomers = () => {
               priorityCustomers.map((item) => (
                 <tr key={item._id} className="hover:bg-gray-50/80">
                   <td className="px-6 py-4">
-                    <div className="text-sm font-semibold text-gray-900">
-                      {item.customer?.name || "-"}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {item.customer?.customer_id}
+                    <div className="text-sm font-mono font-semibold text-gray-900">
+                      {item.customer?.customer_id || "-"}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">

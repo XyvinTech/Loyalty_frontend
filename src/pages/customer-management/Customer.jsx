@@ -9,6 +9,7 @@ import {
 import StyledButton from "../../ui/StyledButton";
 import StyledSearchInput from "../../ui/StyledSearchInput";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import StyledTable from "../../ui/StyledTable";
 import AddCustomer from "../../components/customer-management/AddCustomer.jsx";
 import DeleteModal from "../../ui/DeleteModal";
@@ -335,6 +336,7 @@ const CustomerDetailModal = ({ customer, onClose, isLoading }) => {
 };
 
 const Customer = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     page: 1,
     limit: 10,
@@ -352,9 +354,8 @@ const Customer = () => {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null); // Changed from selectedCustomer
-  const [editCustomerId, setEditCustomerId] = useState(null); // Separate state for editing
-  const [deleteCustomerId, setDeleteCustomerId] = useState(null); // Separate state for deleting
+  const [editCustomerId, setEditCustomerId] = useState(null);
+  const [deleteCustomerId, setDeleteCustomerId] = useState(null);
 
   const {
     useGetCustomers,
@@ -368,10 +369,6 @@ const Customer = () => {
 
   // Fetch customer data for editing
   const { data: editCustomerData } = useGetCustomerById(editCustomerId);
-
-  // Fetch customer data for viewing details
-  const { data: selectedCustomerData, isLoading: isLoadingSelectedCustomer } =
-    useGetCustomerById(selectedCustomerId);
 
   const {
     data: customers,
@@ -479,11 +476,7 @@ const Customer = () => {
   };
 
   const handleViewCustomer = (customerId) => {
-    setSelectedCustomerId(customerId);
-  };
-
-  const handleCloseCustomerDetail = () => {
-    setSelectedCustomerId(null);
+    navigate(`/customers/${customerId}`);
   };
 
   const handleCloseAddCustomer = () => {
@@ -558,7 +551,7 @@ const Customer = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
           <StyledSearchInput
-            placeholder="Search customers..."
+            placeholder="Search by Customer ID / email / phone"
             value={filters.name}
             onChange={(e) => handleSearch(e.target.value)}
             className="w-full sm:w-auto"
@@ -741,9 +734,6 @@ const Customer = () => {
                 Customer ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Registered through
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -771,9 +761,6 @@ const Customer = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {item.customer_id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.name || "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {item.app_type?.name || "-"}
@@ -815,7 +802,7 @@ const Customer = () => {
             ) : (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="6"
                   className="px-6 py-4 text-center text-gray-500 text-sm"
                 >
                   No data available
@@ -839,15 +826,6 @@ const Customer = () => {
         onConfirm={handleDelete}
         confirmLoading={deleteMutation.isPending}
       />
-
-      {/* Customer Detail Modal */}
-      {selectedCustomerId && (
-        <CustomerDetailModal
-          customer={selectedCustomerData}
-          onClose={handleCloseCustomerDetail}
-          isLoading={isLoadingSelectedCustomer}
-        />
-      )}
 
       {/* Filter Modal */}
       {showFilterModal && (

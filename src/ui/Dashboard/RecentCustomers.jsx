@@ -25,8 +25,8 @@ const RecentCustomers = ({ customers, loading }) => {
                 <UserCircleIcon className="w-5 h-5 text-gray-400" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900">
-                  {customer.name}
+                <p className="text-sm font-mono font-medium text-gray-900">
+                  {customer.customer_id || customer.id}
                 </p>
                 <p className="text-xs text-gray-500">{customer.email}</p>
               </div>

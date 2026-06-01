@@ -42,11 +42,12 @@ export const reportsApi = {
   },
 
   // Get offer summary report data (JSON)
-  getOfferSummary: (startDate, endDate) => {
+  getOfferSummary: async (startDate, endDate) => {
     const params = new URLSearchParams();
     if (startDate) params.append("startDate", startDate);
     if (endDate) params.append("endDate", endDate);
-    return apiClient.get(`${rootUrl}/offer-summary?${params.toString()}`);
+    const response = await apiClient.get(`${rootUrl}/offer-summary?${params.toString()}`);
+    return response.data;
   },
 
   // Export offer summary as Excel blob

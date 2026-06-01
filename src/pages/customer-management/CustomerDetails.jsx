@@ -96,12 +96,6 @@ const TransactionsTab = ({ customerId }) => {
     queryParams
   );
 
-  // #region agent log
-  if (data !== undefined || (!isLoading && !isFetching)) {
-    fetch('http://127.0.0.1:7431/ingest/98cfb3b4-06e5-4a3f-9c66-5eb7ccae209c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'217b4f'},body:JSON.stringify({sessionId:'217b4f',location:'CustomerDetails.jsx:TransactionsTab',message:'raw query result',data:{customerId,isLoading,isFetching,dataKeys:data?Object.keys(data):null,dataDataKeys:data?.data?Object.keys(data.data):null,txCount:data?.data?.transactions?.length,paginationRaw:data?.data?.pagination,pointsSummaryRaw:data?.data?.points_summary,httpStatus:data?.status,fullData:data},timestamp:Date.now(),runId:'run1',hypothesisId:'B-C-D-E'})}).catch(()=>{});
-  }
-  // #endregion
-
   const transactions = data?.data?.transactions || [];
   // Backend returns: pagination.total, pagination.pages, pagination.page, pagination.limit
   const rawPagination = data?.data?.pagination || {};
@@ -382,10 +376,6 @@ const CustomerDetails = () => {
   const navigate = useNavigate();
   const { useGetCustomerById, useGetCustomerDashboard } = useCustomers();
   const [activeTab, setActiveTab] = useState("transactions");
-
-  // #region agent log
-  fetch('http://127.0.0.1:7431/ingest/98cfb3b4-06e5-4a3f-9c66-5eb7ccae209c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'217b4f'},body:JSON.stringify({sessionId:'217b4f',location:'CustomerDetails.jsx:CustomerDetails-init',message:'page mounted with id param',data:{id,idLength:id?.length,looksLikeObjectId:/^[a-f0-9]{24}$/.test(id||'')},timestamp:Date.now(),runId:'run1',hypothesisId:'A-E'})}).catch(()=>{});
-  // #endregion
 
   const { data: customerData, isLoading: isLoadingCustomer } = useGetCustomerById(id);
   const { data: dashboardData, isLoading: isLoadingDashboard } = useGetCustomerDashboard(id);

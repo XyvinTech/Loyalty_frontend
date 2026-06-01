@@ -96,8 +96,22 @@ const TransactionsTab = ({ customerId }) => {
     queryParams
   );
 
+  // #region agent log
+  if (data !== undefined || (!isLoading && !isFetching)) {
+    fetch('http://127.0.0.1:7431/ingest/98cfb3b4-06e5-4a3f-9c66-5eb7ccae209c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'217b4f'},body:JSON.stringify({sessionId:'217b4f',location:'CustomerDetails.jsx:TransactionsTab',message:'raw query result',data:{customerId,isLoading,isFetching,dataKeys:data?Object.keys(data):null,dataDataKeys:data?.data?Object.keys(data.data):null,txCount:data?.data?.transactions?.length,paginationRaw:data?.data?.pagination,pointsSummaryRaw:data?.data?.points_summary,httpStatus:data?.status,fullData:data},timestamp:Date.now(),runId:'run1',hypothesisId:'B-C-D-E'})}).catch(()=>{});
+  }
+  // #endregion
+
   const transactions = data?.data?.transactions || [];
-  const pagination = data?.data?.pagination || {};
+  // Backend returns: pagination.total, pagination.pages, pagination.page, pagination.limit
+  const rawPagination = data?.data?.pagination || {};
+  const pagination = {
+    currentPage: rawPagination.page || params.page,
+    totalPages: rawPagination.pages || 1,
+    totalItems: rawPagination.total || 0,
+    itemsPerPage: rawPagination.limit || params.limit,
+  };
+  // Backend returns: points_summary.current_balance, expiring_in_30_days
   const pointsSummary = data?.data?.points_summary;
 
   return (
@@ -106,30 +120,26 @@ const TransactionsTab = ({ customerId }) => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <StatCard label="Total Earned" value={pointsSummary.total_earned?.toLocaleString()} icon={CreditCardIcon} color="green" />
           <StatCard label="Total Spent" value={Math.abs(pointsSummary.total_spent || 0).toLocaleString()} icon={TagIcon} color="red" />
-          <StatCard label="Balance" value={pointsSummary.balance?.toLocaleString()} icon={CheckBadgeIcon} color="indigo" />
-          <StatCard label="Expiring (30d)" value={pointsSummary.expiring_soon?.toLocaleString()} icon={ClockIcon} color="amber" />
+          <StatCard label="Balance" value={(pointsSummary.current_balance ?? pointsSummary.balance)?.toLocaleString()} icon={CheckBadgeIcon} color="indigo" />
+          <StatCard label="Expiring (30d)" value={(pointsSummary.expiring_in_30_days ?? pointsSummary.expiring_soon)?.toLocaleString()} icon={ClockIcon} color="amber" />
         </div>
       )}
 
       <div className="flex flex-wrap gap-2 items-center justify-between">
-        <div className="flex flex-wrap gap-1">
+        <select
+          value={typeFilter}
+          onChange={(e) => {
+            setTypeFilter(e.target.value);
+            setParams((p) => ({ ...p, page: 1 }));
+          }}
+          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white"
+        >
           {TX_TYPES.map((t) => (
-            <button
-              key={t}
-              onClick={() => {
-                setTypeFilter(t);
-                setParams((p) => ({ ...p, page: 1 }));
-              }}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                typeFilter === t
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {t === "all" ? "All" : t}
-            </button>
+            <option key={t} value={t}>
+              {t === "all" ? "All Types" : t.charAt(0).toUpperCase() + t.slice(1).replace("-", " ")}
+            </option>
           ))}
-        </div>
+        </select>
         <RefreshButton onClick={() => refetch()} isLoading={isFetching} />
       </div>
 
@@ -138,10 +148,10 @@ const TransactionsTab = ({ customerId }) => {
       ) : (
         <StyledTable
           pagination={{
-            currentPage: pagination.currentPage || params.page,
-            totalPages: pagination.totalPages || 1,
-            totalItems: pagination.totalItems || 0,
-            itemsPerPage: params.limit,
+            currentPage: pagination.currentPage,
+            totalPages: pagination.totalPages,
+            totalItems: pagination.totalItems,
+            itemsPerPage: pagination.itemsPerPage,
             onPageChange: (p) => setParams((prev) => ({ ...prev, page: p })),
             setItemsPerPage: (l) => setParams((prev) => ({ ...prev, limit: l, page: 1 })),
           }}
@@ -202,7 +212,13 @@ const RedeemedOffersTab = ({ customerId }) => {
   );
 
   const transactions = data?.data?.transactions || [];
-  const pagination = data?.data?.pagination || {};
+  const rawPag = data?.data?.pagination || {};
+  const pagination = {
+    currentPage: rawPag.page || params.page,
+    totalPages: rawPag.pages || 1,
+    totalItems: rawPag.total || 0,
+    itemsPerPage: rawPag.limit || params.limit,
+  };
 
   return (
     <div className="space-y-4">
@@ -215,10 +231,10 @@ const RedeemedOffersTab = ({ customerId }) => {
       ) : (
         <StyledTable
           pagination={{
-            currentPage: pagination.currentPage || params.page,
-            totalPages: pagination.totalPages || 1,
-            totalItems: pagination.totalItems || 0,
-            itemsPerPage: params.limit,
+            currentPage: pagination.currentPage,
+            totalPages: pagination.totalPages,
+            totalItems: pagination.totalItems,
+            itemsPerPage: pagination.itemsPerPage,
             onPageChange: (p) => setParams((prev) => ({ ...prev, page: p })),
             setItemsPerPage: (l) => setParams((prev) => ({ ...prev, limit: l, page: 1 })),
           }}
@@ -366,6 +382,10 @@ const CustomerDetails = () => {
   const navigate = useNavigate();
   const { useGetCustomerById, useGetCustomerDashboard } = useCustomers();
   const [activeTab, setActiveTab] = useState("transactions");
+
+  // #region agent log
+  fetch('http://127.0.0.1:7431/ingest/98cfb3b4-06e5-4a3f-9c66-5eb7ccae209c',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'217b4f'},body:JSON.stringify({sessionId:'217b4f',location:'CustomerDetails.jsx:CustomerDetails-init',message:'page mounted with id param',data:{id,idLength:id?.length,looksLikeObjectId:/^[a-f0-9]{24}$/.test(id||'')},timestamp:Date.now(),runId:'run1',hypothesisId:'A-E'})}).catch(()=>{});
+  // #endregion
 
   const { data: customerData, isLoading: isLoadingCustomer } = useGetCustomerById(id);
   const { data: dashboardData, isLoading: isLoadingDashboard } = useGetCustomerDashboard(id);

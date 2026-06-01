@@ -6,6 +6,7 @@ import AddPoints from "../pages/points-management/AddPoints";
 import ReducePoints from "../pages/points-management/ReducePoints";
 import LoginPage from "../pages/LoginPage";
 import Customer from "../pages/customer-management/Customer";
+import CustomerDetails from "../pages/customer-management/CustomerDetails";
 import Dashboard from "../pages/Dashboard";
 import Transactions from "../pages/points-management/Transactions";
 import Users from "../pages/system-and-settings/Users";
@@ -20,6 +21,7 @@ import Rules from "../pages/points-management/Rules";
 import TierEligibility from "../pages/points-management/TierEligibility";
 import SummaryReport from "../pages/reports/SummaryReport";
 import TransactionReport from "../pages/reports/TransactionReport";
+import OfferSummaryReport from "../pages/reports/OfferSummaryReport";
 import Theme from "../pages/system-and-settings/Theme";
 import { AuthProvider } from "../ui/AuthProvider";
 import TriggerEvents from "../pages/reference-data/TriggerEvents";
@@ -100,6 +102,7 @@ const router = createBrowserRouter([
           { path: "/tier-eligibility", element: <TierEligibility /> },
           { path: "/transactions", element: <Transactions /> },
           { path: "/customers", element: <Customer /> },
+          { path: "/customers/:id", element: <CustomerDetails /> },
           { path: "/priority-customers", element: <PriorityCustomers /> },
           { path: "/users", element: <Users /> },
           { path: "/role", element: <Role /> },
@@ -114,6 +117,7 @@ const router = createBrowserRouter([
           { path: "/rules", element: <Rules /> },
           { path: "/summary-reports", element: <SummaryReport /> },
           { path: "/transaction-reports", element: <TransactionReport /> },
+          { path: "/offer-summary-reports", element: <OfferSummaryReport /> },
           { path: "/theme", element: <Theme /> },
           { path: "/trigger-events", element: <TriggerEvents /> },
           { path: "/trigger-services", element: <TriggerServices /> },

@@ -69,11 +69,30 @@ export function useReports() {
     });
   };
 
+  // Get offer summary report data
+  const useGetOfferSummary = (startDate, endDate) => {
+    return useQuery({
+      queryKey: ["reports", "offer-summary", startDate, endDate],
+      queryFn: () => reportsApi.getOfferSummary(startDate, endDate),
+      staleTime: 2 * 60 * 1000,
+    });
+  };
+
+  // Export offer summary as Excel
+  const useExportOfferSummary = () => {
+    return useMutation({
+      mutationFn: ({ startDate, endDate }) =>
+        reportsApi.exportOfferSummary(startDate, endDate),
+    });
+  };
+
   return {
     useGetReportData,
     useExportReportCSV,
     useGetTransactionExportCount,
     useExportTransactionReport,
+    useGetOfferSummary,
+    useExportOfferSummary,
   };
 }
 

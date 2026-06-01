@@ -106,7 +106,7 @@ const AddPoints = () => {
       customers.map((customer) => ({
         id: customer._id,
         label: customer.customer_id,
-        subLabel: customer.name || "-",
+        subLabel: customer.email || "-",
         tier: customer.tier,
       })),
     [customers]

@@ -15,8 +15,8 @@ const CustomerView = ({ open, onClose, data }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black/20 z-50 p-4">
       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="p-6 border-b dark:border-gray-700 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            {data?.name}
+          <h2 className="text-xl font-mono font-bold text-gray-900 dark:text-white">
+            {data?.customer_id}
           </h2>
           <button
             type="button"
@@ -29,12 +29,7 @@ const CustomerView = ({ open, onClose, data }) => {
         <div className="flex-1 overflow-y-auto p-6">
           <div className="flex items-center mb-6">
             <div className="w-12 h-12 bg-green-50 dark:bg-green-900 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 text-sm font-medium">
-              {data?.name
-                ?.split(" ")
-                ?.map((n) => n[0])
-                ?.join("")
-                ?.substring(0, 2)
-                ?.toUpperCase()}
+              <span className="text-xs font-mono">{data?.customer_id?.slice(-4)}</span>
             </div>
             <div className="ml-4">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">

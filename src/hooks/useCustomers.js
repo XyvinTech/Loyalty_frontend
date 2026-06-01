@@ -65,33 +65,24 @@ export function useCustomers() {
     });
   };
 
-  // Get customer transactions
+  // Get customer dashboard summary
+  const useGetCustomerDashboard = (customerId) => {
+    return useQuery({
+      queryKey: ["customers", customerId, "dashboard"],
+      queryFn: () => customersApi.getCustomerDashboard(customerId),
+      enabled: !!customerId,
+      staleTime: 2 * 60 * 1000,
+    });
+  };
+
+  // Get customer transactions (paginated, with type filter)
   const useGetCustomerTransactions = (customerId, params = {}) => {
     return useQuery({
       queryKey: ["customers", customerId, "transactions", params],
       queryFn: () => customersApi.getCustomerTransactions(customerId, params),
       enabled: !!customerId,
-      staleTime: 2 * 60 * 1000, // 2 minutes
-    });
-  };
-
-  // Get customer points history
-  const useGetCustomerPointsHistory = (customerId, params = {}) => {
-    return useQuery({
-      queryKey: ["customers", customerId, "points-history", params],
-      queryFn: () => customersApi.getCustomerPointsHistory(customerId, params),
-      enabled: !!customerId,
-      staleTime: 2 * 60 * 1000, // 2 minutes
-    });
-  };
-
-  // Get customer tier history
-  const useGetCustomerTierHistory = (customerId, params = {}) => {
-    return useQuery({
-      queryKey: ["customers", customerId, "tier-history", params],
-      queryFn: () => customersApi.getCustomerTierHistory(customerId, params),
-      enabled: !!customerId,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 2 * 60 * 1000,
+      placeholderData: keepPreviousData,
     });
   };
 
@@ -114,9 +105,8 @@ export function useCustomers() {
     useDeleteCustomer,
 
     // Customer details hooks
+    useGetCustomerDashboard,
     useGetCustomerTransactions,
-    useGetCustomerPointsHistory,
-    useGetCustomerTierHistory,
 
     // Export hooks
     useExportCustomers,

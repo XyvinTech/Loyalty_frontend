@@ -36,7 +36,7 @@ const RecentActivity = ({ transactions, loading }) => {
                 <p className="text-sm font-medium text-gray-900">
                   {transaction.type === "earn" ? "Earned" : transaction.type === "redeem" ? "Redeemed" : transaction.type === "expire" ? "Expired" : transaction.type}
                 </p>
-                <p className="text-xs text-gray-500">{transaction.customerName}</p>
+                <p className="text-xs text-gray-500 font-mono">{transaction.customerId || transaction.customer_id}</p>
               </div>
             </div>
             <div className="text-right">

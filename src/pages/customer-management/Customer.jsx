@@ -314,10 +314,6 @@ const CustomerDetailModal = ({ customer, onClose, isLoading }) => {
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Coins:</span>
-                    <span className="text-sm">{customer?.data?.coins}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">
                       Referral Code:
                     </span>

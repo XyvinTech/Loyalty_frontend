@@ -437,10 +437,6 @@ const CustomerDetails = () => {
             <p className="text-sm font-semibold text-gray-900">{customer.total_points?.toLocaleString() ?? 0}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">Coins</p>
-            <p className="text-sm font-medium text-gray-900">{customer.coins?.toLocaleString() ?? 0}</p>
-          </div>
-          <div>
             <p className="text-xs text-gray-500">App Type</p>
             <p className="text-sm text-gray-700">{customer.app_type?.map?.((a) => a.name).join(", ") || customer.app_type?.name || "—"}</p>
           </div>

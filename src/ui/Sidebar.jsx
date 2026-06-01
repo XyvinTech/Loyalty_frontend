@@ -282,6 +282,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: DocumentChartBarIcon,
           permissions: ["VIEW_REPORTS"],
         },
+        {
+          label: "Offer Summary Report",
+          path: "/offer-summary-reports",
+          icon: DocumentChartBarIcon,
+          permissions: ["VIEW_REPORTS"],
+        },
       ],
     },
   ];

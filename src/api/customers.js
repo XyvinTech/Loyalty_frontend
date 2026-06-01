@@ -33,28 +33,16 @@ const customersApi = {
     return response.data;
   },
 
-  // Get customer transactions
+  // Get customer dashboard summary (points, tier progress, recent transactions)
+  getCustomerDashboard: async (customerId) => {
+    const response = await apiClient.get(`${rootUrl}/${customerId}/dashboard`);
+    return response.data;
+  },
+
+  // Get customer transactions via the transaction module endpoint
   getCustomerTransactions: async (customerId, params) => {
     const response = await apiClient.get(
-      `${rootUrl}/${customerId}/transactions`,
-      { params }
-    );
-    return response.data;
-  },
-
-  // Get customer points history
-  getCustomerPointsHistory: async (customerId, params) => {
-    const response = await apiClient.get(
-      `${rootUrl}/${customerId}/points-history`,
-      { params }
-    );
-    return response.data;
-  },
-
-  // Get customer tier history
-  getCustomerTierHistory: async (customerId, params) => {
-    const response = await apiClient.get(
-      `${rootUrl}/${customerId}/tier-history`,
+      `/transaction/customer/${customerId}`,
       { params }
     );
     return response.data;

@@ -3,6 +3,21 @@ import apiClient from "./client";
 const rootUrl = "/focus9";
 
 const focus9Api = {
+  getSqlStatus: async () => {
+    const response = await apiClient.get(`${rootUrl}/sql-status`, {
+      timeout: 30000,
+    });
+    return response.data;
+  },
+
+  getSqlData: async (limit = 50) => {
+    const response = await apiClient.get(`${rootUrl}/sql-data`, {
+      params: { limit },
+      timeout: 30000,
+    });
+    return response.data;
+  },
+
   generateSummary: async () => {
     const response = await apiClient.post(
       `${rootUrl}/generate-summary`,

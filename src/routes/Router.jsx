@@ -31,6 +31,7 @@ import Support from "../pages/customer-management/Support";
 import PriorityCustomers from "../pages/customer-management/PriorityCustomers";
 import KhedmahOffer from "../pages/ofters-and-promotions/KhedmahOffer";
 import SdkAccess from "../pages/system-and-settings/SdkAccess";
+import Focus9Integration from "../pages/system-and-settings/Focus9Integration";
 import PaymentMethods from "../pages/reference-data/PaymentMethods";
 import ChangePassword from "../pages/system-and-settings/ChangePassword";
 import {
@@ -123,6 +124,7 @@ const router = createBrowserRouter([
           { path: "/trigger-services", element: <TriggerServices /> },
           { path: "/auth-logs", element: <AuthLogs /> },
           { path: "/sdk-access", element: <SdkAccess /> },
+          { path: "/focus9-integration", element: <Focus9Integration /> },
           { path: "/support", element: <Support /> },
           { path: "/change-password", element: <ChangePassword /> },
         ],

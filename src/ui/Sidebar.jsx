@@ -230,6 +230,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           icon: LockClosedIcon,
           permissions: ["MANAGE_ROLES"],
         },
+        {
+          label: "FOCUS Integration",
+          path: "/focus9-integration",
+          icon: ServerIcon,
+          permissions: ["MANAGE_SETTINGS"],
+        },
       ],
     },
     {

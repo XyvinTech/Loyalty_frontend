@@ -403,12 +403,16 @@ const TransactionReport = () => {
           Export Details
         </h2>
         <p className="text-sm text-gray-600 mb-3">
-          The CSV file will contain the following 12 columns:
+          The CSV file will contain the following 13 columns:
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-600 rounded-full"></span>
             <span className="text-gray-700">Kedmah Customer ID</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+            <span className="text-gray-700">Customer Tier</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 bg-green-600 rounded-full"></span>

@@ -3,6 +3,7 @@ import {
   ArrowPathIcon,
   CheckCircleIcon,
   ServerStackIcon,
+  TrashIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 import StyledButton from "../../ui/StyledButton";
@@ -47,6 +48,7 @@ const Focus9Integration = () => {
     useGenerateFocus9Summary,
     useSyncFocus9Sql,
     useGenerateAndSyncFocus9,
+    useDeleteFocus9SqlRow,
   } = useFocus9();
 
   const {
@@ -70,15 +72,19 @@ const Focus9Integration = () => {
   const generateMutation = useGenerateFocus9Summary();
   const syncMutation = useSyncFocus9Sql();
   const fullTestMutation = useGenerateAndSyncFocus9();
+  const deleteMutation = useDeleteFocus9SqlRow();
 
   const [lastResult, setLastResult] = useState(null);
+  const [deletingRowId, setDeletingRowId] = useState(null);
 
   const isBusy =
     generateMutation.isPending ||
     syncMutation.isPending ||
-    fullTestMutation.isPending;
+    fullTestMutation.isPending ||
+    deleteMutation.isPending;
 
   const sqlRows = sqlDataResponse?.data?.rows || [];
+  const deleteEnabled = Boolean(sqlStatus?.deleteEnabled);
 
   const handleResult = (label, response, error) => {
     if (error) {
@@ -134,6 +140,34 @@ const Focus9Integration = () => {
     refetchStatus();
     if (isSqlConnected) refetchSqlData();
     refreshFocus9Views();
+  };
+
+  const handleDeleteRow = (row) => {
+    const rowId = row.iTransactionId;
+    const confirmed = window.confirm(
+      `Delete row #${rowId} (${row.TransactionType}, ${formatDate(row.TransactionDate)}) from FOCUS SQL? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    setDeletingRowId(rowId);
+    deleteMutation.mutate(rowId, {
+      onSuccess: (res) => {
+        addToast({
+          type: "success",
+          message: res?.message || "FOCUS SQL row deleted",
+        });
+      },
+      onError: (err) => {
+        addToast({
+          type: "error",
+          message:
+            err?.response?.data?.message ||
+            err.message ||
+            "Failed to delete FOCUS SQL row",
+        });
+      },
+      onSettled: () => setDeletingRowId(null),
+    });
   };
 
   return (
@@ -294,6 +328,11 @@ const Focus9Integration = () => {
                       {col.label}
                     </th>
                   ))}
+                  {deleteEnabled && (
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                      Actions
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -312,12 +351,29 @@ const Focus9Integration = () => {
                               : row[col.key] ?? "-"}
                         </td>
                       ))}
+                      {deleteEnabled && (
+                        <td className="px-4 py-3 text-sm whitespace-nowrap">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteRow(row)}
+                            disabled={
+                              deleteMutation.isPending &&
+                              deletingRowId === row.iTransactionId
+                            }
+                            className="inline-flex items-center gap-1 text-xs text-red-600 hover:text-red-800 disabled:opacity-50"
+                            title="Delete row (UAT only)"
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                            Delete
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td
-                      colSpan={SQL_COLUMNS.length}
+                      colSpan={SQL_COLUMNS.length + (deleteEnabled ? 1 : 0)}
                       className="px-4 py-8 text-center text-sm text-gray-500"
                     >
                       No rows in SQL table yet. Run a test to insert data.

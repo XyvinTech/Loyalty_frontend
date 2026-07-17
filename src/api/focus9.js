@@ -44,6 +44,13 @@ const focus9Api = {
     );
     return response.data;
   },
+
+  deleteSqlRow: async (id) => {
+    const response = await apiClient.delete(`${rootUrl}/sql-data/${id}`, {
+      timeout: 30000,
+    });
+    return response.data;
+  },
 };
 
 export default focus9Api;

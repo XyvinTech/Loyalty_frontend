@@ -44,6 +44,12 @@ export function useFocus9() {
       onSuccess: () => refreshFocus9Views(),
     });
 
+  const useDeleteFocus9SqlRow = () =>
+    useMutation({
+      mutationFn: (id) => focus9Api.deleteSqlRow(id),
+      onSuccess: () => refreshFocus9Views(),
+    });
+
   return {
     useGetFocus9SqlStatus,
     useGetFocus9SqlData,
@@ -51,5 +57,6 @@ export function useFocus9() {
     useGenerateFocus9Summary,
     useSyncFocus9Sql,
     useGenerateAndSyncFocus9,
+    useDeleteFocus9SqlRow,
   };
 }

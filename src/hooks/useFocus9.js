@@ -21,9 +21,18 @@ export function useFocus9() {
       retry: 1,
     });
 
+  const useGetFocus9MongoData = (limit = 50) =>
+    useQuery({
+      queryKey: ["focus9MongoData", limit],
+      queryFn: () => focus9Api.getMongoData(limit),
+      staleTime: 30 * 1000,
+      retry: 1,
+    });
+
   const refreshFocus9Views = () => {
     queryClient.invalidateQueries({ queryKey: ["focus9SqlStatus"] });
     queryClient.invalidateQueries({ queryKey: ["focus9SqlData"] });
+    queryClient.invalidateQueries({ queryKey: ["focus9MongoData"] });
   };
 
   const useGenerateFocus9Summary = () =>
@@ -50,13 +59,21 @@ export function useFocus9() {
       onSuccess: () => refreshFocus9Views(),
     });
 
+  const useBackfillFocus9 = () =>
+    useMutation({
+      mutationFn: (params) => focus9Api.backfill(params),
+      onSuccess: () => refreshFocus9Views(),
+    });
+
   return {
     useGetFocus9SqlStatus,
     useGetFocus9SqlData,
+    useGetFocus9MongoData,
     refreshFocus9Views,
     useGenerateFocus9Summary,
     useSyncFocus9Sql,
     useGenerateAndSyncFocus9,
     useDeleteFocus9SqlRow,
+    useBackfillFocus9,
   };
 }

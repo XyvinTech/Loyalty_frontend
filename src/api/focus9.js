@@ -18,6 +18,14 @@ const focus9Api = {
     return response.data;
   },
 
+  getMongoData: async (limit = 50) => {
+    const response = await apiClient.get(`${rootUrl}/mongo-data`, {
+      params: { limit },
+      timeout: 30000,
+    });
+    return response.data;
+  },
+
   generateSummary: async () => {
     const response = await apiClient.post(
       `${rootUrl}/generate-summary`,
@@ -41,6 +49,15 @@ const focus9Api = {
       `${rootUrl}/generate-and-sync`,
       {},
       { timeout: 120000 }
+    );
+    return response.data;
+  },
+
+  backfill: async ({ from, to, skipSql = false }) => {
+    const response = await apiClient.post(
+      `${rootUrl}/backfill`,
+      { from, to, skipSql },
+      { timeout: 300000 }
     );
     return response.data;
   },

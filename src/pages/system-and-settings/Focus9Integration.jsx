@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ArrowPathIcon,
   CheckCircleIcon,
@@ -23,6 +23,36 @@ const SQL_COLUMNS = [
   { key: "PostedStatus", label: "Posted" },
 ];
 
+const AMOUNT_FIELDS = [
+  "AdditionAmount",
+  "ExpiryAmount",
+  "RedemptionAmount",
+  "RedemptionCancel",
+  "ManualAddition",
+  "ManualDeduction",
+];
+
+const DATA_COLUMNS = SQL_COLUMNS.filter((col) => col.key !== "iTransactionId");
+
+const MONGO_COLUMNS = [
+  { key: "sql_synced", label: "Synced" },
+  ...DATA_COLUMNS,
+  { key: "matchesSql", label: "Match SQL" },
+];
+
+function rowMatchKey(row) {
+  const dateKey = new Date(row.TransactionDate).toISOString().slice(0, 10);
+  return `${dateKey}|${row.TransactionType}`;
+}
+
+function amountsMatch(mongoRow, sqlRow) {
+  if (!mongoRow || !sqlRow) return false;
+  return AMOUNT_FIELDS.every(
+    (field) =>
+      Math.abs(Number(mongoRow[field] || 0) - Number(sqlRow[field] || 0)) <=
+      0.001
+  );
+}
 function formatDate(value) {
   if (!value) return "-";
   return new Date(value).toLocaleString("en-GB", {
@@ -44,11 +74,13 @@ const Focus9Integration = () => {
   const {
     useGetFocus9SqlStatus,
     useGetFocus9SqlData,
+    useGetFocus9MongoData,
     refreshFocus9Views,
     useGenerateFocus9Summary,
     useSyncFocus9Sql,
     useGenerateAndSyncFocus9,
     useDeleteFocus9SqlRow,
+    useBackfillFocus9,
   } = useFocus9();
 
   const {
@@ -69,22 +101,40 @@ const Focus9Integration = () => {
     refetch: refetchSqlData,
   } = useGetFocus9SqlData(isSqlConnected, 50);
 
+  const {
+    data: mongoDataResponse,
+    isLoading: mongoDataLoading,
+    isFetching: mongoDataFetching,
+    refetch: refetchMongoData,
+  } = useGetFocus9MongoData(50);
+
   const generateMutation = useGenerateFocus9Summary();
   const syncMutation = useSyncFocus9Sql();
   const fullTestMutation = useGenerateAndSyncFocus9();
   const deleteMutation = useDeleteFocus9SqlRow();
+  const backfillMutation = useBackfillFocus9();
 
   const [lastResult, setLastResult] = useState(null);
   const [deletingRowId, setDeletingRowId] = useState(null);
+  const [backfillFrom, setBackfillFrom] = useState("2026-07-10");
+  const [backfillTo, setBackfillTo] = useState("");
 
   const isBusy =
     generateMutation.isPending ||
     syncMutation.isPending ||
     fullTestMutation.isPending ||
-    deleteMutation.isPending;
+    deleteMutation.isPending ||
+    backfillMutation.isPending;
 
   const sqlRows = sqlDataResponse?.data?.rows || [];
+  const mongoRows = mongoDataResponse?.data?.rows || [];
   const deleteEnabled = Boolean(sqlStatus?.deleteEnabled);
+
+  const sqlRowsByKey = useMemo(() => {
+    const map = new Map();
+    sqlRows.forEach((row) => map.set(rowMatchKey(row), row));
+    return map;
+  }, [sqlRows]);
 
   const handleResult = (label, response, error) => {
     if (error) {
@@ -136,9 +186,32 @@ const Focus9Integration = () => {
     });
   };
 
+  const runBackfill = () => {
+    if (!backfillFrom) {
+      addToast({ type: "error", message: "Please choose a From date" });
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Backfill Focus9 summaries from ${backfillFrom}${
+        backfillTo ? ` to ${backfillTo}` : " to today"
+      }? This regenerates summaries and re-pushes the range to FOCUS SQL (existing SQL rows in range are deleted first).`
+    );
+    if (!confirmed) return;
+
+    backfillMutation.mutate(
+      { from: backfillFrom, to: backfillTo || undefined },
+      {
+        onSuccess: (res) => handleResult("Backfill", res),
+        onError: (err) => handleResult("Backfill", null, err),
+      }
+    );
+  };
+
   const refreshAll = () => {
     refetchStatus();
     if (isSqlConnected) refetchSqlData();
+    refetchMongoData();
     refreshFocus9Views();
   };
 
@@ -190,7 +263,7 @@ const Focus9Integration = () => {
           name="Refresh Status"
           variant="download"
           onClick={refreshAll}
-          isLoading={statusFetching || sqlDataFetching}
+          isLoading={statusFetching || sqlDataFetching || mongoDataFetching}
           loadingLabel="Refreshing…"
         />
       </div>
@@ -286,6 +359,44 @@ const Focus9Integration = () => {
         </div>
       </div>
 
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+        <div>
+          <h2 className="text-lg font-medium text-gray-800">Backfill</h2>
+          <p className="text-xs text-gray-500 mt-1">
+            Regenerate Mongo summaries for a date range and re-push to FOCUS SQL.
+            Existing SQL rows in the range are deleted first. Leave “To” empty to
+            backfill up to today.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="flex flex-col">
+            <label className="text-xs text-gray-500 mb-1">From</label>
+            <input
+              type="date"
+              value={backfillFrom}
+              onChange={(e) => setBackfillFrom(e.target.value)}
+              className="h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-teal-600 focus:ring-2 focus:ring-teal-600/25 outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-xs text-gray-500 mb-1">To (optional)</label>
+            <input
+              type="date"
+              value={backfillTo}
+              onChange={(e) => setBackfillTo(e.target.value)}
+              className="h-9 rounded-md border border-gray-300 px-3 text-sm focus:border-teal-600 focus:ring-2 focus:ring-teal-600/25 outline-none"
+            />
+          </div>
+          <StyledButton
+            name="Run Backfill"
+            onClick={runBackfill}
+            isLoading={backfillMutation.isPending}
+            loadingLabel="Backfilling…"
+            disabled={isBusy && !backfillMutation.isPending}
+          />
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <div>
@@ -377,6 +488,122 @@ const Focus9Integration = () => {
                       className="px-4 py-8 text-center text-sm text-gray-500"
                     >
                       No rows in SQL table yet. Run a test to insert data.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-medium text-gray-800">
+              MongoDB Focus9 Summaries
+            </h2>
+            <p className="text-xs text-gray-500 mt-1">
+              Latest daily summaries from Focus9DailySummary — compare with SQL
+              above
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => refetchMongoData()}
+            disabled={mongoDataFetching}
+            className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 disabled:opacity-50"
+          >
+            <ArrowPathIcon
+              className={`h-4 w-4 ${mongoDataFetching ? "animate-spin" : ""}`}
+            />
+            Refresh table
+          </button>
+        </div>
+
+        {mongoDataLoading ? (
+          <div className="p-6 text-sm text-gray-500">Loading Mongo data…</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  {MONGO_COLUMNS.map((col) => (
+                    <th
+                      key={col.key}
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                    >
+                      {col.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {mongoRows.length > 0 ? (
+                  mongoRows.map((row) => {
+                    const sqlRow = sqlRowsByKey.get(rowMatchKey(row));
+                    const matches = amountsMatch(row, sqlRow);
+
+                    return (
+                      <tr
+                        key={`${row.summaryId}-${row.TransactionType}`}
+                        className="hover:bg-gray-50"
+                      >
+                        {MONGO_COLUMNS.map((col) => (
+                          <td
+                            key={col.key}
+                            className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap"
+                          >
+                            {col.key === "sql_synced" ? (
+                              <span
+                                className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                                  row.sql_synced
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-amber-100 text-amber-800"
+                                }`}
+                              >
+                                {row.sql_synced ? "Yes" : "No"}
+                              </span>
+                            ) : col.key === "matchesSql" ? (
+                              isSqlConnected ? (
+                                sqlRow ? (
+                                  <span
+                                    className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                                      matches
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-red-100 text-red-800"
+                                    }`}
+                                  >
+                                    {matches ? "Match" : "Diff"}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-gray-500">
+                                    No SQL row
+                                  </span>
+                                )
+                              ) : (
+                                <span className="text-xs text-gray-400">—</span>
+                              )
+                            ) : col.key === "TransactionDate" ? (
+                              formatDate(row[col.key])
+                            ) : col.key.includes("Amount") ? (
+                              formatAmount(row[col.key])
+                            ) : (
+                              row[col.key] ?? "-"
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={MONGO_COLUMNS.length}
+                      className="px-4 py-8 text-center text-sm text-gray-500"
+                    >
+                      No Mongo summaries yet. Run Generate Summary or the
+                      backfill script.
                     </td>
                   </tr>
                 )}

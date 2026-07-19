@@ -26,33 +26,6 @@ const focus9Api = {
     return response.data;
   },
 
-  generateSummary: async () => {
-    const response = await apiClient.post(
-      `${rootUrl}/generate-summary`,
-      {},
-      { timeout: 120000 }
-    );
-    return response.data;
-  },
-
-  syncSql: async () => {
-    const response = await apiClient.post(
-      `${rootUrl}/sync-sql`,
-      {},
-      { timeout: 120000 }
-    );
-    return response.data;
-  },
-
-  generateAndSync: async () => {
-    const response = await apiClient.post(
-      `${rootUrl}/generate-and-sync`,
-      {},
-      { timeout: 120000 }
-    );
-    return response.data;
-  },
-
   backfill: async ({ from, to, skipSql = false }) => {
     const response = await apiClient.post(
       `${rootUrl}/backfill`,

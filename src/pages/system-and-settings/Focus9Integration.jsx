@@ -76,9 +76,6 @@ const Focus9Integration = () => {
     useGetFocus9SqlData,
     useGetFocus9MongoData,
     refreshFocus9Views,
-    useGenerateFocus9Summary,
-    useSyncFocus9Sql,
-    useGenerateAndSyncFocus9,
     useDeleteFocus9SqlRow,
     useBackfillFocus9,
   } = useFocus9();
@@ -108,9 +105,6 @@ const Focus9Integration = () => {
     refetch: refetchMongoData,
   } = useGetFocus9MongoData(50);
 
-  const generateMutation = useGenerateFocus9Summary();
-  const syncMutation = useSyncFocus9Sql();
-  const fullTestMutation = useGenerateAndSyncFocus9();
   const deleteMutation = useDeleteFocus9SqlRow();
   const backfillMutation = useBackfillFocus9();
 
@@ -119,12 +113,7 @@ const Focus9Integration = () => {
   const [backfillFrom, setBackfillFrom] = useState("2026-07-10");
   const [backfillTo, setBackfillTo] = useState("");
 
-  const isBusy =
-    generateMutation.isPending ||
-    syncMutation.isPending ||
-    fullTestMutation.isPending ||
-    deleteMutation.isPending ||
-    backfillMutation.isPending;
+  const isBusy = deleteMutation.isPending || backfillMutation.isPending;
 
   const sqlRows = sqlDataResponse?.data?.rows || [];
   const mongoRows = mongoDataResponse?.data?.rows || [];
@@ -147,7 +136,7 @@ const Focus9Integration = () => {
       setLastResult(payload);
       addToast({
         type: "error",
-        message: payload.message || "Focus9 test failed",
+        message: payload.message || "Focus9 operation failed",
       });
       return;
     }
@@ -161,28 +150,7 @@ const Focus9Integration = () => {
     setLastResult(payload);
     addToast({
       type: "success",
-      message: response?.message || "Focus9 test completed",
-    });
-  };
-
-  const runGenerateSummary = () => {
-    generateMutation.mutate(undefined, {
-      onSuccess: (res) => handleResult("Generate Summary", res),
-      onError: (err) => handleResult("Generate Summary", null, err),
-    });
-  };
-
-  const runSyncSql = () => {
-    syncMutation.mutate(undefined, {
-      onSuccess: (res) => handleResult("Sync to SQL", res),
-      onError: (err) => handleResult("Sync to SQL", null, err),
-    });
-  };
-
-  const runFullTest = () => {
-    fullTestMutation.mutate(undefined, {
-      onSuccess: (res) => handleResult("Generate & Sync", res),
-      onError: (err) => handleResult("Generate & Sync", null, err),
+      message: response?.message || "Focus9 operation completed",
     });
   };
 
@@ -331,35 +299,6 @@ const Focus9Integration = () => {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-        <h2 className="text-lg font-medium text-gray-800">Test Actions</h2>
-        <div className="flex flex-wrap gap-3">
-          <StyledButton
-            name="Run Full Test"
-            onClick={runFullTest}
-            isLoading={fullTestMutation.isPending}
-            loadingLabel="Running test…"
-            disabled={isBusy && !fullTestMutation.isPending}
-          />
-          <StyledButton
-            name="Generate Summary Only"
-            variant="secondary"
-            onClick={runGenerateSummary}
-            isLoading={generateMutation.isPending}
-            loadingLabel="Generating…"
-            disabled={isBusy && !generateMutation.isPending}
-          />
-          <StyledButton
-            name="Sync to SQL Only"
-            variant="download"
-            onClick={runSyncSql}
-            isLoading={syncMutation.isPending}
-            loadingLabel="Syncing…"
-            disabled={isBusy && !syncMutation.isPending}
-          />
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
         <div>
           <h2 className="text-lg font-medium text-gray-800">Backfill</h2>
           <p className="text-xs text-gray-500 mt-1">
@@ -487,7 +426,7 @@ const Focus9Integration = () => {
                       colSpan={SQL_COLUMNS.length + (deleteEnabled ? 1 : 0)}
                       className="px-4 py-8 text-center text-sm text-gray-500"
                     >
-                      No rows in SQL table yet. Run a test to insert data.
+                      No rows in SQL table yet.
                     </td>
                   </tr>
                 )}
@@ -602,8 +541,7 @@ const Focus9Integration = () => {
                       colSpan={MONGO_COLUMNS.length}
                       className="px-4 py-8 text-center text-sm text-gray-500"
                     >
-                      No Mongo summaries yet. Run Generate Summary or the
-                      backfill script.
+                      No Mongo summaries yet.
                     </td>
                   </tr>
                 )}
@@ -616,7 +554,7 @@ const Focus9Integration = () => {
       {lastResult && (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-medium text-gray-800">Last Test Result</h2>
+            <h2 className="text-lg font-medium text-gray-800">Last Backfill Result</h2>
             <span
               className={`text-xs font-medium px-2 py-1 rounded-full ${
                 lastResult.success

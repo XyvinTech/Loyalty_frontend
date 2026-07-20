@@ -433,7 +433,7 @@ const HowtoGet = ({ link }) => {
                     First order Any Customer
                   </div>
                   <div className="text-orange-600 font-bold">
-                    2% of Order Value
+                    1% of Order Value
                   </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border-l-4 border-gray-400">
@@ -441,7 +441,7 @@ const HowtoGet = ({ link }) => {
                     Second order onwards Regular Customer
                   </div>
                   <div className="text-gray-600 font-bold">
-                    1% of Order Value
+                    0.5% of Order Value
                   </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border-l-4 border-purple-400">
@@ -449,7 +449,7 @@ const HowtoGet = ({ link }) => {
                     Second order onwards Diamond Subscriber
                   </div>
                   <div className="text-purple-600 font-bold">
-                    2% of Order Value
+                    1% of Order Value
                   </div>
                 </div>
               </div>
@@ -510,7 +510,7 @@ const HowtoGet = ({ link }) => {
                 <span className="text-sm">1</span>
               </div>
               <p>
-                Subscribe to Diamond membership to earn 2% on all delivery
+                Subscribe to Diamond membership to earn 1% on all delivery
                 orders after the first one
               </p>
             </div>

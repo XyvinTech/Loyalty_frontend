@@ -413,7 +413,7 @@ const HowtoGetArabic = ({ link }) => {
                     الطلب الأول لأي عميل
                   </div>
                   <div className="text-orange-600 font-bold">
-                    %2 من قيمة الطلب
+                    %1 من قيمة الطلب
                   </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border-r-4 border-gray-400">
@@ -421,7 +421,7 @@ const HowtoGetArabic = ({ link }) => {
                     من الطلب الثاني فصاعداً للعميل العادي
                   </div>
                   <div className="text-gray-600 font-bold">
-                    %1 من قيمة الطلب
+                    %0.5 من قيمة الطلب
                   </div>
                 </div>
                 <div className="p-3 bg-white rounded-lg border-r-4 border-purple-400">
@@ -429,7 +429,7 @@ const HowtoGetArabic = ({ link }) => {
                     من الطلب الثاني فصاعداً للمشترك الماسي
                   </div>
                   <div className="text-purple-600 font-bold">
-                    %2 من قيمة الطلب
+                    %1 من قيمة الطلب
                   </div>
                 </div>
               </div>
@@ -490,7 +490,7 @@ const HowtoGetArabic = ({ link }) => {
                 <span className="text-sm">1</span>
               </div>
               <p>
-                اشترك في العضوية الماسية لكسب 2% على جميع طلبات التوصيل بعد
+                اشترك في العضوية الماسية لكسب 1% على جميع طلبات التوصيل بعد
                 الطلب الأول
               </p>
             </div>
